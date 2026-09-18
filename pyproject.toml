@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "theorygate"
-version = "0.1.0"
-description = "Claim-audit and promotion-gate engine for computational and formal research"
+version = "0.2.0"
+description = "Physical-claim audit and promotion-gate engine for computational and formal physics"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
