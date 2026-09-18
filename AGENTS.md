@@ -13,5 +13,8 @@ TheoryGate is a scope and claim-promotion checker. It is not a truth oracle.
 - Preserve Apache-2.0 licensing and third-party notices.
 
 - Robustness adapters must never invent scientific tolerances. Missing preregistered thresholds produce PARTIAL, not PASS.
-- xAct/Cadabra adapters use explicit script contracts; a successful process without the required PASS marker is not evidence of a passed symbolic assertion.
+- Script-backed CAS adapters (xAct/Cadabra/Maxima/generic external) use explicit marker contracts; a successful process without the required PASS marker is not evidence of a passed symbolic assertion.
 - Built-in physical claim templates are conservative scaffolding. Rewrite generic obligations to the model-specific physical statement before using them as publication gates.
+
+- Broad-plateau scans must distinguish fixed/preregistered criteria from post-hoc exploratory window selection. Exploratory plateau discovery cannot produce PASS.
+- Insufficient plateau sampling is PARTIAL rather than FAIL; enough sampled cases with no qualifying plateau may produce FAIL under the declared protocol.

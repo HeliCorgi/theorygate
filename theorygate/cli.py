@@ -63,6 +63,38 @@ def _common_output_args(parser) -> None:
     )
 
 
+def _script_cas_args(parser, *, require_executable: bool = False) -> None:
+    parser.add_argument("--script", required=True, help="CAS audit script path")
+    _common_output_args(parser)
+    parser.add_argument(
+        "--executable",
+        required=require_executable,
+        help="override or define the external CAS executable",
+    )
+    parser.add_argument(
+        "--command-arg",
+        action="append",
+        default=None,
+        help=(
+            "override script command arguments; repeatable. Use {script} where the "
+            "script path belongs. For values beginning with '-', prefer "
+            "--command-arg=--flag."
+        ),
+    )
+    parser.add_argument(
+        "--version-arg",
+        action="append",
+        default=None,
+        help=(
+            "override version-command arguments; repeatable. For values beginning "
+            "with '-', prefer --version-arg=--version."
+        ),
+    )
+    parser.add_argument("--pass-marker", default="THEORYGATE:PASS")
+    parser.add_argument("--fail-marker", default="THEORYGATE:FAIL")
+    parser.add_argument("--timeout", type=float, default=600.0)
+
+
 def _add_evidence_parsers(sub) -> None:
     evidence = sub.add_parser(
         "evidence",
@@ -138,17 +170,24 @@ def _add_evidence_parsers(sub) -> None:
     sympy_p.add_argument("--spec", required=True, help="symbolic check specification")
     _common_output_args(sympy_p)
 
-    for engine in ("xact", "cadabra"):
+    for engine in ("xact", "cadabra", "maxima"):
         p = cas_engines.add_parser(
             engine,
             help=f"run a {engine} audit script under the TheoryGate marker contract",
         )
-        p.add_argument("--script", required=True, help="audit script path")
-        _common_output_args(p)
-        p.add_argument("--executable", help="override wolframscript/cadabra2 executable")
-        p.add_argument("--pass-marker", default="THEORYGATE:PASS")
-        p.add_argument("--fail-marker", default="THEORYGATE:FAIL")
-        p.add_argument("--timeout", type=float, default=600.0)
+        _script_cas_args(p)
+
+    external = cas_engines.add_parser(
+        "external",
+        help="run any script-backed CAS under the TheoryGate marker contract",
+    )
+    external.add_argument(
+        "--engine",
+        required=True,
+        dest="external_engine",
+        help="engine label stored in evidence, e.g. maple or reduce",
+    )
+    _script_cas_args(external, require_executable=True)
 
     robust = engines.add_parser(
         "robustness",
@@ -270,13 +309,28 @@ def _run_cas_evidence(args) -> int:
             artifact=args.artifact,
         )
     else:
+        engine = (
+            args.external_engine
+            if args.cas_engine == "external"
+            else args.cas_engine
+        )
         evidence = collect_external_cas_evidence(
             ExternalCASConfig(
-                engine=args.cas_engine,
+                engine=engine,
                 script=Path(args.script),
                 evidence_id=args.evidence_id,
                 obligation=args.obligation,
                 executable=args.executable,
+                command_args=(
+                    None
+                    if args.command_arg is None
+                    else tuple(args.command_arg)
+                ),
+                version_args=(
+                    None
+                    if args.version_arg is None
+                    else tuple(args.version_arg)
+                ),
                 pass_marker=args.pass_marker,
                 fail_marker=args.fail_marker,
                 timeout=float(args.timeout),

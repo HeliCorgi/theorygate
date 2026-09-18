@@ -28,6 +28,7 @@ jobs:
       - run: theorygate evidence cas sympy --spec tests/fixtures/cas/sympy_identity.json --id ci-sympy --obligation EXTERNAL_FORMAL --output /tmp/sympy-evidence.json --require-pass
       - run: theorygate check tests/fixtures/ingestion_model.json --evidence /tmp/sympy-evidence.json --require EXTERNAL_CLAIM
       - run: theorygate evidence robustness --spec tests/fixtures/robustness/clock_pass.json --id ci-clock --obligation CLOCK_ROBUSTNESS --output /tmp/clock-evidence.json --require-pass
+      - run: theorygate evidence robustness --spec tests/fixtures/robustness/plateau_pass.json --id ci-plateau --obligation REGULATOR_STABILITY --output /tmp/plateau-evidence.json --require-pass
       - run: theorygate check tests/fixtures/robustness_model.json --evidence /tmp/clock-evidence.json --require CLOCK_STABLE
       - run: theorygate template init HISTORY_PROBABILITY --model-id ci-history --output /tmp/history.yaml
       - run: theorygate validate /tmp/history.yaml

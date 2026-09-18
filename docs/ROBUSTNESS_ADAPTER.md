@@ -7,100 +7,145 @@ The robustness adapter covers four explicit sensitivity axes:
 - `ordering`
 - `boundary`
 
-All four use the same data format. TheoryGate does **not** invent scientific tolerances.
-A scan without a preregistered absolute or relative threshold is diagnostic and returns
-`PARTIAL`, never `PASS`.
+TheoryGate does **not** invent scientific tolerances. A scan without a preregistered
+relevant threshold is diagnostic and returns `PARTIAL`, never `PASS`.
 
-## Clock example
-
-```json
-{
-  "kind": "clock",
-  "observable": "branch_weight",
-  "comparison": "reference",
-  "reference": "clock-A",
-  "thresholds": {
-    "max_relative": 0.05
-  },
-  "minimum_cases": 3,
-  "cases": [
-    {"label": "clock-A", "value": 0.300},
-    {"label": "clock-B", "value": 0.304},
-    {"label": "clock-C", "value": 0.297}
-  ]
-}
-```
-
-Run:
-
-```bash
-theorygate evidence robustness \
-  --spec clock-scan.json \
-  --id clock-robustness \
-  --obligation CLOCK_ROBUSTNESS \
-  --output artifacts/clock-robustness.json \
-  --require-pass
-```
-
-## Comparison modes
+## Standard comparison modes
 
 ### reference
 
-Every case is compared with the named `reference`. If omitted, the first case is the
-reference.
+Every case is compared with the named reference.
 
 ### successive
 
-Cases are compared in order:
-
-```text
-case0 -> case1
-case1 -> case2
-...
-```
-
-This is useful for regulator limits such as box size, grid spacing, cutoff, or `eta`.
+Cases are compared in order. This is useful for genuine directed limits such as
+`h -> 0`, `eta -> 0+`, grid refinement, or box enlargement.
 
 ### pairwise
 
-All case pairs are compared. This is often useful for unordered choices such as factor
-orderings or alternative clocks.
+All case pairs are compared. This is useful for unordered choices such as clocks or
+factor orderings.
 
-## Metrics
-
-For scalar or equal-length vector values, TheoryGate records:
-
-- maximum absolute component difference;
-- maximum symmetric relative component difference,
-
-where the symmetric relative difference is
+For scalar or equal-length vector values, TheoryGate records maximum absolute component
+difference and maximum symmetric relative component difference,
 
 ```text
 2 |a-b| / (|a| + |b|)
 ```
 
-with zero assigned when both values are zero.
+with zero when both values are zero.
 
-Available thresholds:
+## Broad plateau mode
+
+Some regulators are not directed limits. Complex absorbing potential strength is a
+typical example: too weak may fail to absorb, while too strong may enter a
+reflection/Zeno regime. A narrow tuned optimum should not be promoted to a
+regulator-independent result.
+
+Use:
+
+```json
+{
+  "kind": "regulator",
+  "observable": "max_abs_Doff",
+  "comparison": "plateau",
+  "plateau_selection": "criterion",
+  "minimum_plateau_cases": 3,
+  "minimum_setting_span": 0.02,
+  "thresholds": {
+    "max_relative_within_plateau": 0.05
+  },
+  "cases": [
+    {"label": ".025", "setting": 0.025, "value": 0.11048},
+    {"label": ".040", "setting": 0.040, "value": 0.05358},
+    {"label": ".050", "setting": 0.050, "value": 0.03210},
+    {"label": ".060", "setting": 0.060, "value": 0.01666},
+    {"label": ".075", "setting": 0.075, "value": 0.00733},
+    {"label": ".085", "setting": 0.085, "value": 0.01361},
+    {"label": ".100", "setting": 0.100, "value": 0.02323}
+  ]
+}
+```
+
+With a 5% within-plateau tolerance, the example fails: there is no contiguous broad
+window satisfying the declared count/span/variation rule. A single minimum near
+`.075` is therefore not sufficient.
+
+Plateau cases require numeric `setting` values.
+
+Available plateau thresholds:
 
 ```json
 {
   "thresholds": {
-    "max_absolute": 1e-6,
-    "max_relative": 0.05
+    "max_absolute_within_plateau": 1e-3,
+    "max_relative_within_plateau": 0.05
   }
 }
 ```
 
-If both are supplied, both must pass.
+The ordinary `max_absolute` / `max_relative` names are also accepted as fallbacks in
+plateau mode.
 
-The tolerance is part of the research protocol. TheoryGate records and applies it; it
-does not decide that 5%, 1%, or any other threshold is scientifically appropriate.
+### plateau_selection = fixed
 
-## Regulator convergence direction
+Use a window fixed before the result is interpreted:
 
-For an ordered `successive` scan, this optional check can reject a sequence whose
-successive relative drift grows toward the intended limit:
+```json
+{
+  "comparison": "plateau",
+  "plateau_selection": "fixed",
+  "plateau_window": {
+    "min_setting": 0.04,
+    "max_setting": 0.08
+  },
+  "minimum_plateau_cases": 3,
+  "minimum_setting_span": 0.02,
+  "thresholds": {
+    "max_relative_within_plateau": 0.05
+  }
+}
+```
+
+The selected cases inside that window must meet the case-count, actual setting-span, and
+variation requirements. A valid fixed window can produce `PASS`.
+
+### plateau_selection = criterion
+
+The existence of any contiguous window satisfying the predeclared case-count, setting
+span, and variation criterion is the protocol. This can produce `PASS`.
+
+This mode is appropriate only when the existence criterion itself was chosen before
+inspecting the result. TheoryGate records the mode but cannot prove when the protocol was
+authored.
+
+### plateau_selection = exploratory
+
+TheoryGate searches the observed data for qualifying windows but **never promotes the
+result to PASS**. If a stable window exists, the evidence is `PARTIAL`; if enough data
+were scanned and no qualifying window exists, it is `FAIL`.
+
+This is the conservative option for post-hoc exploration.
+
+If `plateau_selection` is omitted, a supplied `plateau_window` defaults to `fixed`;
+otherwise the mode defaults to `exploratory`.
+
+## Insufficient data versus negative evidence
+
+TheoryGate distinguishes:
+
+- **PARTIAL**: fewer than `minimum_plateau_cases` valid cases, no declared tolerance,
+  or a qualifying window found only through exploratory selection;
+- **FAIL**: enough data were provided but no broad plateau satisfies the declared
+  criterion, or the configured fixed window violates it;
+- **PASS**: a fixed or criterion-based preregistered plateau rule is satisfied.
+
+This separation prevents “not enough scan” from being reported as evidence against a
+plateau.
+
+## Directed regulator convergence
+
+The older directed-limit check remains available:
 
 ```json
 {
@@ -117,16 +162,11 @@ successive relative drift grows toward the intended limit:
 }
 ```
 
-That example fails because the later step moves farther, not closer.
+That rule should not be used merely because it makes a non-monotone regulator fail; use
+`comparison=plateau` when a broad stable region is the actual scientific criterion.
 
-This is still a finite scan, not a convergence proof. A PASS discharges only the
-obligation stated for that finite protocol.
+## Scope
 
-## Status behavior
-
-- `PASS`: enough cases, thresholds explicitly provided, all configured checks pass.
-- `FAIL`: malformed scientific scan or configured threshold/trend violation.
-- `PARTIAL`: valid diagnostics but insufficient case count or no declared threshold.
-
-The complete cases, comparisons, thresholds, maximum differences, spec hash, warnings,
-and failures are preserved in the evidence metadata.
+A robustness PASS is still a finite protocol, not a convergence theorem or proof of
+regulator independence in the continuum. The evidence records the spec hash, cases,
+candidate/stable plateau windows, selected window, thresholds, warnings, and failures.
