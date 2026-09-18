@@ -7,7 +7,12 @@ import sys
 
 from .adapters.lean import LeanEvidenceConfig, collect_lean_evidence, write_evidence_json
 from .evaluate import evaluate_document
-from .io import DocumentError, load_document
+from .io import (
+    DocumentError,
+    load_document,
+    load_evidence_patterns,
+    merge_evidence,
+)
 
 
 def _print_report(report: dict) -> None:
@@ -123,6 +128,21 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("path")
     check.add_argument("--json", action="store_true", dest="as_json")
     check.add_argument(
+        "--evidence",
+        action="append",
+        default=[],
+        metavar="PATH_OR_GLOB",
+        help=(
+            "ingest external evidence JSON/YAML before evaluation; repeatable. "
+            "Globs are expanded by TheoryGate, e.g. --evidence 'artifacts/*.json'"
+        ),
+    )
+    check.add_argument(
+        "--replace-evidence",
+        action="store_true",
+        help="explicitly allow ingested evidence to replace an existing evidence id",
+    )
+    check.add_argument(
         "--require",
         metavar="CLAIM_ID",
         help="exit non-zero unless this claim is supported",
@@ -185,6 +205,13 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         doc = load_document(args.path)
+        if args.command == "check" and args.evidence:
+            external = load_evidence_patterns(args.evidence)
+            doc = merge_evidence(
+                doc,
+                external,
+                replace_existing=bool(args.replace_evidence),
+            )
     except (OSError, ValueError, DocumentError) as exc:
         print(f"theorygate: {exc}", file=sys.stderr)
         return 2

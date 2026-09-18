@@ -160,6 +160,36 @@ The adapter verifies a formal obligation at the theorem's actual scope. It does 
 turn a theorem about a chosen clock, quantization or inner product into evidence that
 that choice is physically unique or empirically correct.
 
+## Evidence ingestion
+
+Adapter output can now be consumed directly during claim evaluation:
+
+```bash
+theorygate check theorygate-model.yaml \
+  --evidence artifacts/bianchi-factorization-lean.json
+```
+
+Multiple evidence artifacts and quoted globs are supported:
+
+```bash
+theorygate check theorygate-model.yaml \
+  --evidence 'artifacts/formal/*.json' \
+  --evidence 'artifacts/robustness/*.yaml' \
+  --require MODEL_INTERNAL_RESULT
+```
+
+External evidence may be a single evidence object, a list, or a bundle with an
+`evidence` field. The source filename is recorded in
+`metadata.theorygate_ingested_from`.
+
+Duplicate evidence IDs are rejected by default. Explicit replacement requires
+`--replace-evidence`; evidence targeting an obligation not declared by the model is
+always rejected. Negative evidence such as `FAIL` or `PARTIAL` is ingested normally
+and can block promotion.
+
+See [docs/EVIDENCE_INGESTION.md](docs/EVIDENCE_INGESTION.md).
+
+
 ## Status vocabulary
 
 Evidence uses a deliberately small vocabulary:
@@ -258,12 +288,14 @@ v0.1: schema + dependency evaluation + claim promotion + CLI.
 
 v0.2: Lean evidence adapter with git/toolchain/axiom provenance.
 
+v0.3: external evidence ingestion into claim evaluation, including glob loading and explicit replacement policy.
+
 Likely next layers:
 
 - symbolic adapters for xAct/Cadabra/SymPy canonical-form comparison;
 - numerical/robustness adapters, potentially reusing the trajectory/axis ideas from
   `stateflow`;
-- direct evidence upsert / signed evidence bundles;
+- signed evidence bundles and stronger artifact-integrity checks;
 - physical-claim templates for quantum mechanics, GR/minisuperspace, QFT and
   semiclassical gravity;
 - GitHub Actions summary / PR annotation;

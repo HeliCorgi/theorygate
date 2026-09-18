@@ -1,0 +1,8 @@
+{
+  "id": "fixture-formal-pass",
+  "obligation": "EXTERNAL_FORMAL",
+  "status": "PASS",
+  "engine": "test-fixture",
+  "artifact": "synthetic",
+  "note": "Synthetic CI fixture; not scientific evidence."
+}

@@ -24,3 +24,4 @@ jobs:
       - run: python -m unittest discover -s tests -v
       - run: theorygate validate examples/astra_blackhole.json
       - run: theorygate check examples/astra_blackhole.json --require MODEL_INTERNAL_BRANCH_WEIGHT
+      - run: theorygate check tests/fixtures/ingestion_model.json --evidence 'tests/fixtures/evidence/*.json' --require EXTERNAL_CLAIM

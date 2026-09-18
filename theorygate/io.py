@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import glob
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 import yaml
 
@@ -43,6 +44,73 @@ def _requirement(raw: Any) -> Requirement:
     return Requirement(id=str(raw["id"]), accept=values)
 
 
+def _evidence_item(raw: Any, *, source: str | None = None) -> Evidence:
+    if not isinstance(raw, dict):
+        raise DocumentError(f"invalid evidence: {raw!r}")
+    for key in ("id", "obligation", "status", "engine"):
+        if key not in raw:
+            where = f" in {source}" if source else ""
+            raise DocumentError(f"evidence missing {key}{where}: {raw!r}")
+    st = _status(raw["status"])
+    if st not in EVIDENCE_STATUSES:
+        raise DocumentError("evidence cannot have computed status BLOCKED")
+    metadata = dict(raw.get("metadata", {}))
+    if source is not None:
+        metadata.setdefault("theorygate_ingested_from", source)
+    return Evidence(
+        id=str(raw["id"]),
+        obligation=str(raw["obligation"]),
+        status=st,
+        engine=str(raw["engine"]),
+        artifact=(None if raw.get("artifact") is None else str(raw["artifact"])),
+        note=str(raw.get("note", "")),
+        metadata=metadata,
+    )
+
+
+def parse_evidence_payload(raw: Any, *, source: str = "<external>") -> tuple[Evidence, ...]:
+    """Parse external evidence in one of three shapes.
+
+    Accepted forms:
+
+    1. one evidence object;
+    2. a list of evidence objects;
+    3. a bundle object with an `evidence` field containing either form.
+
+    The source path is recorded in evidence metadata for ingestion provenance.
+    """
+    payload = raw
+    if isinstance(raw, dict) and "evidence" in raw and not all(
+        key in raw for key in ("id", "obligation", "status", "engine")
+    ):
+        payload = raw["evidence"]
+
+    if isinstance(payload, dict):
+        items = [payload]
+    elif isinstance(payload, list):
+        items = payload
+    else:
+        raise DocumentError(
+            f"external evidence {source} must be an evidence object, list, "
+            "or bundle with an evidence field"
+        )
+
+    return tuple(_evidence_item(item, source=source) for item in items)
+
+
+def _load_serialized(path: Path) -> Any:
+    text = path.read_text(encoding="utf-8")
+    suffix = path.suffix.lower()
+    if suffix == ".json":
+        return json.loads(text)
+    if suffix in {".yaml", ".yml"}:
+        return yaml.safe_load(text)
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return yaml.safe_load(text)
+
+
 def parse_document(raw: dict[str, Any]) -> AuditDocument:
     if not isinstance(raw, dict):
         raise DocumentError("document root must be an object")
@@ -75,27 +143,7 @@ def parse_document(raw: dict[str, Any]) -> AuditDocument:
             )
         )
 
-    evidence = []
-    for item in raw.get("evidence", []):
-        if not isinstance(item, dict):
-            raise DocumentError(f"invalid evidence: {item!r}")
-        for key in ("id", "obligation", "status", "engine"):
-            if key not in item:
-                raise DocumentError(f"evidence missing {key}: {item!r}")
-        st = _status(item["status"])
-        if st not in EVIDENCE_STATUSES:
-            raise DocumentError("evidence cannot have computed status BLOCKED")
-        evidence.append(
-            Evidence(
-                id=str(item["id"]),
-                obligation=str(item["obligation"]),
-                status=st,
-                engine=str(item["engine"]),
-                artifact=(None if item.get("artifact") is None else str(item["artifact"])),
-                note=str(item.get("note", "")),
-                metadata=dict(item.get("metadata", {})),
-            )
-        )
+    evidence = tuple(_evidence_item(item) for item in raw.get("evidence", []))
 
     claims = []
     for item in raw.get("claims", []):
@@ -115,7 +163,7 @@ def parse_document(raw: dict[str, Any]) -> AuditDocument:
         version=version,
         model=model,
         obligations=tuple(obligations),
-        evidence=tuple(evidence),
+        evidence=evidence,
         claims=tuple(claims),
     )
     validate_document(doc)
@@ -147,7 +195,6 @@ def validate_document(doc: AuditDocument) -> None:
             if req.id not in known:
                 raise DocumentError(f"claim {claim.id} requires unknown obligation {req.id}")
 
-    # cycle check
     graph = {x.id: [r.id for r in x.depends_on] for x in doc.obligations}
     visiting: set[str] = set()
     visited: set[str] = set()
@@ -169,15 +216,81 @@ def validate_document(doc: AuditDocument) -> None:
 
 def load_document(path: str | Path) -> AuditDocument:
     p = Path(path)
-    text = p.read_text(encoding="utf-8")
-    suffix = p.suffix.lower()
-    if suffix == ".json":
-        raw = json.loads(text)
-    elif suffix in {".yaml", ".yml"}:
-        raw = yaml.safe_load(text)
-    else:
-        try:
-            raw = json.loads(text)
-        except json.JSONDecodeError:
-            raw = yaml.safe_load(text)
-    return parse_document(raw)
+    return parse_document(_load_serialized(p))
+
+
+def load_evidence_patterns(patterns: Iterable[str]) -> tuple[Evidence, ...]:
+    """Load external evidence from exact paths and/or glob patterns.
+
+    Patterns are expanded by TheoryGate, so callers may quote shell globs:
+
+        --evidence 'artifacts/*.json'
+
+    Overlapping patterns that resolve to the same file are de-duplicated by
+    resolved path. A pattern matching no files is an error rather than a silent
+    no-op.
+    """
+    paths: list[Path] = []
+    seen: set[Path] = set()
+
+    for pattern in patterns:
+        matches = sorted(glob.glob(pattern, recursive=True))
+        if not matches:
+            raise DocumentError(f"evidence pattern matched no files: {pattern}")
+        for match in matches:
+            p = Path(match)
+            if not p.is_file():
+                continue
+            rp = p.resolve()
+            if rp not in seen:
+                seen.add(rp)
+                paths.append(p)
+
+    if not paths:
+        raise DocumentError("no evidence files were resolved")
+
+    evidence: list[Evidence] = []
+    for path in paths:
+        raw = _load_serialized(path)
+        evidence.extend(parse_evidence_payload(raw, source=str(path)))
+    return tuple(evidence)
+
+
+def merge_evidence(
+    doc: AuditDocument,
+    external: Iterable[Evidence],
+    *,
+    replace_existing: bool = False,
+) -> AuditDocument:
+    """Merge external evidence into an audit document.
+
+    Duplicate evidence IDs are rejected by default. With `replace_existing`,
+    later external records explicitly replace earlier records with the same ID,
+    including evidence embedded in the model document.
+
+    Unknown obligation targets are always rejected by final document validation.
+    """
+    merged = list(doc.evidence)
+    index = {ev.id: i for i, ev in enumerate(merged)}
+
+    for ev in external:
+        if ev.id in index:
+            if not replace_existing:
+                raise DocumentError(
+                    f"duplicate evidence id during ingestion: {ev.id}; "
+                    "use --replace-evidence to replace explicitly"
+                )
+            merged[index[ev.id]] = ev
+        else:
+            index[ev.id] = len(merged)
+            merged.append(ev)
+
+    out = AuditDocument(
+        version=doc.version,
+        model=doc.model,
+        obligations=doc.obligations,
+        evidence=tuple(merged),
+        claims=doc.claims,
+    )
+    validate_document(out)
+    return out
