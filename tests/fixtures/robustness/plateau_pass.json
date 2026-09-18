@@ -1,0 +1,18 @@
+{
+  "kind": "regulator",
+  "observable": "synthetic_plateau_observable",
+  "comparison": "plateau",
+  "plateau_selection": "criterion",
+  "minimum_plateau_cases": 3,
+  "minimum_setting_span": 0.03,
+  "thresholds": {
+    "max_relative_within_plateau": 0.04
+  },
+  "cases": [
+    {"label": "r0", "setting": 0.00, "value": 1.40},
+    {"label": "r1", "setting": 0.02, "value": 1.00},
+    {"label": "r2", "setting": 0.04, "value": 1.01},
+    {"label": "r3", "setting": 0.06, "value": 0.99},
+    {"label": "r4", "setting": 0.08, "value": 1.30}
+  ]
+}

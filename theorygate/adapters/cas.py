@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 from typing import Any, Callable, Sequence
 
@@ -216,6 +217,9 @@ def collect_sympy_evidence(
     }
 
 
+_ENGINE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._+-]*$")
+
+
 @dataclass(frozen=True)
 class ExternalCASConfig:
     engine: str
@@ -223,10 +227,58 @@ class ExternalCASConfig:
     evidence_id: str
     obligation: str
     executable: str | None = None
+    command_args: tuple[str, ...] | None = None
+    version_args: tuple[str, ...] | None = None
     pass_marker: str = "THEORYGATE:PASS"
     fail_marker: str = "THEORYGATE:FAIL"
     timeout: float = 600.0
     artifact: str | None = None
+
+
+def _replace_script_token(args: Sequence[str], script: Path) -> tuple[str, ...]:
+    rendered = tuple(str(arg).replace("{script}", str(script)) for arg in args)
+    if not any("{script}" in str(arg) for arg in args):
+        rendered = (*rendered, str(script))
+    return rendered
+
+
+def _external_commands(
+    config: ExternalCASConfig,
+    script: Path,
+) -> tuple[str, tuple[str, ...], tuple[str, ...]]:
+    engine = config.engine.lower()
+    if not _ENGINE_RE.match(engine):
+        raise ValueError(
+            "external CAS engine label must contain only letters, digits, '.', '_', '+', or '-'"
+        )
+
+    if engine == "xact":
+        executable = config.executable or "wolframscript"
+        default_args = ("-file", "{script}")
+        default_version = ("--version",)
+    elif engine == "cadabra":
+        executable = config.executable or "cadabra2"
+        default_args = ("{script}",)
+        default_version = ("--version",)
+    elif engine == "maxima":
+        executable = config.executable or "maxima"
+        # Maxima documents --batch=<file>, --quiet, and --quit-on-error.
+        default_args = ("--quiet", "--quit-on-error", "--batch={script}")
+        default_version = ("--version",)
+    else:
+        if not config.executable:
+            raise ValueError(
+                "generic external CAS engines require an explicit executable"
+            )
+        executable = config.executable
+        default_args = ("{script}",)
+        default_version = ("--version",)
+
+    command_args = config.command_args if config.command_args is not None else default_args
+    version_args = config.version_args if config.version_args is not None else default_version
+    command = (executable, *_replace_script_token(command_args, script))
+    version_command = (executable, *tuple(version_args))
+    return engine, command, version_command
 
 
 def collect_external_cas_evidence(
@@ -234,41 +286,56 @@ def collect_external_cas_evidence(
     *,
     runner: CommandRunner = _default_runner,
 ) -> dict:
-    """Run an xAct/Wolfram or Cadabra audit script under a marker contract.
+    """Run a script-backed CAS audit under a marker contract.
 
-    The script itself performs the domain-specific tensor/canonicalization checks.
-    TheoryGate verifies process success plus an explicit PASS marker and records
-    exact script/tool provenance.
+    Built-in command presets exist for xAct/WolframScript, Cadabra and Maxima.
+    Any other engine label can use the generic external form with an explicit
+    executable and argument vectors.
+
+    TheoryGate verifies process success, explicit PASS/FAIL markers, and exact
+    execution provenance. The audit script owns the domain-specific symbolic
+    assertions.
     """
-    engine = config.engine.lower()
-    if engine not in {"xact", "cadabra"}:
-        raise ValueError("external CAS engine must be xact or cadabra")
-
     script = Path(config.script).expanduser().resolve()
     cwd = script.parent
     failures: list[str] = []
 
-    if engine == "xact":
-        executable = config.executable or "wolframscript"
-        command = (executable, "-file", str(script))
-        version_command = (executable, "--version")
-    else:
-        executable = config.executable or "cadabra2"
-        command = (executable, str(script))
-        version_command = (executable, "--version")
+    if not script.is_file():
+        failures.append(f"CAS audit script does not exist: {script}")
 
-    version_r = runner(version_command, cwd, config.timeout)
-    run_r = runner(command, cwd, config.timeout)
+    try:
+        engine, command, version_command = _external_commands(config, script)
+    except ValueError as exc:
+        engine = config.engine.lower()
+        command = ()
+        version_command = ()
+        failures.append(str(exc))
+
+    version_r = (
+        runner(version_command, cwd, config.timeout)
+        if version_command
+        else CommandResult((), 2, "", "version command not constructed")
+    )
+    run_r = (
+        runner(command, cwd, config.timeout)
+        if command and script.is_file()
+        else CommandResult(command, 2, "", "audit command not executed")
+    )
     combined = "\n".join(x for x in (run_r.stdout, run_r.stderr) if x)
 
-    if version_r.returncode != 0:
-        failures.append(f"{engine} version check failed with exit code {version_r.returncode}")
-    if run_r.returncode != 0:
+    if version_command and version_r.returncode != 0:
+        failures.append(
+            f"{engine} version check failed with exit code {version_r.returncode}"
+        )
+    if command and script.is_file() and run_r.returncode != 0:
         failures.append(f"{engine} audit script exited {run_r.returncode}")
-    if config.fail_marker and config.fail_marker in combined:
-        failures.append(f"{engine} script emitted explicit failure marker")
-    if config.pass_marker not in combined:
-        failures.append(f"{engine} script did not emit required pass marker {config.pass_marker!r}")
+    if command and script.is_file():
+        if config.fail_marker and config.fail_marker in combined:
+            failures.append(f"{engine} script emitted explicit failure marker")
+        if config.pass_marker not in combined:
+            failures.append(
+                f"{engine} script did not emit required pass marker {config.pass_marker!r}"
+            )
 
     status = "PASS" if not failures else "FAIL"
     version_text = (version_r.stdout or version_r.stderr).strip()
@@ -285,7 +352,8 @@ def collect_external_cas_evidence(
         "artifact": config.artifact or str(script),
         "note": note,
         "metadata": {
-            "adapter": f"theorygate.adapters.cas.{engine}",
+            "adapter": "theorygate.adapters.cas.external",
+            "engine_preset": engine if engine in {"xact", "cadabra", "maxima"} else None,
             "script": str(script),
             "script_sha256": _sha256(script) if script.is_file() else None,
             "tool_version": version_text or None,
@@ -298,8 +366,8 @@ def collect_external_cas_evidence(
             "stderr_tail": _tail(run_r.stderr),
             "failures": failures,
             "contract_note": (
-                "TheoryGate checks execution provenance and markers; the script is "
-                "responsible for the domain-specific xAct/Cadabra symbolic assertions."
+                "TheoryGate checks execution provenance and markers; the external "
+                "CAS script is responsible for the domain-specific symbolic assertions."
             ),
         },
     }

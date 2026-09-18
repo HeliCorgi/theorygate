@@ -1,5 +1,4 @@
 import json
-import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -21,7 +20,7 @@ class FakeCASRunner:
     def __call__(self, command, cwd, timeout):
         cmd = tuple(command)
         self.commands.append(cmd)
-        if "-version" in cmd or "--version" in cmd:
+        if "--version" in cmd or "-version" in cmd:
             return CommandResult(cmd, 0, "FakeCAS 1.0\n", "")
         return CommandResult(cmd, self.returncode, self.marker + "\n", "")
 
@@ -126,6 +125,68 @@ class CASAdapterTests(unittest.TestCase):
             )
         self.assertEqual(ev["status"], "FAIL")
         self.assertTrue(any("failure marker" in x for x in ev["metadata"]["failures"]))
+
+    def test_maxima_preset_records_standard_batch_command(self):
+        with tempfile.TemporaryDirectory() as td:
+            script = Path(td) / "reduction.mac"
+            script.write_text('print("THEORYGATE:PASS")$\n', encoding="utf-8")
+            runner = FakeCASRunner()
+            ev = collect_external_cas_evidence(
+                ExternalCASConfig(
+                    engine="maxima",
+                    script=script,
+                    evidence_id="maxima",
+                    obligation="GR_REDUCTION",
+                ),
+                runner=runner,
+            )
+        self.assertEqual(ev["status"], "PASS")
+        command = ev["metadata"]["command"]
+        self.assertEqual(command[0], "maxima")
+        self.assertIn("--quiet", command)
+        self.assertIn("--quit-on-error", command)
+        self.assertTrue(any(arg.startswith("--batch=") for arg in command))
+        self.assertEqual(ev["metadata"]["engine_preset"], "maxima")
+
+    def test_generic_external_cas_supports_custom_argument_vectors(self):
+        with tempfile.TemporaryDirectory() as td:
+            script = Path(td) / "audit.in"
+            script.write_text("synthetic\n", encoding="utf-8")
+            runner = FakeCASRunner()
+            ev = collect_external_cas_evidence(
+                ExternalCASConfig(
+                    engine="reduce",
+                    executable="redcsl",
+                    script=script,
+                    command_args=("--batch", "{script}"),
+                    version_args=("--version",),
+                    evidence_id="reduce",
+                    obligation="ALGEBRA",
+                ),
+                runner=runner,
+            )
+        self.assertEqual(ev["status"], "PASS")
+        self.assertEqual(
+            ev["metadata"]["command"],
+            ["redcsl", "--batch", str(script.resolve())],
+        )
+        self.assertIsNone(ev["metadata"]["engine_preset"])
+
+    def test_generic_external_cas_requires_executable(self):
+        with tempfile.TemporaryDirectory() as td:
+            script = Path(td) / "audit.in"
+            script.write_text("synthetic\n", encoding="utf-8")
+            ev = collect_external_cas_evidence(
+                ExternalCASConfig(
+                    engine="unknown-cas",
+                    script=script,
+                    evidence_id="external",
+                    obligation="ALGEBRA",
+                ),
+                runner=FakeCASRunner(),
+            )
+        self.assertEqual(ev["status"], "FAIL")
+        self.assertTrue(any("explicit executable" in x for x in ev["metadata"]["failures"]))
 
 
 if __name__ == "__main__":

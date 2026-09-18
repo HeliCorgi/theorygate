@@ -204,9 +204,11 @@ theorygate evidence cas sympy \
   --require-pass
 ```
 
-xAct and Cadabra are script-backed: the domain-specific script performs the tensor or
-canonicalization assertions and emits `THEORYGATE:PASS` only after they succeed.
-TheoryGate records the script hash, tool version, exact command, exit code, and output.
+xAct, Cadabra, and Maxima are script-backed: the domain-specific script performs the
+tensor or canonicalization assertions and emits `THEORYGATE:PASS` only after they
+succeed. TheoryGate records the script hash, tool version, exact command, exit code, and
+output. A generic external-CAS form provides the same provenance contract for other
+engines.
 
 ```bash
 theorygate evidence cas xact \
@@ -216,6 +218,20 @@ theorygate evidence cas xact \
   --output artifacts/xact-bianchi-ix.json \
   --require-pass
 ```
+
+Maxima example:
+
+```bash
+theorygate evidence cas maxima \
+  --script cas/maxima/bianchi_ix_reduction.mac \
+  --id maxima-bianchi-ix \
+  --obligation GR_REDUCTION_ALGEBRA \
+  --output artifacts/maxima-bianchi-ix.json \
+  --require-pass
+```
+
+Other engines can use `theorygate evidence cas external` with an explicit executable
+and argument vector.
 
 See [docs/CAS_ADAPTERS.md](docs/CAS_ADAPTERS.md).
 
@@ -232,9 +248,13 @@ theorygate evidence robustness \
   --require-pass
 ```
 
-TheoryGate does not invent a tolerance. Without a declared `max_absolute` or
-`max_relative` threshold, a valid scan is diagnostic-only and returns `PARTIAL`,
-never `PASS`.
+TheoryGate does not invent a tolerance. Without a declared relevant threshold, a valid
+scan is diagnostic-only and returns `PARTIAL`, never `PASS`.
+
+For non-monotone regulators, `comparison: plateau` supports a broad-stability criterion
+instead of forcing a one-direction convergence interpretation. Fixed or explicitly
+criterion-based plateau protocols can PASS; a window discovered post-hoc under
+`plateau_selection: exploratory` can never exceed PARTIAL.
 
 See [docs/ROBUSTNESS_ADAPTER.md](docs/ROBUSTNESS_ADAPTER.md).
 
@@ -366,6 +386,9 @@ v0.2: Lean evidence adapter with git/toolchain/axiom provenance.
 v0.3: external evidence ingestion into claim evaluation, including glob loading and explicit replacement policy.
 
 v0.4: SymPy/xAct/Cadabra symbolic adapters, four-axis robustness evidence, and built-in physical claim templates.
+
+v0.5: Maxima/generic external-CAS provenance and broad-plateau robustness criteria,
+driven by the first astra-blackhole field trial.
 
 Likely next layers:
 

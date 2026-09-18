@@ -11,6 +11,8 @@ import yaml
 
 
 VALID_KINDS = {"regulator", "clock", "ordering", "boundary"}
+VALID_COMPARISONS = {"reference", "successive", "pairwise", "plateau"}
+VALID_PLATEAU_SELECTIONS = {"fixed", "criterion", "exploratory"}
 
 
 def _load(path: Path) -> Any:
@@ -54,6 +56,287 @@ def _distance(a: list[float], b: list[float]) -> tuple[float, float]:
     return abs_diff, max(rels, default=0.0)
 
 
+def _pairwise_window_metrics(cases: list[dict], indices: list[int]) -> dict:
+    rows = []
+    max_abs = 0.0
+    max_rel = 0.0
+    for a_i, b_i in itertools.combinations(indices, 2):
+        abs_diff, rel_diff = _distance(cases[a_i]["value"], cases[b_i]["value"])
+        max_abs = max(max_abs, abs_diff)
+        max_rel = max(max_rel, rel_diff)
+        rows.append({
+            "a": cases[a_i]["label"],
+            "b": cases[b_i]["label"],
+            "absolute_difference": abs_diff,
+            "symmetric_relative_difference": rel_diff,
+        })
+    settings = [float(cases[i]["setting"]) for i in indices]
+    return {
+        "labels": [cases[i]["label"] for i in indices],
+        "indices": indices,
+        "minimum_setting": min(settings),
+        "maximum_setting": max(settings),
+        "setting_span": max(settings) - min(settings),
+        "case_count": len(indices),
+        "max_absolute_difference": max_abs,
+        "max_symmetric_relative_difference": max_rel,
+        "comparisons": rows,
+    }
+
+
+def _plateau_threshold_pass(
+    window: dict,
+    *,
+    max_abs_allowed: float | None,
+    max_rel_allowed: float | None,
+) -> bool:
+    if (
+        max_abs_allowed is not None
+        and window["max_absolute_difference"] > max_abs_allowed
+    ):
+        return False
+    if (
+        max_rel_allowed is not None
+        and window["max_symmetric_relative_difference"] > max_rel_allowed
+    ):
+        return False
+    return True
+
+
+def _best_plateau(windows: list[dict]) -> dict | None:
+    if not windows:
+        return None
+    return sorted(
+        windows,
+        key=lambda w: (
+            -w["setting_span"],
+            -w["case_count"],
+            w["max_symmetric_relative_difference"],
+            w["max_absolute_difference"],
+        ),
+    )[0]
+
+
+def _evaluate_plateau(
+    raw: dict,
+    cases: list[dict],
+    thresholds: dict,
+    failures: list[str],
+    warnings: list[str],
+) -> dict:
+    min_cases = int(raw.get("minimum_plateau_cases", 3))
+    min_span = float(raw.get("minimum_setting_span", 0.0))
+    if min_cases < 2:
+        failures.append("minimum_plateau_cases must be >= 2")
+    if min_span < 0:
+        failures.append("minimum_setting_span must be non-negative")
+
+    for case in cases:
+        setting = case.get("setting")
+        if not isinstance(setting, (int, float)) or isinstance(setting, bool):
+            failures.append(
+                f"plateau comparison requires numeric setting for case {case['label']}"
+            )
+            continue
+        setting = float(setting)
+        if not math.isfinite(setting):
+            failures.append(
+                f"plateau comparison requires finite setting for case {case['label']}"
+            )
+        case["setting"] = setting
+
+    p_abs = thresholds.get(
+        "max_absolute_within_plateau",
+        thresholds.get("max_absolute"),
+    )
+    p_rel = thresholds.get(
+        "max_relative_within_plateau",
+        thresholds.get("max_relative"),
+    )
+    if p_abs is not None:
+        p_abs = float(p_abs)
+        if p_abs < 0:
+            failures.append("max_absolute_within_plateau must be non-negative")
+    if p_rel is not None:
+        p_rel = float(p_rel)
+        if p_rel < 0:
+            failures.append("max_relative_within_plateau must be non-negative")
+
+    diagnostic_only = p_abs is None and p_rel is None
+    if diagnostic_only:
+        warnings.append(
+            "no preregistered plateau variation threshold; plateau scan is diagnostic only"
+        )
+
+    selection = raw.get("plateau_selection")
+    window_spec = raw.get("plateau_window")
+    if selection is None:
+        selection = "fixed" if window_spec is not None else "exploratory"
+    selection = str(selection).lower()
+    if selection not in VALID_PLATEAU_SELECTIONS:
+        failures.append(
+            "plateau_selection must be fixed, criterion, or exploratory"
+        )
+
+    insufficient_sampling = len(cases) < min_cases
+    if insufficient_sampling:
+        warnings.append(
+            f"only {len(cases)} valid case(s); minimum_plateau_cases={min_cases}"
+        )
+
+    if failures:
+        return {
+            "status": "FAIL",
+            "diagnostic_only": diagnostic_only,
+            "selection": selection,
+            "candidate_windows": [],
+            "stable_windows": [],
+            "selected_window": None,
+            "max_absolute": 0.0,
+            "max_relative": 0.0,
+            "thresholds": {
+                "max_absolute_within_plateau": p_abs,
+                "max_relative_within_plateau": p_rel,
+            },
+            "minimum_plateau_cases": min_cases,
+            "minimum_setting_span": min_span,
+        }
+
+    sorted_indices = sorted(range(len(cases)), key=lambda i: cases[i]["setting"])
+    if selection != "fixed" and len(sorted_indices) >= 2:
+        observed_span = (
+            cases[sorted_indices[-1]]["setting"] - cases[sorted_indices[0]]["setting"]
+        )
+        if observed_span < min_span:
+            insufficient_sampling = True
+            warnings.append(
+                f"observed setting span {observed_span:g} is below "
+                f"minimum_setting_span={min_span:g}"
+            )
+
+    candidates: list[dict] = []
+    fixed_coverage_partial = False
+
+    if selection == "fixed":
+        if not isinstance(window_spec, dict):
+            failures.append(
+                "plateau_selection=fixed requires plateau_window with min_setting/max_setting"
+            )
+        else:
+            try:
+                low = float(window_spec["min_setting"])
+                high = float(window_spec["max_setting"])
+            except (KeyError, TypeError, ValueError):
+                failures.append(
+                    "plateau_window requires numeric min_setting and max_setting"
+                )
+            else:
+                if high < low:
+                    failures.append("plateau_window max_setting must be >= min_setting")
+                indices = [
+                    i for i in sorted_indices
+                    if low <= cases[i]["setting"] <= high
+                ]
+                if indices:
+                    candidates.append(_pairwise_window_metrics(cases, indices))
+    else:
+        for start in range(len(sorted_indices)):
+            for end in range(start + min_cases, len(sorted_indices) + 1):
+                indices = sorted_indices[start:end]
+                window = _pairwise_window_metrics(cases, indices)
+                if window["setting_span"] >= min_span:
+                    candidates.append(window)
+
+    stable = [
+        w for w in candidates
+        if w["case_count"] >= min_cases
+        and w["setting_span"] >= min_span
+        and _plateau_threshold_pass(
+            w,
+            max_abs_allowed=p_abs,
+            max_rel_allowed=p_rel,
+        )
+    ]
+    selected = _best_plateau(stable)
+
+    if selection == "fixed":
+        if candidates:
+            fixed = candidates[0]
+            if fixed["case_count"] < min_cases:
+                fixed_coverage_partial = True
+                warnings.append(
+                    f"fixed plateau has {fixed['case_count']} case(s); "
+                    f"minimum_plateau_cases={min_cases}"
+                )
+            if fixed["setting_span"] < min_span:
+                fixed_coverage_partial = True
+                warnings.append(
+                    f"fixed plateau setting span {fixed['setting_span']:g} "
+                    f"is below minimum_setting_span={min_span:g}"
+                )
+            if (
+                p_abs is not None
+                and fixed["max_absolute_difference"] > p_abs
+            ):
+                failures.append(
+                    f"fixed plateau max absolute difference "
+                    f"{fixed['max_absolute_difference']:g} exceeds {p_abs:g}"
+                )
+            if (
+                p_rel is not None
+                and fixed["max_symmetric_relative_difference"] > p_rel
+            ):
+                failures.append(
+                    f"fixed plateau max relative difference "
+                    f"{fixed['max_symmetric_relative_difference']:g} exceeds {p_rel:g}"
+                )
+        elif not failures:
+            fixed_coverage_partial = True
+            warnings.append("fixed plateau window contains no sampled cases")
+    elif not stable and not diagnostic_only and not insufficient_sampling:
+        failures.append(
+            "no contiguous broad plateau satisfies the preregistered case/span/variation criteria"
+        )
+
+    if failures:
+        status = "FAIL"
+    elif insufficient_sampling or fixed_coverage_partial:
+        status = "PARTIAL"
+    elif diagnostic_only:
+        status = "PARTIAL"
+    elif selection == "exploratory":
+        status = "PARTIAL"
+        warnings.append(
+            "stable plateau window was selected from observed data; exploratory search cannot PASS"
+        )
+    else:
+        status = "PASS"
+
+    if selected is None and candidates:
+        selected = _best_plateau(candidates)
+
+    return {
+        "status": status,
+        "diagnostic_only": diagnostic_only,
+        "selection": selection,
+        "candidate_windows": candidates,
+        "stable_windows": stable,
+        "selected_window": selected,
+        "max_absolute": (
+            0.0 if selected is None else selected["max_absolute_difference"]
+        ),
+        "max_relative": (
+            0.0 if selected is None else selected["max_symmetric_relative_difference"]
+        ),
+        "thresholds": {
+            "max_absolute_within_plateau": p_abs,
+            "max_relative_within_plateau": p_rel,
+        },
+        "minimum_plateau_cases": min_cases,
+        "minimum_setting_span": min_span,
+    }
+
+
 def collect_robustness_evidence(
     *,
     spec_path: str | Path,
@@ -63,8 +346,12 @@ def collect_robustness_evidence(
 ) -> dict:
     """Evaluate a preregistered robustness scan.
 
-    No tolerance is invented by TheoryGate. If the spec contains no absolute or
-    relative threshold, diagnostics are produced as PARTIAL rather than PASS.
+    No tolerance is invented by TheoryGate. If the spec contains no relevant
+    absolute or relative threshold, diagnostics are produced as PARTIAL rather
+    than PASS.
+
+    For non-monotone regulators, comparison=plateau supports a broad-plateau
+    criterion instead of forcing a one-direction convergence interpretation.
     """
     path = Path(spec_path).expanduser().resolve()
     failures: list[str] = []
@@ -112,6 +399,76 @@ def collect_robustness_evidence(
     if not isinstance(thresholds, dict):
         failures.append("thresholds must be an object")
         thresholds = {}
+
+    mode = str(raw.get("comparison", "reference")).lower()
+    if mode not in VALID_COMPARISONS:
+        failures.append(
+            "comparison must be reference, successive, pairwise, or plateau"
+        )
+
+    if mode == "plateau":
+        plateau = _evaluate_plateau(raw, cases, thresholds, failures, warnings)
+        status = plateau["status"]
+        all_failures = failures
+        max_abs = plateau["max_absolute"]
+        max_rel = plateau["max_relative"]
+        comparisons = (
+            [] if plateau["selected_window"] is None
+            else plateau["selected_window"]["comparisons"]
+        )
+        diagnostic_only = plateau["diagnostic_only"]
+        minimum_cases = int(raw.get("minimum_cases", 2))
+        if status == "PASS":
+            selected = plateau["selected_window"]
+            note = (
+                f"{kind} broad plateau passed across "
+                f"{selected['case_count']} case(s), span={selected['setting_span']:.6g}; "
+                f"max symmetric relative difference={max_rel:.6g}."
+            )
+        elif status == "PARTIAL":
+            note = (
+                f"{kind or 'unspecified'} plateau robustness is partial: "
+                + (warnings[0] if warnings else "exploratory or diagnostic-only plateau")
+            )
+        else:
+            note = (
+                f"{kind or 'unspecified'} plateau robustness failed: "
+                + (all_failures[0] if all_failures else "unknown failure")
+            )
+        return {
+            "id": evidence_id,
+            "obligation": obligation,
+            "status": status,
+            "engine": f"robustness-{kind or 'unknown'}",
+            "artifact": artifact or str(path),
+            "note": note,
+            "metadata": {
+                "adapter": "theorygate.adapters.robustness",
+                "kind": kind,
+                "spec": str(path),
+                "spec_sha256": _sha256(path) if path.is_file() else None,
+                "observable": raw.get("observable"),
+                "comparison": mode,
+                "reference": None,
+                "thresholds": plateau["thresholds"],
+                "minimum_cases": minimum_cases,
+                "minimum_plateau_cases": plateau["minimum_plateau_cases"],
+                "minimum_setting_span": plateau["minimum_setting_span"],
+                "plateau_selection": plateau["selection"],
+                "plateau_window": raw.get("plateau_window"),
+                "cases": cases,
+                "comparisons": comparisons,
+                "candidate_windows": plateau["candidate_windows"],
+                "stable_windows": plateau["stable_windows"],
+                "selected_plateau": plateau["selected_window"],
+                "max_absolute_difference": max_abs,
+                "max_symmetric_relative_difference": max_rel,
+                "diagnostic_only": diagnostic_only,
+                "failures": all_failures,
+                "warnings": warnings,
+            },
+        }
+
     max_abs_allowed = thresholds.get("max_absolute")
     max_rel_allowed = thresholds.get("max_relative")
     if max_abs_allowed is not None:
@@ -131,8 +488,7 @@ def collect_robustness_evidence(
             f"only {len(cases)} valid case(s); minimum_cases={minimum_cases}"
         )
 
-    mode = str(raw.get("comparison", "reference")).lower()
-    comparisons: list[tuple[int, int]] = []
+    comparisons_idx: list[tuple[int, int]] = []
     if len(cases) >= 2:
         if mode == "reference":
             ref_label = str(raw.get("reference", cases[0]["label"]))
@@ -141,18 +497,16 @@ def collect_robustness_evidence(
                 failures.append(f"reference case not found: {ref_label}")
             else:
                 r = ref_indices[0]
-                comparisons = [(r, i) for i in range(len(cases)) if i != r]
+                comparisons_idx = [(r, i) for i in range(len(cases)) if i != r]
         elif mode == "successive":
-            comparisons = [(i, i + 1) for i in range(len(cases) - 1)]
+            comparisons_idx = [(i, i + 1) for i in range(len(cases) - 1)]
         elif mode == "pairwise":
-            comparisons = list(itertools.combinations(range(len(cases)), 2))
-        else:
-            failures.append("comparison must be reference, successive, or pairwise")
+            comparisons_idx = list(itertools.combinations(range(len(cases)), 2))
 
     rows = []
     max_abs = 0.0
     max_rel = 0.0
-    for a_i, b_i in comparisons:
+    for a_i, b_i in comparisons_idx:
         try:
             abs_diff, rel_diff = _distance(cases[a_i]["value"], cases[b_i]["value"])
         except ValueError as exc:

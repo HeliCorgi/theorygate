@@ -1,10 +1,11 @@
 # CAS evidence adapters
 
-TheoryGate v0.4 supports three symbolic evidence paths:
+TheoryGate supports four symbolic evidence paths:
 
 - **SymPy**: TheoryGate directly evaluates declared symbolic identities.
-- **xAct**: TheoryGate executes a Wolfram/xAct audit script and requires an explicit marker.
-- **Cadabra**: TheoryGate executes a Cadabra audit script and requires an explicit marker.
+- **xAct**: a Wolfram/xAct script runs under an explicit PASS/FAIL marker contract.
+- **Cadabra**: a Cadabra script runs under the same contract.
+- **Maxima / generic external CAS**: script-backed engines use the same provenance format.
 
 CAS evidence is symbolic evidence only. A successful tensor identity or reduction does
 not establish that the selected action, gauge, quantization, clock, factor ordering, or
@@ -58,27 +59,34 @@ difference.
 SymPy expression specs are **trusted local research inputs**. SymPy expression parsing is
 not treated as a sandbox. Do not feed untrusted network input directly to this adapter.
 
-## xAct
+## Script-backed CAS contract
 
-xAct checks are deliberately script-driven because a useful GR audit generally requires
-model-specific tensor declarations, metrics, contractions, canonicalization rules, and
-sometimes variational calculations.
+xAct, Cadabra, Maxima, and generic external CAS engines use the same rule:
 
-Write a Wolfram script which exits normally and prints:
+1. the script exits successfully;
+2. it does not emit the configured fail marker;
+3. it emits the configured pass marker only after all intended symbolic assertions pass.
+
+Default markers:
 
 ```text
 THEORYGATE:PASS
-```
-
-only after all intended xAct checks pass. On a failed assertion it should emit:
-
-```text
 THEORYGATE:FAIL
 ```
 
-or exit non-zero.
+TheoryGate records:
 
-Then:
+- exact executable and command argument vector;
+- tool-version command/output;
+- script SHA-256;
+- exit code;
+- stdout/stderr tails;
+- engine label and marker policy.
+
+The domain-specific script owns the actual symbolic assertion. TheoryGate owns execution
+provenance and downstream claim gating.
+
+## xAct
 
 ```bash
 theorygate evidence cas xact \
@@ -89,20 +97,13 @@ theorygate evidence cas xact \
   --require-pass
 ```
 
-The default command is:
+Default command:
 
 ```bash
 wolframscript -file audit/rederive_bianchi_ix.wls
 ```
 
-Use `--executable` to select another WolframScript binary.
-
-TheoryGate records the exact command, tool-version output, script SHA-256, exit code, and
-stdout/stderr tails.
-
 ## Cadabra
-
-The contract is the same:
 
 ```bash
 theorygate evidence cas cadabra \
@@ -113,25 +114,73 @@ theorygate evidence cas cadabra \
   --require-pass
 ```
 
-The default command is:
+Default command:
 
 ```bash
 cadabra2 audit/rederive_curvature.cdb
 ```
 
-The script must emit `THEORYGATE:PASS` only after its own symbolic assertions pass.
+## Maxima
 
-## Why xAct/Cadabra are script contracts
+Maxima has a built-in preset so an independent `ctensor` backend can produce the same
+standard evidence shape:
+
+```bash
+theorygate evidence cas maxima \
+  --script cas/maxima/bianchi_ix_reduction.mac \
+  --id maxima-bianchi-ix \
+  --obligation GR_REDUCTION_ALGEBRA \
+  --output artifacts/maxima-bianchi-ix.json \
+  --require-pass
+```
+
+The default invocation uses Maxima's documented batch/quiet/error-exit options:
+
+```text
+maxima --quiet --quit-on-error --batch=<script>
+```
+
+and records `maxima --version`.
+
+The Maxima script must print `THEORYGATE:PASS` only after its own checks succeed.
+
+## Generic external CAS
+
+Other CAS systems can use the same adapter without adding a new TheoryGate backend.
+
+Example shape:
+
+```bash
+theorygate evidence cas external \
+  --engine reduce \
+  --executable redcsl \
+  --script audit/reduction.in \
+  --command-arg=--batch \
+  --command-arg='{script}' \
+  --version-arg=--version \
+  --id reduce-reduction \
+  --obligation GR_REDUCTION_ALGEBRA \
+  --output artifacts/reduce-reduction.json \
+  --require-pass
+```
+
+`{script}` is replaced with the absolute script path. If no `{script}` token appears,
+TheoryGate appends the script path to the command.
+
+Arguments are executed as an argument vector, not through a shell. For values beginning
+with `-`, use the `--command-arg=--flag` / `--version-arg=--flag` form so
+`argparse` does not interpret the value as a TheoryGate option.
+
+A generic engine requires an explicit executable. The arbitrary engine label is stored in
+the evidence record but does not grant extra trust.
+
+## Why this is script-driven
 
 TheoryGate should not pretend that arbitrary GR tensor calculations can be reduced to a
-single generic `simplify(lhs-rhs)` call. The domain-specific CAS script owns the actual
-mathematical assertion. TheoryGate owns:
+single generic `simplify(lhs-rhs)` call. Model-specific tensor declarations,
+canonicalization, variational rules, component choices, and sign conventions belong in
+the audit script.
 
-- exact execution provenance;
-- script hashing;
-- tool/version recording;
-- required PASS/FAIL marker policy;
-- conversion to a standard evidence object;
-- downstream physical claim gating.
-
-That separation is intentional.
+That separation also makes independent backends useful: two different CAS programs can
+discharge separate obligations or provide multiple evidence records for the same
+obligation without pretending they are mathematically independent proofs by default.
