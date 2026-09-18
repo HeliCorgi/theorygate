@@ -189,6 +189,81 @@ and can block promotion.
 
 See [docs/EVIDENCE_INGESTION.md](docs/EVIDENCE_INGESTION.md).
 
+## CAS evidence adapters
+
+TheoryGate v0.4 adds symbolic evidence adapters.
+
+Direct SymPy identity audit:
+
+```bash
+theorygate evidence cas sympy \
+  --spec symbolic-audit.json \
+  --id sympy-gr-check \
+  --obligation GR_REDUCTION_ALGEBRA \
+  --output artifacts/sympy-gr-check.json \
+  --require-pass
+```
+
+xAct and Cadabra are script-backed: the domain-specific script performs the tensor or
+canonicalization assertions and emits `THEORYGATE:PASS` only after they succeed.
+TheoryGate records the script hash, tool version, exact command, exit code, and output.
+
+```bash
+theorygate evidence cas xact \
+  --script audit/rederive_bianchi_ix.wls \
+  --id xact-bianchi-ix \
+  --obligation GR_REDUCTION_ALGEBRA \
+  --output artifacts/xact-bianchi-ix.json \
+  --require-pass
+```
+
+See [docs/CAS_ADAPTERS.md](docs/CAS_ADAPTERS.md).
+
+## Robustness evidence
+
+Regulator, clock, factor-ordering, and boundary sensitivity use one scan adapter:
+
+```bash
+theorygate evidence robustness \
+  --spec clock-scan.json \
+  --id clock-robustness \
+  --obligation CLOCK_ROBUSTNESS \
+  --output artifacts/clock-robustness.json \
+  --require-pass
+```
+
+TheoryGate does not invent a tolerance. Without a declared `max_absolute` or
+`max_relative` threshold, a valid scan is diagnostic-only and returns `PARTIAL`,
+never `PASS`.
+
+See [docs/ROBUSTNESS_ADAPTER.md](docs/ROBUSTNESS_ADAPTER.md).
+
+## Physical claim templates
+
+Built-in conservative starter policies:
+
+```bash
+theorygate template list
+theorygate template show HISTORY_PROBABILITY
+
+theorygate template init SINGULARITY_RESOLUTION \
+  --model-id bianchi-ix-wdw \
+  --title "Bianchi IX singularity-resolution audit" \
+  --output theorygate.yaml
+```
+
+Current templates:
+
+- `HISTORY_PROBABILITY`
+- `PHYSICAL_OBSERVABLE`
+- `TIMELESS_CLASS_OPERATOR`
+- `SINGULARITY_RESOLUTION`
+
+Templates are scaffolding, not universal scientific definitions. Their generic obligations
+must be rewritten to match the actual model and claim.
+
+See [docs/PHYSICS_CLAIM_TEMPLATES.md](docs/PHYSICS_CLAIM_TEMPLATES.md).
+
 
 ## Status vocabulary
 
@@ -290,11 +365,12 @@ v0.2: Lean evidence adapter with git/toolchain/axiom provenance.
 
 v0.3: external evidence ingestion into claim evaluation, including glob loading and explicit replacement policy.
 
+v0.4: SymPy/xAct/Cadabra symbolic adapters, four-axis robustness evidence, and built-in physical claim templates.
+
 Likely next layers:
 
-- symbolic adapters for xAct/Cadabra/SymPy canonical-form comparison;
-- numerical/robustness adapters, potentially reusing the trajectory/axis ideas from
-  `stateflow`;
+- richer GR/QFT-specific CAS libraries and independent dual-CAS agreement gates;
+- time-series and distribution-aware robustness diagnostics beyond scalar/vector summaries;
 - signed evidence bundles and stronger artifact-integrity checks;
 - physical-claim templates for quantum mechanics, GR/minisuperspace, QFT and
   semiclassical gravity;

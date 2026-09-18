@@ -1,0 +1,13 @@
+{
+  "symbols": {
+    "x": {"real": true}
+  },
+  "checks": [
+    {
+      "id": "trigonometric-identity",
+      "lhs": "sin(x)**2 + cos(x)**2",
+      "rhs": "1",
+      "method": "trigsimp"
+    }
+  ]
+}

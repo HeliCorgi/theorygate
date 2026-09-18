@@ -1,0 +1,23 @@
+{
+  "version": "0.4",
+  "model": {
+    "id": "synthetic-clock-robustness",
+    "title": "Synthetic clock robustness fixture"
+  },
+  "obligations": [
+    {
+      "id": "CLOCK_ROBUSTNESS",
+      "title": "Synthetic clock robustness",
+      "kind": "robustness"
+    }
+  ],
+  "evidence": [],
+  "claims": [
+    {
+      "id": "CLOCK_STABLE",
+      "rank": 10,
+      "statement": "Synthetic claim used only to test the robustness evidence pipeline.",
+      "requires": ["CLOCK_ROBUSTNESS"]
+    }
+  ]
+}
