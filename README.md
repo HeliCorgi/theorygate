@@ -1,11 +1,20 @@
 # TheoryGate
 
-**TheoryGate is a claim-audit engine for computational and formal research.**
+**TheoryGate is a physical-claim audit and promotion-gate engine for computational and formal physics.**
 
 It does **not** decide whether a physical theory is true. It records explicit model
-choices, expands scientific claims into checkable obligations, attaches evidence from
+choices, expands physical claims into checkable obligations, attaches evidence from
 formal proofs / CAS / numerical audits / robustness scans, and reports the strongest
 claim currently supported by that evidence.
+
+The core data model is intentionally domain-generic, but the project is aimed at
+questions such as:
+
+- is this quantity only model-internal, or can it be called a physical observable?
+- is a branch weight actually a probability?
+- is a result regulator / boundary / clock / ordering independent?
+- does a formal derivation prove the algebra claimed under the stated assumptions?
+- which stronger physical interpretation is still blocked, and by what?
 
 The intended failure mode is conservative:
 
@@ -34,15 +43,13 @@ ModelSpec
 
 Typical evidence engines include:
 
-- `lean` -- theorem/proof evidence;
+- `lean` -- formal theorem/proof evidence;
 - `xact`, `cadabra`, `sympy` -- symbolic derivation cross-checks;
 - `numerical-audit` -- convergence, conservation, recombination, residual tests;
 - `robustness-scan` -- clock, ordering, regulator, boundary and discretization scans;
 - `literature` -- provenance for assumptions or known limiting cases.
 
-An engine name is provenance, **not trust by declaration**. TheoryGate v0.1 evaluates
-the evidence records you give it; adapters that execute external engines belong in later
-layers.
+An engine name is provenance, **not trust by declaration**.
 
 ## Install
 
@@ -96,6 +103,62 @@ Machine-readable report:
 ```bash
 theorygate check examples/astra_blackhole.json --json
 ```
+
+## Lean evidence adapter
+
+v0.2 can execute a Lean/Lake project and turn the result directly into one
+TheoryGate evidence record.
+
+For example, against `astra-blackhole`:
+
+```bash
+theorygate evidence lean \
+  --project ../astra-blackhole/lean \
+  --id bianchi-factorization-lean \
+  --obligation WDW_FACTORIZATION_ALGEBRA \
+  --import AstraBlackhole \
+  --theorem AstraBlackhole.time_dependent_factorization_residual \
+  --theorem AstraBlackhole.common_operator_preserves_recombination \
+  --output artifacts/bianchi-factorization-lean.json \
+  --require-pass
+```
+
+The adapter records:
+
+- exact git commit SHA, branch, remote and dirty/clean state;
+- Lean and Lake versions;
+- SHA-256 hashes of the pinned toolchain / Lake files;
+- exact `lake build` scope and result;
+- generated theorem audit imports;
+- theorem-by-theorem `#print axioms` results;
+- forbidden or unexpected axiom findings.
+
+`sorryAx` is forbidden by default.
+
+A clean git tree is required for `PASS`. A dirty tree does not have commit-complete
+provenance, so it is `FAIL` unless `--allow-dirty` is explicitly used; even then the
+evidence is only `PARTIAL`, never `PASS`.
+
+For an explicit axiom allow-list:
+
+```bash
+theorygate evidence lean ... \
+  --allow-axiom propext \
+  --allow-axiom Classical.choice \
+  --allow-axiom Quot.sound
+```
+
+Or require no axioms:
+
+```bash
+theorygate evidence lean ... --no-axioms
+```
+
+See [docs/LEAN_EVIDENCE_ADAPTER.md](docs/LEAN_EVIDENCE_ADAPTER.md).
+
+The adapter verifies a formal obligation at the theorem's actual scope. It does **not**
+turn a theorem about a chosen clock, quantization or inner product into evidence that
+that choice is physically unique or empirically correct.
 
 ## Status vocabulary
 
@@ -170,6 +233,8 @@ accepted caveat.
    convergence theorem; a Lean theorem under assumptions is not empirical validation.
 5. **The strongest supported claim is computed, not narrated.**
 6. **Reproducibility is not physical validity.** TheoryGate can record both.
+7. **Formal provenance must identify compiled source.** A dirty tree cannot produce
+   commit-complete `PASS` evidence.
 
 ## Why this exists
 
@@ -181,6 +246,7 @@ interpretations. It does not make the distinctions between
 - model-internal observable and physical observable,
 - regulator-dependent result and regulator-independent result,
 - branch weight and probability,
+- a consistent quantization and a uniquely justified physical quantization,
 
 go away.
 
@@ -188,16 +254,18 @@ TheoryGate is intended to make those distinctions executable.
 
 ## Roadmap
 
-v0.1 is intentionally small: schema + dependency evaluation + claim promotion + CLI.
+v0.1: schema + dependency evaluation + claim promotion + CLI.
+
+v0.2: Lean evidence adapter with git/toolchain/axiom provenance.
 
 Likely next layers:
 
-- evidence adapters that execute Lean and record theorem/axiom metadata;
 - symbolic adapters for xAct/Cadabra/SymPy canonical-form comparison;
 - numerical/robustness adapters, potentially reusing the trajectory/axis ideas from
   `stateflow`;
-- evidence hashes and revision pinning;
-- claim templates for quantum mechanics, GR/minisuperspace and PDE research;
+- direct evidence upsert / signed evidence bundles;
+- physical-claim templates for quantum mechanics, GR/minisuperspace, QFT and
+  semiclassical gravity;
 - GitHub Actions summary / PR annotation;
 - evidence DAG visualization.
 
@@ -211,7 +279,7 @@ TheoryGate is **not**:
 - a guarantee that a chosen model corresponds to nature;
 - a license to call a numerically stable quantity an observable or probability.
 
-It is a scope and promotion checker.
+It is a physical-claim scope and promotion checker.
 
 ## License
 

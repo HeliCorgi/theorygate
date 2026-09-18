@@ -12,6 +12,16 @@
   },
   "obligations": [
     {
+      "id": "WDW_FACTORIZATION_ALGEBRA",
+      "title": "Time-dependent square-root / second-order constraint factorization identity is formally checked",
+      "kind": "formal"
+    },
+    {
+      "id": "COMMON_OPERATOR_RECOMBINATION_ALGEBRA",
+      "title": "Common linear operator preserves branch recombination algebraically",
+      "kind": "formal"
+    },
+    {
       "id": "COMMON_PROPAGATOR",
       "title": "All branches use one common linear approximate propagator",
       "kind": "numerical"
@@ -20,7 +30,9 @@
       "id": "BRANCH_RECOMBINATION",
       "title": "Projected branches recombine under the common evolution",
       "kind": "numerical",
-      "depends_on": ["COMMON_PROPAGATOR"]
+      "depends_on": [
+        "COMMON_PROPAGATOR"
+      ]
     },
     {
       "id": "INNER_PRODUCT",
@@ -110,8 +122,20 @@
       "requires": [
         "COMMON_PROPAGATOR",
         "BRANCH_RECOMBINATION",
-        {"id": "INNER_PRODUCT", "accept": ["PASS", "MODEL_CHOICE"]},
-        {"id": "CLOCK", "accept": ["PASS", "MODEL_CHOICE"]}
+        {
+          "id": "INNER_PRODUCT",
+          "accept": [
+            "PASS",
+            "MODEL_CHOICE"
+          ]
+        },
+        {
+          "id": "CLOCK",
+          "accept": [
+            "PASS",
+            "MODEL_CHOICE"
+          ]
+        }
       ]
     },
     {
@@ -124,8 +148,20 @@
         "BRANCH_RECOMBINATION",
         "DECOHERENCE",
         "REGULATOR_STABILITY",
-        {"id": "INNER_PRODUCT", "accept": ["PASS", "MODEL_CHOICE"]},
-        {"id": "CLOCK", "accept": ["PASS", "MODEL_CHOICE"]}
+        {
+          "id": "INNER_PRODUCT",
+          "accept": [
+            "PASS",
+            "MODEL_CHOICE"
+          ]
+        },
+        {
+          "id": "CLOCK",
+          "accept": [
+            "PASS",
+            "MODEL_CHOICE"
+          ]
+        }
       ]
     },
     {
