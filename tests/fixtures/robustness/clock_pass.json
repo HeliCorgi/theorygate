@@ -1,0 +1,15 @@
+{
+  "kind": "clock",
+  "observable": "synthetic_observable",
+  "comparison": "reference",
+  "reference": "clock-A",
+  "thresholds": {
+    "max_relative": 0.05
+  },
+  "minimum_cases": 3,
+  "cases": [
+    {"label": "clock-A", "value": 1.0},
+    {"label": "clock-B", "value": 1.01},
+    {"label": "clock-C", "value": 0.99}
+  ]
+}
