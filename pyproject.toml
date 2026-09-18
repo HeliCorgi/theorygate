@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "theorygate"
+version = "0.1.0"
+description = "Claim-audit and promotion-gate engine for computational and formal research"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [{name = "HeliCorgi"}]
+dependencies = ["PyYAML>=6.0"]
+
+[project.scripts]
+theorygate = "theorygate.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["theorygate*"]
