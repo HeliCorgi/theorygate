@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HeliCorgi/theorygate/schema/theorygate.schema.json",
+  "title": "TheoryGate audit document",
+  "type": "object",
+  "required": ["model", "obligations", "evidence", "claims"],
+  "properties": {
+    "version": {"type": "string"},
+    "model": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string"},
+        "choices": {"type": "object"}
+      },
+      "additionalProperties": true
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "title": {"type": "string"},
+          "kind": {"type": "string"},
+          "description": {"type": "string"},
+          "combine": {"enum": ["all", "any"]},
+          "depends_on": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/requirement"}
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "obligation", "status", "engine"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "obligation": {"type": "string", "minLength": 1},
+          "status": {
+            "enum": ["PASS", "FAIL", "PARTIAL", "OPEN", "MODEL_CHOICE", "NOT_APPLICABLE"]
+          },
+          "engine": {"type": "string", "minLength": 1},
+          "artifact": {"type": ["string", "null"]},
+          "note": {"type": "string"},
+          "metadata": {"type": "object"}
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "title": {"type": "string"},
+          "rank": {"type": "integer"},
+          "statement": {"type": "string"},
+          "requires": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/requirement"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "requirement": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": {"type": "string", "minLength": 1},
+            "accept": {
+              "type": "array",
+              "items": {
+                "enum": ["PASS", "FAIL", "PARTIAL", "OPEN", "MODEL_CHOICE", "NOT_APPLICABLE"]
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

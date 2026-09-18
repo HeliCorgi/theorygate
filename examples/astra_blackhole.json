@@ -1,0 +1,154 @@
+{
+  "version": "0.1",
+  "model": {
+    "id": "bianchi-ix-finite-clock-history",
+    "title": "Bianchi IX finite-clock history audit",
+    "choices": {
+      "internal_clock": "s = -alpha",
+      "inner_product": "L2(beta+, beta-)",
+      "quantization": "time-dependent square-root Hamiltonian",
+      "boundary": "finite box with staged regrids"
+    }
+  },
+  "obligations": [
+    {
+      "id": "COMMON_PROPAGATOR",
+      "title": "All branches use one common linear approximate propagator",
+      "kind": "numerical"
+    },
+    {
+      "id": "BRANCH_RECOMBINATION",
+      "title": "Projected branches recombine under the common evolution",
+      "kind": "numerical",
+      "depends_on": ["COMMON_PROPAGATOR"]
+    },
+    {
+      "id": "INNER_PRODUCT",
+      "title": "Inner product is explicitly declared",
+      "kind": "physical-choice"
+    },
+    {
+      "id": "CLOCK",
+      "title": "Internal clock is explicitly declared",
+      "kind": "physical-choice"
+    },
+    {
+      "id": "DECOHERENCE",
+      "title": "Off-diagonal interference is below the adopted control scale",
+      "kind": "numerical"
+    },
+    {
+      "id": "REGULATOR_STABILITY",
+      "title": "Result is stable under relevant numerical regulators",
+      "kind": "robustness"
+    },
+    {
+      "id": "PHYSICAL_INNER_PRODUCT",
+      "title": "Physical induced inner product is identified",
+      "kind": "formal"
+    },
+    {
+      "id": "CURVATURE_OBSERVABLE_4D",
+      "title": "Relevant four-dimensional curvature observable and domain are constructed",
+      "kind": "formal"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "block-krylov-common-space",
+      "obligation": "COMMON_PROPAGATOR",
+      "status": "PASS",
+      "engine": "numerical-audit",
+      "artifact": "docs/BIANCHI_IX_HISTORIES_AUDIT_ja.md",
+      "note": "Second-wall branches are propagated in a common block-Krylov space."
+    },
+    {
+      "id": "branch-recombination-control",
+      "obligation": "BRANCH_RECOMBINATION",
+      "status": "PASS",
+      "engine": "numerical-audit",
+      "artifact": "research/bianchi_ix_histories_results/summary.json",
+      "note": "Published common-block implementation reports zero final projection recombination error."
+    },
+    {
+      "id": "l2-inner-product-choice",
+      "obligation": "INNER_PRODUCT",
+      "status": "MODEL_CHOICE",
+      "engine": "model-spec",
+      "note": "L2 representation is declared but not promoted to a unique physical inner product."
+    },
+    {
+      "id": "minus-alpha-clock-choice",
+      "obligation": "CLOCK",
+      "status": "MODEL_CHOICE",
+      "engine": "model-spec",
+      "note": "The finite-clock audit uses s=-alpha."
+    },
+    {
+      "id": "history-interference",
+      "obligation": "DECOHERENCE",
+      "status": "FAIL",
+      "engine": "numerical-audit",
+      "artifact": "docs/BIANCHI_IX_HISTORIES_AUDIT_ja.md",
+      "note": "Strict off-diagonal decoherence is not adopted for the selected nine histories."
+    },
+    {
+      "id": "krylov-and-regrid-controls",
+      "obligation": "REGULATOR_STABILITY",
+      "status": "PARTIAL",
+      "engine": "robustness-scan",
+      "artifact": "docs/BIANCHI_IX_HISTORIES_AUDIT_ja.md",
+      "note": "Block-dimension control exists, while finite box/regrid/model regulator dependence remains."
+    }
+  ],
+  "claims": [
+    {
+      "id": "MODEL_INTERNAL_BRANCH_WEIGHT",
+      "title": "Model-internal diagonal branch weight",
+      "rank": 10,
+      "statement": "A diagonal branch weight is computed within the declared finite-clock model.",
+      "requires": [
+        "COMMON_PROPAGATOR",
+        "BRANCH_RECOMBINATION",
+        {"id": "INNER_PRODUCT", "accept": ["PASS", "MODEL_CHOICE"]},
+        {"id": "CLOCK", "accept": ["PASS", "MODEL_CHOICE"]}
+      ]
+    },
+    {
+      "id": "HISTORY_PROBABILITY",
+      "title": "Ordinary additive history probability",
+      "rank": 20,
+      "statement": "The diagonal history weights may be interpreted as ordinary additive probabilities.",
+      "requires": [
+        "COMMON_PROPAGATOR",
+        "BRANCH_RECOMBINATION",
+        "DECOHERENCE",
+        "REGULATOR_STABILITY",
+        {"id": "INNER_PRODUCT", "accept": ["PASS", "MODEL_CHOICE"]},
+        {"id": "CLOCK", "accept": ["PASS", "MODEL_CHOICE"]}
+      ]
+    },
+    {
+      "id": "TIMELESS_PHYSICAL_CLASS_OP",
+      "title": "Timeless physical class operator",
+      "rank": 30,
+      "statement": "A physical timeless class operator has been identified.",
+      "requires": [
+        "PHYSICAL_INNER_PRODUCT",
+        "REGULATOR_STABILITY",
+        "DECOHERENCE"
+      ]
+    },
+    {
+      "id": "SINGULARITY_RESOLUTION",
+      "title": "Physical singularity resolution",
+      "rank": 40,
+      "statement": "The calculation establishes resolution of the physical black-hole singularity.",
+      "requires": [
+        "PHYSICAL_INNER_PRODUCT",
+        "CURVATURE_OBSERVABLE_4D",
+        "REGULATOR_STABILITY"
+      ]
+    }
+  ]
+}
