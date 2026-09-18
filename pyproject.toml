@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "theorygate"
-version = "0.2.0"
+version = "0.3.0"
 description = "Physical-claim audit and promotion-gate engine for computational and formal physics"
 readme = "README.md"
 requires-python = ">=3.10"

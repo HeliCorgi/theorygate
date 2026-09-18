@@ -1,0 +1,23 @@
+{
+  "version": "0.1",
+  "model": {
+    "id": "synthetic-ingestion-fixture",
+    "title": "Synthetic evidence ingestion fixture"
+  },
+  "obligations": [
+    {
+      "id": "EXTERNAL_FORMAL",
+      "title": "External formal evidence arrives",
+      "kind": "formal"
+    }
+  ],
+  "evidence": [],
+  "claims": [
+    {
+      "id": "EXTERNAL_CLAIM",
+      "rank": 10,
+      "statement": "Synthetic claim used only to test evidence ingestion.",
+      "requires": ["EXTERNAL_FORMAL"]
+    }
+  ]
+}
