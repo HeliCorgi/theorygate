@@ -50,6 +50,11 @@ jobs:
           python qccg/run_unitarity_audit.py \
             --out artifacts/qccg/unitarity-evidence.json
 
+      - name: Audit linearized spin-2 constraint target
+        run: |
+          python qccg/run_linearized_constraint_audit.py \
+            --out artifacts/qccg/constraint-evidence.json
+
       - name: Validate audit model
         run: theorygate validate qccg/theorygate.yaml
 
@@ -60,6 +65,7 @@ jobs:
             --evidence artifacts/qccg/parent-evidence.json \
             --evidence artifacts/qccg/lorentz-evidence.json \
             --evidence artifacts/qccg/unitarity-evidence.json \
+            --evidence artifacts/qccg/constraint-evidence.json \
             --require QCCG_QUADRATIC_UNITARY_SCALING_TOY
 
       - name: Assert stronger physical claims remain blocked
@@ -69,6 +75,7 @@ jobs:
             --evidence artifacts/qccg/parent-evidence.json \
             --evidence artifacts/qccg/lorentz-evidence.json \
             --evidence artifacts/qccg/unitarity-evidence.json \
+            --evidence artifacts/qccg/constraint-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
           import json
@@ -79,6 +86,8 @@ jobs:
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
           assert any("MARGINAL_LV_STABILITY=OPEN" in x for x in report["obligations"]["LORENTZ_UNIVERSALITY"]["blockers"])
           assert report["obligations"]["PHYSICAL_UNITARITY_SCALING_LIMIT"]["status"] == "BLOCKED"
+          assert report["obligations"]["CONTINUUM_DIFFEO_BRST"]["status"] == "BLOCKED"
+          assert any("NONLINEAR_CONSTRAINT_CLOSURE=OPEN" in x for x in report["obligations"]["CONTINUUM_DIFFEO_BRST"]["blockers"])
           assert any("INTERACTING_PHYSICAL_SCALING_UNITARITY=OPEN" in x for x in report["obligations"]["PHYSICAL_UNITARITY_SCALING_LIMIT"]["blockers"])
           for cid in (
               "QCCG_EMERGENT_MASSLESS_SPIN2",
