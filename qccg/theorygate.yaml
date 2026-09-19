@@ -108,6 +108,16 @@ claims:
       - FINITE_SIZE_GAP_SCALING
       - DEFECT_GAP_STABILITY
 
+  - id: QCCG_PARENT_HESSIAN_TOY
+    title: "Explicit finite-qudit parent yields the audited quadratic phase"
+    rank: 40
+    statement: "One fixed finite-Weyl local parent Hamiltonian yields the audited quadratic tensor/defect Hessian without fitting the Hessian independently."
+    requires:
+      - FULL_MICROSCOPIC_DERIVATION
+      - TT_QUADRATIC_SPECTRUM
+      - FINITE_SIZE_GAP_SCALING
+      - DEFECT_GAP_STABILITY
+
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
     rank: 50
