@@ -55,6 +55,11 @@ jobs:
           python qccg/run_linearized_constraint_audit.py \
             --out artifacts/qccg/constraint-evidence.json
 
+      - name: Reject naive commuting-projector nonlinear completion
+        run: |
+          python qccg/run_nonlinear_constraint_diagnostic.py \
+            --out artifacts/qccg/nonlinear-constraint-evidence.json
+
       - name: Validate audit model
         run: theorygate validate qccg/theorygate.yaml
 
@@ -66,6 +71,7 @@ jobs:
             --evidence artifacts/qccg/lorentz-evidence.json \
             --evidence artifacts/qccg/unitarity-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
+            --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --require QCCG_QUADRATIC_UNITARY_SCALING_TOY
 
       - name: Assert stronger physical claims remain blocked
@@ -76,6 +82,7 @@ jobs:
             --evidence artifacts/qccg/lorentz-evidence.json \
             --evidence artifacts/qccg/unitarity-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
+            --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
           import json
