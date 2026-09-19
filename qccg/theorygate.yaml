@@ -72,10 +72,26 @@ obligations:
       - BARE_SPATIAL_ISOTROPY
       - LATTICE_LV_IRRELEVANT
       - MARGINAL_LV_STABILITY
+  - id: LINEARIZED_CONSTRAINT_ALGEBRA
+    title: "The linearized symmetric-tensor target has four first-class constraints"
+    kind: formal-numerical
+    description: "Hamiltonian plus momentum constraints have rank four and close at the linearized continuum target."
+  - id: TT_PROJECTOR_RANK2
+    title: "The linearized symmetric-tensor target has a rank-two TT physical projector"
+    kind: formal-numerical
+    description: "The continuum target TT projector is transverse, traceless, idempotent and rank two."
+  - id: NONLINEAR_CONSTRAINT_CLOSURE
+    title: "The nonlinear interacting constraint/BRST algebra closes anomaly-free"
+    kind: physics
+    description: "Requires full interacting hypersurface-deformation or equivalent BRST closure."
   - id: CONTINUUM_DIFFEO_BRST
     title: "Continuum diffeomorphism/BRST identities emerge"
     kind: physics
     description: "Requires continuum mSTI/mNI or equivalent gauge identities; graph relabeling alone is insufficient."
+    depends_on:
+      - LINEARIZED_CONSTRAINT_ALGEBRA
+      - TT_PROJECTOR_RANK2
+      - NONLINEAR_CONSTRAINT_CLOSURE
   - id: FINITE_PARENT_UNITARITY
     title: "The finite audited parent Hamiltonian generates unitary evolution"
     kind: formal-numerical
@@ -173,6 +189,14 @@ claims:
     requires:
       - FINITE_PARENT_UNITARITY
       - QUADRATIC_SCALING_ISOMETRY
+
+  - id: QCCG_LINEARIZED_SPIN2_TARGET
+    title: "Consistent linearized spin-2 continuum target"
+    rank: 43
+    statement: "The audited continuum target has four linear first-class constraints and a rank-two TT sector; no claim is made that the microscopic parent generates the nonlinear gauge algebra."
+    requires:
+      - LINEARIZED_CONSTRAINT_ALGEBRA
+      - TT_PROJECTOR_RANK2
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
