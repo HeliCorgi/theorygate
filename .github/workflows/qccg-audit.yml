@@ -40,6 +40,11 @@ jobs:
           python qccg/run_parent_hamiltonian_audit.py \
             --out artifacts/qccg/parent-evidence.json
 
+      - name: Audit Lorentz-universality obstruction and bare-cone repair
+        run: |
+          python qccg/run_lorentz_audit.py \
+            --out artifacts/qccg/lorentz-evidence.json
+
       - name: Validate audit model
         run: theorygate validate qccg/theorygate.yaml
 
@@ -48,20 +53,24 @@ jobs:
           theorygate check qccg/theorygate.yaml \
             --evidence artifacts/qccg/evidence.json \
             --evidence artifacts/qccg/parent-evidence.json \
-            --require QCCG_PARENT_HESSIAN_TOY
+            --evidence artifacts/qccg/lorentz-evidence.json \
+            --require QCCG_BARE_COMMON_CONE_TOY
 
       - name: Assert stronger physical claims remain blocked
         run: |
           theorygate check qccg/theorygate.yaml \
             --evidence artifacts/qccg/evidence.json \
             --evidence artifacts/qccg/parent-evidence.json \
+            --evidence artifacts/qccg/lorentz-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
           import json
           from pathlib import Path
 
           report = json.loads(Path("artifacts/qccg/report.json").read_text())
-          assert report["strongest_supported_claim"] == "QCCG_PARENT_HESSIAN_TOY", report["strongest_supported_claim"]
+          assert report["strongest_supported_claim"] == "QCCG_BARE_COMMON_CONE_TOY", report["strongest_supported_claim"]
+          assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
+          assert any("MARGINAL_LV_STABILITY=OPEN" in x for x in report["obligations"]["LORENTZ_UNIVERSALITY"]["blockers"])
           for cid in (
               "QCCG_EMERGENT_MASSLESS_SPIN2",
               "QCCG_RFQG_UNIVERSALITY",
