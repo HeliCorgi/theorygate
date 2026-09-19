@@ -35,6 +35,11 @@ jobs:
             --out artifacts/qccg/evidence.json \
             --summary artifacts/qccg/summary.json
 
+      - name: Derive quadratic Hessian from explicit finite-Weyl parent
+        run: |
+          python qccg/run_parent_hamiltonian_audit.py \
+            --out artifacts/qccg/parent-evidence.json
+
       - name: Validate audit model
         run: theorygate validate qccg/theorygate.yaml
 
@@ -42,19 +47,21 @@ jobs:
         run: |
           theorygate check qccg/theorygate.yaml \
             --evidence artifacts/qccg/evidence.json \
-            --require QCCG_QUADRATIC_TT_TOY
+            --evidence artifacts/qccg/parent-evidence.json \
+            --require QCCG_PARENT_HESSIAN_TOY
 
       - name: Assert stronger physical claims remain blocked
         run: |
           theorygate check qccg/theorygate.yaml \
             --evidence artifacts/qccg/evidence.json \
+            --evidence artifacts/qccg/parent-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
           import json
           from pathlib import Path
 
           report = json.loads(Path("artifacts/qccg/report.json").read_text())
-          assert report["strongest_supported_claim"] == "QCCG_QUADRATIC_TT_TOY", report["strongest_supported_claim"]
+          assert report["strongest_supported_claim"] == "QCCG_PARENT_HESSIAN_TOY", report["strongest_supported_claim"]
           for cid in (
               "QCCG_EMERGENT_MASSLESS_SPIN2",
               "QCCG_RFQG_UNIVERSALITY",
