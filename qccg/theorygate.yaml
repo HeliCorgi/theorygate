@@ -46,10 +46,32 @@ obligations:
     title: "The critical phase reconstructs a smooth 3+1 Lorentzian continuum"
     kind: physics
     description: "Requires manifold-likeness, signature and continuum reconstruction beyond the quadratic lattice pilot."
+  - id: COMMON_CAUSAL_PROPAGATOR
+    title: "A common microscopic causal propagation coefficient is declared"
+    kind: physical-choice
+    description: "Tensor and probe-matter sectors use one bare propagation coefficient; this is a model principle rather than an RG result."
+  - id: BARE_SPATIAL_ISOTROPY
+    title: "The selected quadratic parent has a common isotropic bare cone"
+    kind: numerical
+    description: "Cubic-symmetric spatial links and the shared propagation coefficient give the audited species one bare z=1 cone."
+  - id: LATTICE_LV_IRRELEVANT
+    title: "Higher-derivative lattice Lorentz violation is irrelevant"
+    kind: rg-analytic
+    description: "Four-derivative lattice corrections scale away relative to the two-derivative kinetic term."
+  - id: MARGINAL_LV_STABILITY
+    title: "The common cone is stable against marginal/relevant Lorentz-violating deformations"
+    kind: physics
+    description: "Requires an interacting RG or symmetry argument; canonical scaling alone leaves velocity anisotropies marginal."
   - id: LORENTZ_UNIVERSALITY
     title: "All physical sectors share an emergent z=1 light cone"
     kind: physics
     description: "Requires exclusion of relevant/marginal Lorentz-violating operators and equality of matter/gravity characteristics."
+    depends_on:
+      - id: COMMON_CAUSAL_PROPAGATOR
+        accept: [PASS, MODEL_CHOICE]
+      - BARE_SPATIAL_ISOTROPY
+      - LATTICE_LV_IRRELEVANT
+      - MARGINAL_LV_STABILITY
   - id: CONTINUUM_DIFFEO_BRST
     title: "Continuum diffeomorphism/BRST identities emerge"
     kind: physics
@@ -117,6 +139,16 @@ claims:
       - TT_QUADRATIC_SPECTRUM
       - FINITE_SIZE_GAP_SCALING
       - DEFECT_GAP_STABILITY
+
+  - id: QCCG_BARE_COMMON_CONE_TOY
+    title: "Bare common-cone quadratic pilot"
+    rank: 45
+    statement: "Within the selected parent pilot, the audited tensor and probe-matter sectors share an isotropic bare cone and higher-derivative lattice violations are irrelevant; interacting RG protection is not claimed."
+    requires:
+      - id: COMMON_CAUSAL_PROPAGATOR
+        accept: [PASS, MODEL_CHOICE]
+      - BARE_SPATIAL_ISOTROPY
+      - LATTICE_LV_IRRELEVANT
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
