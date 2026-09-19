@@ -45,6 +45,11 @@ jobs:
           python qccg/run_lorentz_audit.py \
             --out artifacts/qccg/lorentz-evidence.json
 
+      - name: Audit finite and quadratic scaling unitarity
+        run: |
+          python qccg/run_unitarity_audit.py \
+            --out artifacts/qccg/unitarity-evidence.json
+
       - name: Validate audit model
         run: theorygate validate qccg/theorygate.yaml
 
@@ -54,7 +59,8 @@ jobs:
             --evidence artifacts/qccg/evidence.json \
             --evidence artifacts/qccg/parent-evidence.json \
             --evidence artifacts/qccg/lorentz-evidence.json \
-            --require QCCG_BARE_COMMON_CONE_TOY
+            --evidence artifacts/qccg/unitarity-evidence.json \
+            --require QCCG_QUADRATIC_UNITARY_SCALING_TOY
 
       - name: Assert stronger physical claims remain blocked
         run: |
@@ -62,15 +68,18 @@ jobs:
             --evidence artifacts/qccg/evidence.json \
             --evidence artifacts/qccg/parent-evidence.json \
             --evidence artifacts/qccg/lorentz-evidence.json \
+            --evidence artifacts/qccg/unitarity-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
           import json
           from pathlib import Path
 
           report = json.loads(Path("artifacts/qccg/report.json").read_text())
-          assert report["strongest_supported_claim"] == "QCCG_BARE_COMMON_CONE_TOY", report["strongest_supported_claim"]
+          assert report["strongest_supported_claim"] == "QCCG_QUADRATIC_UNITARY_SCALING_TOY", report["strongest_supported_claim"]
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
           assert any("MARGINAL_LV_STABILITY=OPEN" in x for x in report["obligations"]["LORENTZ_UNIVERSALITY"]["blockers"])
+          assert report["obligations"]["PHYSICAL_UNITARITY_SCALING_LIMIT"]["status"] == "BLOCKED"
+          assert any("INTERACTING_PHYSICAL_SCALING_UNITARITY=OPEN" in x for x in report["obligations"]["PHYSICAL_UNITARITY_SCALING_LIMIT"]["blockers"])
           for cid in (
               "QCCG_EMERGENT_MASSLESS_SPIN2",
               "QCCG_RFQG_UNIVERSALITY",
