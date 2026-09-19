@@ -76,10 +76,26 @@ obligations:
     title: "Continuum diffeomorphism/BRST identities emerge"
     kind: physics
     description: "Requires continuum mSTI/mNI or equivalent gauge identities; graph relabeling alone is insufficient."
+  - id: FINITE_PARENT_UNITARITY
+    title: "The finite audited parent Hamiltonian generates unitary evolution"
+    kind: formal-numerical
+    description: "Finite Weyl generators are unitary and local parent terms are Hermitian on every finite audited lattice."
+  - id: QUADRATIC_SCALING_ISOMETRY
+    title: "The free band-limited quadratic sector has an isometric continuum scaling map"
+    kind: numerical
+    description: "Fixed low Fourier modes preserve norm and converge to continuum wave evolution as the lattice is refined."
+  - id: INTERACTING_PHYSICAL_SCALING_UNITARITY
+    title: "The interacting graph-changing physical Hilbert space has a controlled unitary scaling limit"
+    kind: physics
+    description: "Requires an isometric continuum map for the constrained interacting physical state space."
   - id: PHYSICAL_UNITARITY_SCALING_LIMIT
     title: "Microscopic unitarity descends isometrically to the continuum physical Hilbert space"
     kind: physics
     description: "Requires a controlled scaling map and physical spectral/unitarity checks."
+    depends_on:
+      - FINITE_PARENT_UNITARITY
+      - QUADRATIC_SCALING_ISOMETRY
+      - INTERACTING_PHYSICAL_SCALING_UNITARITY
   - id: AS_FIXED_POINT_MATCH
     title: "QCCG coarse graining reaches the RFQG-5/asymptotic-safety universality class"
     kind: physics
@@ -149,6 +165,14 @@ claims:
         accept: [PASS, MODEL_CHOICE]
       - BARE_SPATIAL_ISOTROPY
       - LATTICE_LV_IRRELEVANT
+
+  - id: QCCG_QUADRATIC_UNITARY_SCALING_TOY
+    title: "Unitary free quadratic scaling pilot"
+    rank: 47
+    statement: "The finite parent is unitary and a fixed free band-limited quadratic sector has an isometric norm-preserving continuum scaling limit."
+    requires:
+      - FINITE_PARENT_UNITARITY
+      - QUADRATIC_SCALING_ISOMETRY
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
