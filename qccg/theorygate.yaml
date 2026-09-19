@@ -80,10 +80,21 @@ obligations:
     title: "The linearized symmetric-tensor target has a rank-two TT physical projector"
     kind: formal-numerical
     description: "The continuum target TT projector is transverse, traceless, idempotent and rank two."
+  - id: HDA_NONABELIAN_TARGET
+    title: "The nonlinear GR hypersurface-deformation target is generically non-Abelian"
+    kind: formal
+    description: "Generic Hamiltonian-constraint smearings close into a diffeomorphism generator with metric-dependent structure functions."
+  - id: COMMUTING_PROJECTOR_HDA_REJECTED
+    title: "A mutually commuting nonlinear Hamiltonian-projector completion is rejected"
+    kind: negative-control
+    description: "A zero Hamiltonian-constraint commutator cannot reproduce the generic GR hypersurface-deformation target."
   - id: NONLINEAR_CONSTRAINT_CLOSURE
     title: "The nonlinear interacting constraint/BRST algebra closes anomaly-free"
     kind: physics
-    description: "Requires full interacting hypersurface-deformation or equivalent BRST closure."
+    description: "Requires noncommuting constraint generators with the correct operator/field-dependent structure functions and physical-kernel preservation."
+    depends_on:
+      - HDA_NONABELIAN_TARGET
+      - COMMUTING_PROJECTOR_HDA_REJECTED
   - id: CONTINUUM_DIFFEO_BRST
     title: "Continuum diffeomorphism/BRST identities emerge"
     kind: physics
@@ -197,6 +208,14 @@ claims:
     requires:
       - LINEARIZED_CONSTRAINT_ALGEBRA
       - TT_PROJECTOR_RANK2
+
+  - id: QCCG_HDA_DESIGN_CONSTRAINT
+    title: "Nonlinear constraint design rule"
+    rank: 44
+    statement: "The audited program rejects a mutually commuting nonlinear Hamiltonian-projector completion and requires noncommuting structure-function closure for the next microscopic construction."
+    requires:
+      - HDA_NONABELIAN_TARGET
+      - COMMUTING_PROJECTOR_HDA_REJECTED
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
