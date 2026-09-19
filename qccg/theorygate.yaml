@@ -42,10 +42,26 @@ obligations:
     title: "The quadratic tensor Hessian is derived from one fully explicit interacting finite-qudit parent Hamiltonian"
     kind: physics
     description: "Requires a fixed microscopic Hamiltonian and controlled derivation, not coefficient tuning of the Hessian."
+  - id: CELLULATION_LIQUID_ZERO_MODE
+    title: "The local-move Hamiltonian admits a unique uniform cellulation-liquid zero mode"
+    kind: formal-numerical
+    description: "On a connected audited cellulation-move graph, H_move is a positive graph Laplacian with unique uniform zero state."
+  - id: CELLULATION_CONNECTIVITY_CONTROL
+    title: "Disconnected move graphs are detected as degenerate-vacuum failures"
+    kind: negative-control
+    description: "A disconnected cellulation-move graph must produce multiple zero modes."
+  - id: MANIFOLD_LIKENESS_SCALING
+    title: "The cellulation liquid has a smooth 3+1 Lorentzian manifold-like scaling phase"
+    kind: physics
+    description: "Requires scaling evidence for dimension, signature, locality and manifold-likeness."
   - id: CONTINUUM_MANIFOLD_PHASE
     title: "The critical phase reconstructs a smooth 3+1 Lorentzian continuum"
     kind: physics
-    description: "Requires manifold-likeness, signature and continuum reconstruction beyond the quadratic lattice pilot."
+    description: "Requires manifold-likeness, signature and continuum reconstruction beyond the finite cellulation-liquid pilot."
+    depends_on:
+      - CELLULATION_LIQUID_ZERO_MODE
+      - CELLULATION_CONNECTIVITY_CONTROL
+      - MANIFOLD_LIKENESS_SCALING
   - id: COMMON_CAUSAL_PROPAGATOR
     title: "A common microscopic causal propagation coefficient is declared"
     kind: physical-choice
@@ -216,6 +232,14 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_CELLULATION_LIQUID_TOY
+    title: "Finite cellulation-liquid vacuum pilot"
+    rank: 35
+    statement: "The audited finite move graph has a unique uniform cellulation-superposition zero mode and detects disconnected-vacuum degeneracy."
+    requires:
+      - CELLULATION_LIQUID_ZERO_MODE
+      - CELLULATION_CONNECTIVITY_CONTROL
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
