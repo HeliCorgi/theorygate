@@ -1,0 +1,123 @@
+version: "0.5"
+model:
+  id: qccg-rfqg-bridge
+  title: "QCCG × RFQG continuum-bridge audit"
+  choices:
+    scope: "finite-Weyl quadratic flat-sector pilot; not a full QCCG many-body solution"
+    local_register: "finite K-state Weyl qudit"
+    reciprocity: "2-cell / dual-2-cell geometric reciprocity"
+    quadratic_background: "periodic flat lattice Hessian"
+    continuum_target: "Lorentzian asymptotic-safety / RFQG-5 universality class"
+
+obligations:
+  - id: FINITE_WEYL_ALGEBRA
+    title: "Finite local Weyl algebra is realized"
+    kind: formal-numerical
+    description: "A finite K-state register realizes ZX=omega XZ and bounded local Weyl operators."
+  - id: WEYL_QUADRATIC_LIMIT
+    title: "Finite Weyl plaquette term has a controlled quadratic small-phase limit"
+    kind: numerical
+    description: "For preregistered finite K values, 2-W-W† approaches Q^2 at the declared tolerance."
+  - id: GEOMETRIC_RECIPROCITY
+    title: "Geometric reciprocity is declared"
+    kind: physical-choice
+    description: "Curvature 2-cells and conjugate dual flux use the same elementary register type."
+  - id: D4_RECIPROCITY_ALGEBRA
+    title: "The reciprocity dimension relation selects D=4"
+    kind: formal
+    description: "Given geometric reciprocity, 2=D-2 has the unique integer solution D=4."
+  - id: TT_QUADRATIC_SPECTRUM
+    title: "Declared quadratic Hessian has exactly two massless tensor branches"
+    kind: numerical
+    description: "The flat-sector quadratic Hessian has two zero branches and no zero defect branch at finite periodic volume."
+  - id: FINITE_SIZE_GAP_SCALING
+    title: "First tensor excitation scales as 1/L"
+    kind: robustness
+    description: "The first nonzero tensor frequency obeys preregistered z=1 finite-size scaling over the declared lattice sizes."
+  - id: DEFECT_GAP_STABILITY
+    title: "Declared scalar/vector defect sectors remain gapped"
+    kind: robustness
+    description: "The model-internal defect mass remains nonzero under the same finite-size scan."
+  - id: FULL_MICROSCOPIC_DERIVATION
+    title: "The quadratic tensor Hessian is derived from one fully explicit interacting finite-qudit parent Hamiltonian"
+    kind: physics
+    description: "Requires a fixed microscopic Hamiltonian and controlled derivation, not coefficient tuning of the Hessian."
+  - id: CONTINUUM_MANIFOLD_PHASE
+    title: "The critical phase reconstructs a smooth 3+1 Lorentzian continuum"
+    kind: physics
+    description: "Requires manifold-likeness, signature and continuum reconstruction beyond the quadratic lattice pilot."
+  - id: LORENTZ_UNIVERSALITY
+    title: "All physical sectors share an emergent z=1 light cone"
+    kind: physics
+    description: "Requires exclusion of relevant/marginal Lorentz-violating operators and equality of matter/gravity characteristics."
+  - id: CONTINUUM_DIFFEO_BRST
+    title: "Continuum diffeomorphism/BRST identities emerge"
+    kind: physics
+    description: "Requires continuum mSTI/mNI or equivalent gauge identities; graph relabeling alone is insufficient."
+  - id: PHYSICAL_UNITARITY_SCALING_LIMIT
+    title: "Microscopic unitarity descends isometrically to the continuum physical Hilbert space"
+    kind: physics
+    description: "Requires a controlled scaling map and physical spectral/unitarity checks."
+  - id: AS_FIXED_POINT_MATCH
+    title: "QCCG coarse graining reaches the RFQG-5/asymptotic-safety universality class"
+    kind: physics
+    description: "Requires critical exponents/essential observables compatible with the target Lorentzian fixed point."
+  - id: GR_IR_EFFECTIVE_ACTION
+    title: "The infrared physical effective action reproduces GR plus controlled corrections"
+    kind: physics
+    description: "Requires gauge-invariant continuum observables and the Einstein low-energy limit, not insertion of Einstein equations."
+  - id: STRONG_GRAVITY_CTP
+    title: "Real-time strong-gravity dynamics are controlled"
+    kind: physics
+    description: "Requires an in-in/CTP effective description for collapse or cosmology and causal physical observables."
+
+evidence:
+  - id: reciprocity-choice
+    obligation: GEOMETRIC_RECIPROCITY
+    status: MODEL_CHOICE
+    engine: model-spec
+    note: "Reciprocity is a microscopic dynamical principle, not derived from unitarity/locality/background independence."
+
+claims:
+  - id: QCCG_FINITE_WEYL_KINEMATICS
+    title: "Finite-Weyl microscopic kinematics"
+    rank: 10
+    statement: "The audited pilot has a consistent finite local Weyl kinematics and controlled small-phase local terms."
+    requires:
+      - FINITE_WEYL_ALGEBRA
+      - WEYL_QUADRATIC_LIMIT
+  - id: QCCG_D4_RECIPROCITY_TOY
+    title: "Conditional 4D reciprocity sector"
+    rank: 20
+    statement: "Given the declared reciprocity choice, the pilot algebraically selects D=4."
+    requires:
+      - FINITE_WEYL_ALGEBRA
+      - id: GEOMETRIC_RECIPROCITY
+        accept: [PASS, MODEL_CHOICE]
+      - D4_RECIPROCITY_ALGEBRA
+  - id: QCCG_QUADRATIC_TT_TOY
+    title: "Model-internal two-branch z=1 quadratic tensor phase"
+    rank: 30
+    statement: "Within the declared quadratic flat-sector pilot, two massless tensor branches exhibit z=1 finite-size scaling while declared defect sectors remain gapped."
+    requires:
+      - FINITE_WEYL_ALGEBRA
+      - WEYL_QUADRATIC_LIMIT
+      - TT_QUADRATIC_SPECTRUM
+      - FINITE_SIZE_GAP_SCALING
+      - DEFECT_GAP_STABILITY
+  - id: QCCG_EMERGENT_MASSLESS_SPIN2
+    title: "Microscopically emergent physical massless spin-2 continuum"
+    rank: 50
+    statement: "A fully explicit QCCG parent Hamiltonian has a physical continuum containing only the required massless helicity-2 gravitational sector."
+    requires:
+      - FULL_MICROSCOPIC_DERIVATION
+      - CONTINUUM_MANIFOLD_PHASE
+      - LORENTZ_UNIVERSALITY
+      - CONTINUUM_DIFFEO_BRST
+      - PHYSICAL_UNITARITY_SCALING_LIMIT
+  - id: QCCG_RFQG_UNIVERSALITY
+    title: "QCCG realizes the RFQG-5 continuum universality class"
+    rank: 60
+    statement: "QCCG coarse graining reaches the same physical Lorentzian UV-complete universality class audited by RFQG-5."
+    requires:
+      - QCCG_PLACEHOLDER_NOT_AN_OBLIGATION
