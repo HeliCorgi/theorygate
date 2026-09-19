@@ -1,0 +1,70 @@
+name: QCCG bridge audit
+
+on:
+  push:
+    paths:
+      - "qccg/**"
+      - "theorygate/**"
+      - "pyproject.toml"
+      - ".github/workflows/qccg-audit.yml"
+  pull_request:
+    paths:
+      - "qccg/**"
+      - "theorygate/**"
+      - "pyproject.toml"
+      - ".github/workflows/qccg-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qccg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e .
+
+      - name: Run scoped QCCG calculation
+        run: |
+          python qccg/run_quadratic_audit.py \
+            --out artifacts/qccg/evidence.json \
+            --summary artifacts/qccg/summary.json
+
+      - name: Validate audit model
+        run: theorygate validate qccg/theorygate.yaml
+
+      - name: Require only the scoped quadratic claim
+        run: |
+          theorygate check qccg/theorygate.yaml \
+            --evidence artifacts/qccg/evidence.json \
+            --require QCCG_QUADRATIC_TT_TOY
+
+      - name: Assert stronger physical claims remain blocked
+        run: |
+          theorygate check qccg/theorygate.yaml \
+            --evidence artifacts/qccg/evidence.json \
+            --json > artifacts/qccg/report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path("artifacts/qccg/report.json").read_text())
+          assert report["strongest_supported_claim"] == "QCCG_QUADRATIC_TT_TOY", report["strongest_supported_claim"]
+          for cid in (
+              "QCCG_EMERGENT_MASSLESS_SPIN2",
+              "QCCG_RFQG_UNIVERSALITY",
+              "QCCG_GR_IR",
+              "QCCG_STRONG_GRAVITY",
+          ):
+              assert report["claims"][cid]["supported"] is False, cid
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qccg-bridge-audit
+          path: artifacts/qccg/
