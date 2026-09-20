@@ -15,7 +15,8 @@ Collapsing the upper refinement vertex reconstructs the original prism exactly.
 A wrong-time new vertex is rejected.
 
 This is an explicit strict-foliation slab for the 1<->4 spatial move only.
-The 2<->3 spatial transition and arbitrary mixed histories remain separate
+The independently audited strict 2<->3 slab is handled in
+run_causal_23_slab_audit.py; arbitrary mixed histories remain separate
 obligations.
 """
 from __future__ import annotations
@@ -197,12 +198,6 @@ def main():
                 "Placing the refinement vertex at t=2 creates nonadjacent-time 4-simplices and is rejected.",
                 bad_vertex=list(BAD_NEW),
                 bad_causal=causal(bad),
-            ),
-            evidence(
-                "qccg-causal-23-slab-open",
-                "CAUSAL_23_SPACETIME_SLAB_REALIZATION",
-                "OPEN",
-                "A strict adjacent-slice 4D slab for the spatial 2<->3 Pachner transition has not yet been constructed. The local abstract 4-simplex cobordism exists, but strict time-slice vertex assignments remain to be solved.",
             ),
         ],
     }
