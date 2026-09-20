@@ -179,10 +179,26 @@ obligations:
     title: "The free band-limited quadratic sector has an isometric continuum scaling map"
     kind: numerical
     description: "Fixed low Fourier modes preserve norm and converge to continuum wave evolution as the lattice is refined."
+  - id: INTERACTING_CODE_INTERTWINER_TOY
+    title: "A finite interacting microscopic code embeds isometrically into a coarse Hilbert space"
+    kind: formal-numerical
+    description: "A two-body microscopic Hamiltonian exactly preserves a constrained code subspace and intertwines with a coarse Hamiltonian."
+  - id: SCALING_LEAKAGE_NEGATIVE_CONTROL
+    title: "A microscopic perturbation that violates the code constraint is detected as scaling leakage"
+    kind: negative-control
+    description: "A single-site perturbation must leak outside the embedded code and fail the constraint commutator."
+  - id: QCCG_GRAPH_CHANGING_SCALING_MAP
+    title: "The actual graph-changing QCCG physical Hilbert space has an isometric coarse-graining intertwiner"
+    kind: physics
+    description: "Requires scaling maps between increasing cellulation sectors, not only a fixed two-qubit code toy."
   - id: INTERACTING_PHYSICAL_SCALING_UNITARITY
     title: "The interacting graph-changing physical Hilbert space has a controlled unitary scaling limit"
     kind: physics
     description: "Requires an isometric continuum map for the constrained interacting physical state space."
+    depends_on:
+      - INTERACTING_CODE_INTERTWINER_TOY
+      - SCALING_LEAKAGE_NEGATIVE_CONTROL
+      - QCCG_GRAPH_CHANGING_SCALING_MAP
   - id: PHYSICAL_UNITARITY_SCALING_LIMIT
     title: "Microscopic unitarity descends isometrically to the continuum physical Hilbert space"
     kind: physics
@@ -392,6 +408,14 @@ claims:
     requires:
       - MANIFOLD_DIAGNOSTIC_CALIBRATED
       - MANIFOLD_DIMENSION_CONTROLS
+
+  - id: QCCG_INTERACTING_SCALING_ARCHITECTURE_TOY
+    title: "Interacting isometric scaling architecture toy"
+    rank: 47
+    statement: "A finite interacting constrained code subspace embeds isometrically into a coarse Hilbert space and a leakage perturbation is detected; no graph-changing QCCG scaling map is claimed."
+    requires:
+      - INTERACTING_CODE_INTERTWINER_TOY
+      - SCALING_LEAKAGE_NEGATIVE_CONTROL
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
