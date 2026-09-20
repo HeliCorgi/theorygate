@@ -778,13 +778,28 @@ obligations:
     title: "QCCG ingredients reproduce the functional structure of the CDT de Sitter minisuperspace action"
     kind: formal-analytic
     description: "Conditional on the large-volume diffusive regime and S3-like slices, the kinetic denominator, N3^(1/3) curvature term and linear volume term have the CDT functional form."
+  - id: QCCG_CDT_KINETIC_COEFFICIENT_STABILITY
+    title: "QCCG volume dynamics yields a stable CDT-type kinetic coefficient per microscopic time unit"
+    kind: numerical
+    description: "Requires Var(Delta N3)/(N3*tau) to be approximately volume-independent and stable across increasing short-time blocks."
+  - id: QCCG_CDT_TIME_UNIT_MAP
+    title: "The QCCG microscopic time unit is mapped to the CDT effective proper-time unit or an equivalent dimensionless kinetic coordinate"
+    kind: physics
+    description: "Required before the numerical QCCG kinetic coefficient can be identified directly with CDT Gamma."
+  - id: QCCG_CDT_POTENTIAL_PROFILE_MATCH
+    title: "QCCG dynamically yields stable curvature/volume coefficients and a de Sitter-type volume profile"
+    kind: physics
+    description: "Requires large-volume fits of mu, lambda and the profile parameter omega (or an equivalent potential/profile observable) without inserting the CDT potential by hand."
   - id: QCCG_CDT_EFFECTIVE_COEFFICIENT_MATCH
     title: "QCCG large-volume effective Gamma, mu, lambda and omega are measured and stable"
     kind: physics
-    description: "Requires increasing-volume/time-blocking fits of the reduced transfer matrix and de Sitter volume profile."
+    description: "Requires stable QCCG kinetic data, a justified time/scale map, and independently measured potential/profile coefficients."
     depends_on:
       - QCCG_CDT_DIFFUSIVE_KINETIC_LIMIT
       - QCCG_CDT_ACTION_STRUCTURAL_MATCH
+      - QCCG_CDT_KINETIC_COEFFICIENT_STABILITY
+      - QCCG_CDT_TIME_UNIT_MAP
+      - QCCG_CDT_POTENTIAL_PROFILE_MATCH
   - id: CDT_FRG_MAPPING_REFERENCE
     title: "Published CDT-to-FRG scale-factor mapping is fixed as an external anchor"
     kind: literature-anchor
