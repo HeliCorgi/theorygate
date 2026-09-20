@@ -107,6 +107,9 @@ jobs:
           - name: qccg-equilibrated-critical-line
             script: qccg/run_qccg_equilibrated_critical_line.py
             output: qccg-equilibrated-critical-line-evidence.json
+          - name: qccg-equilibrated-critical-confirmation
+            script: qccg/run_qccg_equilibrated_critical_confirmation.py
+            output: qccg-equilibrated-critical-confirmation-evidence.json
           - name: qccg-cdt-potential-drift
             script: qccg/run_qccg_cdt_potential_drift_audit.py
             output: qccg-cdt-potential-drift-evidence.json
