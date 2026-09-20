@@ -145,6 +145,11 @@ jobs:
           python qccg/run_cdt_mixed_connectivity_toy.py \
             --out artifacts/qccg/cdt-mixed-connectivity-evidence.json
 
+      - name: Scan finite-size CDT connectivity
+        run: |
+          python qccg/run_cdt_scalable_connectivity_scan.py \
+            --out artifacts/qccg/cdt-connectivity-scaling-evidence.json
+
       - name: Audit local 4D Pachner cobordisms
         run: |
           python qccg/run_pachner_cobordism_audit.py \
@@ -283,6 +288,7 @@ jobs:
             --evidence artifacts/qccg/cdt-move46-evidence.json \
             --evidence artifacts/qccg/cdt-move33-evidence.json \
             --evidence artifacts/qccg/cdt-mixed-connectivity-evidence.json \
+            --evidence artifacts/qccg/cdt-connectivity-scaling-evidence.json \
             --evidence artifacts/qccg/pachner-cobordism-evidence.json \
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/causal-14-slab-evidence.json \
@@ -332,6 +338,7 @@ jobs:
             --evidence artifacts/qccg/cdt-move46-evidence.json \
             --evidence artifacts/qccg/cdt-move33-evidence.json \
             --evidence artifacts/qccg/cdt-mixed-connectivity-evidence.json \
+            --evidence artifacts/qccg/cdt-connectivity-scaling-evidence.json \
             --evidence artifacts/qccg/pachner-cobordism-evidence.json \
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/causal-14-slab-evidence.json \
