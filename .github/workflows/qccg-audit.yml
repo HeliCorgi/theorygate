@@ -220,6 +220,11 @@ jobs:
           python qccg/run_lattice_ward_scaling_audit.py \
             --out artifacts/qccg/lattice-ward-evidence.json
 
+      - name: Audit operator-level tensor cubic continuum limit
+        run: |
+          python qccg/run_tensor_cubic_continuum_limit.py \
+            --out artifacts/qccg/tensor-cubic-continuum-evidence.json
+
       - name: Audit soft-graviton universal coupling target
         run: |
           python qccg/run_soft_graviton_audit.py \
@@ -268,6 +273,7 @@ jobs:
             --evidence artifacts/qccg/tensor-cubic-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-stress-evidence.json \
             --evidence artifacts/qccg/lattice-ward-evidence.json \
+            --evidence artifacts/qccg/tensor-cubic-continuum-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --require QCCG_RG_BRIDGE_DATA_TOY
 
@@ -311,6 +317,7 @@ jobs:
             --evidence artifacts/qccg/tensor-cubic-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-stress-evidence.json \
             --evidence artifacts/qccg/lattice-ward-evidence.json \
+            --evidence artifacts/qccg/tensor-cubic-continuum-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --json > artifacts/qccg/report.json
           python qccg/check_promotion_boundaries.py \
