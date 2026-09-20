@@ -98,6 +98,18 @@ obligations:
     title: "Time-skipping local replacements are rejected by the causal move audit"
     kind: negative-control
     description: "A deliberately nonadjacent-time local replacement must fail the same causal/manifold validator."
+  - id: CAUSAL_MOVE_ENSEMBLE_SCAN_EXECUTED
+    title: "A finite reversible causal-move ensemble scan is executed with detailed-balance control"
+    kind: numerical
+    description: "The finite causal ensemble preserves foliation/manifold constraints and checks proposal-count Metropolis detailed balance."
+  - id: CAUSAL_FINITE_4D_CANDIDATE
+    title: "The finite causal-move ensemble reaches a broad four-dimensional geometry diagnostic"
+    kind: physics
+    description: "A finite-volume diagnostic only; PASS does not establish a continuum four-dimensional phase and FAIL is a valid negative result."
+  - id: CAUSAL_4D_SCALING_STABILITY
+    title: "The causal-move ensemble has a stable four-dimensional scaling phase at increasing volume and time extent"
+    kind: physics
+    description: "Requires finite-size scaling and coupling-window stability beyond a single finite ensemble."
   - id: QCCG_CAUSAL_MOVE_DYNAMICS
     title: "QCCG has a reversible local graph-changing dynamics closed within the causal foliated cellulation class"
     kind: physics
@@ -106,6 +118,7 @@ obligations:
       - CAUSAL_LOCAL_MOVESET_TOY
       - CAUSAL_MOVE_HERMITIAN_TOY
       - CAUSAL_MOVE_NEGATIVE_CONTROL
+      - CAUSAL_MOVE_ENSEMBLE_SCAN_EXECUTED
   - id: QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS
     title: "QCCG realizes a causal/foliated weighted cellulation dynamics with a stable 4D critical phase"
     kind: physics
@@ -114,6 +127,8 @@ obligations:
       - CAUSAL_FOLIATED_4D_ARCHITECTURE
       - CAUSAL_FOLIATION_NEGATIVE_CONTROL
       - QCCG_CAUSAL_MOVE_DYNAMICS
+      - CAUSAL_FINITE_4D_CANDIDATE
+      - CAUSAL_4D_SCALING_STABILITY
   - id: QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE
     title: "QCCG specifies and realizes a weighted critical cellulation ensemble with 4D manifold-like scaling"
     kind: physics
@@ -567,6 +582,13 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_CAUSAL_ENSEMBLE_SCAN
+    title: "Finite reversible causal geometry ensemble scan"
+    rank: 44
+    statement: "A finite causal foliated move ensemble is sampled with explicit detailed-balance and topology/foliation controls; its measured dimension is retained as a finite-size result only."
+    requires:
+      - CAUSAL_MOVE_ENSEMBLE_SCAN_EXECUTED
 
   - id: QCCG_CAUSAL_MOVE_ARCHITECTURE_TOY
     title: "Finite reversible causal move architecture"
