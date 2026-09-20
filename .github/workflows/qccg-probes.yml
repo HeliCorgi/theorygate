@@ -89,6 +89,9 @@ jobs:
           - name: qccg-cdt-structural-action
             script: qccg/run_qccg_cdt_structural_action_audit.py
             output: qccg-cdt-structural-action-evidence.json
+          - name: cdt-frg-reuter-anchor
+            script: qccg/run_cdt_frg_anchor_audit.py
+            output: cdt-frg-reuter-anchor-evidence.json
     name: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
