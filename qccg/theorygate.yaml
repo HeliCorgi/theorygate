@@ -289,6 +289,22 @@ obligations:
     title: "Wrong-time self-dual moves are rejected"
     kind: negative-control
     description: "A vertex outside adjacent time slices invalidates the causal 3->3 move."
+  - id: SPATIAL_PACHNER_CONNECTIVITY_THEOREM
+    title: "Pachner theorem connects triangulations of a fixed closed PL 3-manifold"
+    kind: reference-theorem
+    description: "External mathematical input: finite bistellar/Pachner move connectivity; in dimension three the elementary move families are 1<->4 and 2<->3 with inverses."
+  - id: QCCG_SPATIAL_PACHNER_MOVESET_MATCH
+    title: "QCCG spatial slice dynamics contains the 3D Pachner move families"
+    kind: formal-numerical
+    description: "The audited spatial move architecture implements reversible 1<->4 and 2<->3 move families."
+  - id: QCCG_SPATIAL_SLICE_PL_CONNECTIVITY
+    title: "QCCG spatial slice triangulations are finitely connected within a fixed PL 3-manifold class"
+    kind: theorem-application
+    description: "Combines Pachner theorem with the audited QCCG spatial move family; does not imply full four-dimensional causal triangulation ergodicity."
+    depends_on:
+      - SPATIAL_PACHNER_CONNECTIVITY_THEOREM
+      - QCCG_SPATIAL_PACHNER_MOVESET_MATCH
+
   - id: CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
     title: "A finite mixed causal-move fixed-boundary sector is connected"
     kind: formal-numerical
@@ -921,6 +937,13 @@ claims:
     requires:
       - CDT_MOVE_INVARIANT_AUDIT
       - CDT_BOUNDARY_MODULAR_INVARIANTS_EXPLAINED
+
+  - id: QCCG_SPATIAL_PACHNER_CONNECTIVITY
+    title: "Spatial-slice Pachner connectivity"
+    rank: 49
+    statement: "Using Pachner's theorem and the audited reversible 1<->4 and 2<->3 QCCG spatial move families, any two triangulations in the same closed PL 3-manifold slice class are connected by a finite QCCG spatial move sequence; no full 4D causal ergodicity is claimed."
+    requires:
+      - QCCG_SPATIAL_SLICE_PL_CONNECTIVITY
 
   - id: QCCG_CDT_CONNECTIVITY_SCALING_TOY
     title: "Finite-size constructive CDT connectivity scan"
