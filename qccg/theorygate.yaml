@@ -300,6 +300,18 @@ obligations:
     title: "Removing one move bit splits the largest constructive connectivity sector"
     kind: negative-control
     description: "The largest audited mixed-patch state graph must split when its final local move direction is removed."
+  - id: CDT_MOVE_INVARIANT_AUDIT
+    title: "Simple f-vector invariants of the realized causal move set are audited"
+    kind: formal-numerical
+    description: "Move deltas are checked for Euler/incidence identities and unexpected component-wise modular conservation laws."
+  - id: CDT_BOUNDARY_MODULAR_INVARIANTS_EXPLAINED
+    title: "Visible f3 mod-5 and f4 mod-2 invariants are explained by fixed-boundary incidence"
+    kind: formal-numerical
+    description: "The apparent modular invariants follow from 2 Δf3 = 5 Δf4 with fixed tetrahedral boundary."
+  - id: QCCG_CDT_GENERIC_INVARIANT_SEARCH
+    title: "Generic nonlocal conserved invariants of causal triangulation sectors are excluded"
+    kind: physics
+    description: "Requires scalable state-graph sampling beyond f-vector invariants."
   - id: QCCG_CDT_SCALABLE_CONNECTIVITY
     title: "Fixed-boundary causal move graphs remain connected across increasing generic triangulation sectors"
     kind: physics
@@ -307,6 +319,9 @@ obligations:
     depends_on:
       - CDT_CONNECTIVITY_SCALING_TOY
       - CDT_CONNECTIVITY_SCALING_NEGATIVE_CONTROL
+      - CDT_MOVE_INVARIANT_AUDIT
+      - CDT_BOUNDARY_MODULAR_INVARIANTS_EXPLAINED
+      - QCCG_CDT_GENERIC_INVARIANT_SEARCH
   - id: QCCG_CDT_MOVESET_ERGODICITY
     title: "The realized local 4D causal move set is ergodic within the intended fixed-boundary causal triangulation sectors"
     kind: physics
@@ -881,6 +896,14 @@ claims:
     requires:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
+
+  - id: QCCG_CDT_MOVE_INVARIANT_TOY
+    title: "Causal move-set f-vector invariant audit"
+    rank: 49
+    statement: "The realized local causal move templates have no unexpected component-wise modular f-vector invariant beyond fixed-boundary manifold identities; generic nonlocal invariants remain open."
+    requires:
+      - CDT_MOVE_INVARIANT_AUDIT
+      - CDT_BOUNDARY_MODULAR_INVARIANTS_EXPLAINED
 
   - id: QCCG_CDT_CONNECTIVITY_SCALING_TOY
     title: "Finite-size constructive CDT connectivity scan"
