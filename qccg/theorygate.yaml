@@ -126,10 +126,26 @@ obligations:
     title: "Repeating one vertex-changing spatial triangulation through time is diagnosed as insufficient when the 4D target fails"
     kind: negative-control
     description: "The repair removes the fixed-vertex defect but may still fail because every time slice shares one spatial geometry."
+  - id: TIME_LOCAL_SLICE_TRANSFER_TOY
+    title: "A finite spatial-triangulation state graph supports nearest-time local transfer dynamics"
+    kind: formal-numerical
+    description: "Adjacent discrete times may carry distinct spatial geometries related by one reversible Pachner move, with a Hermitian connected move graph."
+  - id: TIME_NONLOCAL_JUMP_NEGATIVE_CONTROL
+    title: "A two-move geometry jump is rejected by the nearest-time transfer rule"
+    kind: negative-control
+    description: "States at graph distance two are not direct one-step temporal neighbors."
+  - id: QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
+    title: "Every allowed neighboring spatial slice pair has a bounded-time 4D causal simplicial interpolation"
+    kind: physics
+    description: "Requires explicit 4D manifold-compatible slab realizations and composition for all allowed spatial Pachner transitions."
   - id: QCCG_TIME_LOCAL_CAUSAL_DYNAMICS
     title: "QCCG has bounded-time-neighborhood local causal graph dynamics with independently evolving spatial slices"
     kind: physics
     description: "Requires slice-dependent geometries and foliation-preserving local spacetime moves rather than global time-column updates."
+    depends_on:
+      - TIME_LOCAL_SLICE_TRANSFER_TOY
+      - TIME_NONLOCAL_JUMP_NEGATIVE_CONTROL
+      - QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
   - id: CAUSAL_4D_SCALING_STABILITY
     title: "The causal-move ensemble has a stable four-dimensional scaling phase at increasing volume and time extent"
     kind: physics
@@ -612,6 +628,14 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_TIME_LOCAL_TRANSFER_TOY
+    title: "Finite time-local evolving-slice architecture"
+    rank: 45
+    statement: "The audited finite spatial Pachner state graph supports reversible nearest-time transfer between genuinely different slice geometries and rejects two-move time-nonlocal jumps; explicit 4D slab realization remains open."
+    requires:
+      - TIME_LOCAL_SLICE_TRANSFER_TOY
+      - TIME_NONLOCAL_JUMP_NEGATIVE_CONTROL
 
   - id: QCCG_CAUSAL_COLUMN_REPAIR_DIAGNOSTIC
     title: "Vertex-changing causal-column repair diagnostic"
