@@ -92,6 +92,9 @@ jobs:
           - name: qccg-curvature-critical-line
             script: qccg/run_qccg_curvature_critical_line.py
             output: qccg-curvature-critical-line-evidence.json
+          - name: qccg-curvature-weighted-time-exploration
+            script: qccg/run_qccg_curvature_weighted_time_exploration.py
+            output: qccg-curvature-weighted-time-exploration-evidence.json
           - name: qccg-cdt-potential-drift
             script: qccg/run_qccg_cdt_potential_drift_audit.py
             output: qccg-cdt-potential-drift-evidence.json
