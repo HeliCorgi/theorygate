@@ -786,6 +786,26 @@ obligations:
     title: "The QCCG microscopic time unit is mapped to the CDT effective proper-time unit or an equivalent dimensionless kinetic coordinate"
     kind: physics
     description: "Required before the numerical QCCG kinetic coefficient can be identified directly with CDT Gamma."
+  - id: QCCG_REGGE_SPATIAL_CURVATURE_WEIGHT
+    title: "A local Regge curvature weight is defined on QCCG spatial slices"
+    kind: formal-numerical
+    description: "Equilateral 3D Regge curvature is computed from edge deficit angles and its change is explicit for local spatial Pachner moves."
+  - id: QCCG_CURVATURE_WEIGHT_DETAILED_BALANCE
+    title: "The curvature-weighted local QCCG move generator obeys pairwise detailed balance"
+    kind: formal-numerical
+    description: "Rates exp(-Delta S/2) satisfy detailed balance with weight exp(-S) on each reversible audited move edge."
+  - id: QCCG_CURVATURE_POTENTIAL_RESOLUTION_SCAN
+    title: "A Regge-curvature coupling scan resolves the CDT-inspired curvature-potential derivative better than the unweighted baseline"
+    kind: numerical
+    description: "A preregistered negative-curvature-coupling region improves the N3^(-2/3) potential-derivative fit without inserting the CDT potential directly."
+  - id: QCCG_CURVATURE_WEIGHTED_DYNAMICS
+    title: "Time-evolved curvature-weighted QCCG dynamics yields stable CDT effective potential coefficients"
+    kind: physics
+    description: "Requires state-dependent weighted evolution with stable mu/lambda, preserved diffusive kinetic scaling and a de Sitter-like volume profile."
+    depends_on:
+      - QCCG_REGGE_SPATIAL_CURVATURE_WEIGHT
+      - QCCG_CURVATURE_WEIGHT_DETAILED_BALANCE
+      - QCCG_CURVATURE_POTENTIAL_RESOLUTION_SCAN
   - id: QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
     title: "QCCG microscopic volume drift/diffusion is converted to an effective potential derivative"
     kind: numerical
@@ -805,6 +825,15 @@ obligations:
     depends_on:
       - QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
       - QCCG_CURVATURE_WEIGHTED_DYNAMICS
+  - id: QCCG_REGGE_CURVATURE_REPAIR_TOY
+    title: "Regge-curvature weighted potential repair"
+    rank: 49
+    statement: "A local edge-deficit Regge weight with exact detailed balance improves the CDT-inspired curvature-potential diagnostic over the unweighted QCCG generator on a preregistered negative-coupling range; time-evolved coefficient stability is not claimed."
+    requires:
+      - QCCG_REGGE_SPATIAL_CURVATURE_WEIGHT
+      - QCCG_CURVATURE_WEIGHT_DETAILED_BALANCE
+      - QCCG_CURVATURE_POTENTIAL_RESOLUTION_SCAN
+
   - id: QCCG_CDT_EFFECTIVE_COEFFICIENT_MATCH
     title: "QCCG large-volume effective Gamma, mu, lambda and omega are measured and stable"
     kind: physics
@@ -812,6 +841,7 @@ obligations:
     depends_on:
       - QCCG_CDT_DIFFUSIVE_KINETIC_LIMIT
       - QCCG_CDT_ACTION_STRUCTURAL_MATCH
+      - QCCG_CURVATURE_WEIGHTED_DYNAMICS
       - QCCG_CDT_KINETIC_COEFFICIENT_STABILITY
       - QCCG_CDT_TIME_UNIT_MAP
       - QCCG_CDT_POTENTIAL_PROFILE_MATCH
