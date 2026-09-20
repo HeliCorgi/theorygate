@@ -29,6 +29,12 @@ jobs:
           - name: cdt-selfdual-move
             script: qccg/run_cdt_move33_audit.py
             output: cdt-move33-evidence.json
+          - name: cdt-mixed-connectivity
+            script: qccg/run_cdt_mixed_connectivity_toy.py
+            output: cdt-mixed-connectivity-evidence.json
+          - name: lattice-ward-scaling
+            script: qccg/run_lattice_ward_scaling_audit.py
+            output: lattice-ward-evidence.json
           - name: pachner-cobordism
             script: qccg/run_pachner_cobordism_audit.py
             output: pachner-cobordism-evidence.json
