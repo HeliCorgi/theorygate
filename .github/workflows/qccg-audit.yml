@@ -65,6 +65,11 @@ jobs:
           python qccg/run_cellulation_liquid_audit.py \
             --out artifacts/qccg/cellulation-evidence.json
 
+      - name: Calibrate manifold-likeness diagnostics
+        run: |
+          python qccg/run_manifold_diagnostic_audit.py \
+            --out artifacts/qccg/manifold-diagnostic-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -108,6 +113,7 @@ jobs:
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
+            --evidence artifacts/qccg/manifold-diagnostic-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -126,6 +132,7 @@ jobs:
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
+            --evidence artifacts/qccg/manifold-diagnostic-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -144,6 +151,8 @@ jobs:
           assert any("QCCG_NONPERTURBATIVE_RG_FLOW=OPEN" in x or "ESSENTIAL_CRITICAL_EXPONENT_MATCH=OPEN" in x for x in report["obligations"]["AS_FIXED_POINT_MATCH"]["blockers"])
           assert report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["status"] == "OPEN"
           assert report["obligations"]["DERIVATIVE_CUBIC_REPAIR"]["status"] == "PASS"
+          assert report["obligations"]["MANIFOLD_DIAGNOSTIC_CALIBRATED"]["status"] == "PASS"
+          assert report["obligations"]["MANIFOLD_DIMENSION_CONTROLS"]["status"] == "PASS"
           assert report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["status"] == "BLOCKED"
           assert any("MANIFOLD_LIKENESS_SCALING=OPEN" in x for x in report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["blockers"])
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
