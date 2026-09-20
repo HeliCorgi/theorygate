@@ -292,10 +292,21 @@ obligations:
     title: "Removing a required move family is detected as finite-sector disconnection"
     kind: negative-control
     description: "The finite mixed-sector connectivity audit must split when one move family is removed."
+  - id: CDT_CONNECTIVITY_SCALING_TOY
+    title: "A constructive mixed-CDT fixed-boundary sector remains connected under finite size increase"
+    kind: formal-numerical
+    description: "Independent audited local move patches are glued through increasing depth and all 2^m configurations remain causal manifolds with one external boundary and a connected move graph."
+  - id: CDT_CONNECTIVITY_SCALING_NEGATIVE_CONTROL
+    title: "Removing one move bit splits the largest constructive connectivity sector"
+    kind: negative-control
+    description: "The largest audited mixed-patch state graph must split when its final local move direction is removed."
   - id: QCCG_CDT_SCALABLE_CONNECTIVITY
     title: "Fixed-boundary causal move graphs remain connected across increasing generic triangulation sectors"
     kind: physics
-    description: "Requires scalable enumeration/sampling and conserved-invariant searches beyond the finite glued sector."
+    description: "Requires scalable enumeration/sampling and conserved-invariant searches beyond the finite constructive glued family."
+    depends_on:
+      - CDT_CONNECTIVITY_SCALING_TOY
+      - CDT_CONNECTIVITY_SCALING_NEGATIVE_CONTROL
   - id: QCCG_CDT_MOVESET_ERGODICITY
     title: "The realized local 4D causal move set is ergodic within the intended fixed-boundary causal triangulation sectors"
     kind: physics
@@ -870,6 +881,14 @@ claims:
     requires:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
+
+  - id: QCCG_CDT_CONNECTIVITY_SCALING_TOY
+    title: "Finite-size constructive CDT connectivity scan"
+    rank: 49
+    statement: "The audited mixed local-move architecture remains a single fixed-boundary causal move-graph component through the preregistered finite patch depth, while removing one move direction splits the largest sector; generic ergodicity is not claimed."
+    requires:
+      - CDT_CONNECTIVITY_SCALING_TOY
+      - CDT_CONNECTIVITY_SCALING_NEGATIVE_CONTROL
 
   - id: QCCG_CDT_MAJOR_MOVES_TOY
     title: "Major local 4D causal move architectures"
