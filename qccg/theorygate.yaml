@@ -232,13 +232,28 @@ obligations:
     title: "An incorrect refinement map is detected as graph-change leakage"
     kind: negative-control
     description: "A wrong coarse-to-refined map must leak into the constraint-violating refined sector."
+  - id: REFINEMENT_PATH_COHERENCE_TOY
+    title: "Local refinement isometries are path-coherent in a finite code toy"
+    kind: formal-numerical
+    description: "Two different one-to-three refinement paths agree exactly on the physical repetition code and preserve the logical intertwiner."
+  - id: REFINEMENT_COHERENCE_NEGATIVE_CONTROL
+    title: "A child-dependent refinement phase is detected as path dependence"
+    kind: negative-control
+    description: "An inconsistent local refinement convention produces distinct physical embeddings for different refinement histories."
+  - id: QCCG_CELLULATION_REFINEMENT_COHERENCE
+    title: "The full QCCG move groupoid has a coherent cellulation-independent physical embedding"
+    kind: physics
+    description: "Requires path/loop independence for a generating set of actual Pachner/cellulation move relations."
   - id: QCCG_GRAPH_CHANGING_SCALING_MAP
     title: "The actual graph-changing QCCG physical Hilbert space has an isometric coarse-graining intertwiner"
     kind: physics
-    description: "Requires a compatible family of scaling maps over the actual cellulation graph, not only finite direct-sum toys."
+    description: "Requires a compatible coherent family of scaling maps over the actual cellulation graph, not only finite direct-sum toys."
     depends_on:
       - GRAPH_CHANGE_INTERTWINER_TOY
       - GRAPH_CHANGE_LEAKAGE_NEGATIVE_CONTROL
+      - REFINEMENT_PATH_COHERENCE_TOY
+      - REFINEMENT_COHERENCE_NEGATIVE_CONTROL
+      - QCCG_CELLULATION_REFINEMENT_COHERENCE
   - id: INTERACTING_PHYSICAL_SCALING_UNITARITY
     title: "The interacting graph-changing physical Hilbert space has a controlled unitary scaling limit"
     kind: physics
@@ -569,6 +584,14 @@ claims:
     requires:
       - INTERACTING_CODE_INTERTWINER_TOY
       - SCALING_LEAKAGE_NEGATIVE_CONTROL
+
+  - id: QCCG_REFINEMENT_COHERENCE_TOY
+    title: "Finite refinement-history coherence architecture"
+    rank: 47
+    statement: "Local code refinements are isometric and path-coherent in the audited finite toy, while a phase-inconsistent refinement is detected; coherence of the full QCCG move groupoid is not claimed."
+    requires:
+      - REFINEMENT_PATH_COHERENCE_TOY
+      - REFINEMENT_COHERENCE_NEGATIVE_CONTROL
 
   - id: QCCG_GRAPH_CHANGE_SCALING_TOY
     title: "Finite graph-change scaling isometry toy"
