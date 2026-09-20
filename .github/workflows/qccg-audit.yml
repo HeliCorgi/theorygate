@@ -115,6 +115,11 @@ jobs:
           python qccg/run_feshbach_rg_toy.py \
             --out artifacts/qccg/feshbach-evidence.json
 
+      - name: Audit cellulation-sector exact coarse graining
+        run: |
+          python qccg/run_cellulation_rg_toy.py \
+            --out artifacts/qccg/cellulation-rg-evidence.json
+
       - name: Audit soft-graviton universal coupling target
         run: |
           python qccg/run_soft_graviton_audit.py \
@@ -143,6 +148,7 @@ jobs:
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
             --evidence artifacts/qccg/feshbach-evidence.json \
+            --evidence artifacts/qccg/cellulation-rg-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --require QCCG_RG_BRIDGE_DATA_TOY
 
@@ -166,6 +172,7 @@ jobs:
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
             --evidence artifacts/qccg/feshbach-evidence.json \
+            --evidence artifacts/qccg/cellulation-rg-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
@@ -179,7 +186,13 @@ jobs:
           assert report["obligations"]["SINGLE_COUPLING_RG_TRUNCATION_REJECTED"]["status"] == "PASS"
           assert report["obligations"]["FULL_FINITE_HARMONIC_RG_CLOSURE_TOY"]["status"] == "PASS"
           assert report["obligations"]["TRIVIAL_RG_FLOW_NEGATIVE_CONTROL"]["status"] == "PASS"
-          assert report["obligations"]["QCCG_NONPERTURBATIVE_RG_FLOW"]["status"] == "OPEN"
+          assert report["obligations"]["CELLULATION_FESHBACH_RG_TOY"]["status"] == "PASS"
+          assert report["obligations"]["CELLULATION_RESTRICTED_RG_BASIS_REJECTED"]["status"] == "PASS"
+          assert report["obligations"]["CELLULATION_FULL_OPERATOR_BASIS_CLOSURE_TOY"]["status"] == "PASS"
+          assert report["obligations"]["CELLULATION_ENERGY_DEPENDENT_KERNEL"]["status"] == "PASS"
+          assert report["obligations"]["QCCG_CELLULATION_NONPERTURBATIVE_RG"]["status"] == "OPEN"
+          assert report["obligations"]["QCCG_NONPERTURBATIVE_RG_FLOW"]["status"] == "BLOCKED"
+          assert any("QCCG_CELLULATION_NONPERTURBATIVE_RG=OPEN" in x for x in report["obligations"]["QCCG_NONPERTURBATIVE_RG_FLOW"]["blockers"])
           assert report["obligations"]["FESHBACH_COARSE_GRAINING_TOY"]["status"] == "PASS"
           assert report["obligations"]["COARSE_OPERATOR_PROLIFERATION_DETECTED"]["status"] == "PASS"
           assert report["obligations"]["ENERGY_DEPENDENT_EFFECTIVE_KERNEL_DETECTED"]["status"] == "PASS"
