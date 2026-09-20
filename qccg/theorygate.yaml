@@ -104,6 +104,22 @@ obligations:
     title: "A mutually commuting nonlinear Hamiltonian-projector completion is rejected"
     kind: negative-control
     description: "A zero Hamiltonian-constraint commutator cannot reproduce the generic GR hypersurface-deformation target."
+  - id: STRUCTURE_FUNCTION_CLOSURE_TOY
+    title: "A finite-dimensional noncommuting constraint toy closes with an operator-valued structure function"
+    kind: formal-numerical
+    description: "A scoped finite Hilbert-space example demonstrates exact noncommuting closure, Jacobi identity and a nontrivial common kernel."
+  - id: CONSTRAINT_KERNEL_GAP_TOY
+    title: "The structure-function toy has a gapped constraint-penalty Hamiltonian preserving the physical kernel"
+    kind: formal-numerical
+    description: "The toy constraint penalty is positive, gapped above the common kernel and commutes with the toy constraints."
+  - id: STRUCTURE_FUNCTION_NEGATIVE_CONTROL
+    title: "An incorrect constant structure function is detected as a closure failure"
+    kind: negative-control
+    description: "Replacing the sector-dependent operator structure function by a constant fails the exact closure relation."
+  - id: GR_HDA_STRUCTURE_FUNCTION_MATCH
+    title: "The finite-Weyl nonlinear constraints reproduce the dynamical GR HDA structure functions"
+    kind: physics
+    description: "Requires inverse-metric/operator-valued structure functions with the correct smearing dependence, not merely a central toy operator."
   - id: NONLINEAR_CONSTRAINT_CLOSURE
     title: "The nonlinear interacting constraint/BRST algebra closes anomaly-free"
     kind: physics
@@ -111,6 +127,10 @@ obligations:
     depends_on:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+      - STRUCTURE_FUNCTION_CLOSURE_TOY
+      - CONSTRAINT_KERNEL_GAP_TOY
+      - STRUCTURE_FUNCTION_NEGATIVE_CONTROL
+      - GR_HDA_STRUCTURE_FUNCTION_MATCH
   - id: CONTINUUM_DIFFEO_BRST
     title: "Continuum diffeomorphism/BRST identities emerge"
     kind: physics
@@ -256,6 +276,15 @@ claims:
     requires:
       - CELLULATION_LIQUID_ZERO_MODE
       - CELLULATION_CONNECTIVITY_CONTROL
+
+  - id: QCCG_STRUCTURE_FUNCTION_TOY
+    title: "Finite constraint structure-function architecture toy"
+    rank: 46
+    statement: "A finite-dimensional QCCG-style toy realizes noncommuting operator-valued structure-function closure with Jacobi identity, a gapped common physical kernel, and a closure-failure negative control; GR HDA matching is not claimed."
+    requires:
+      - STRUCTURE_FUNCTION_CLOSURE_TOY
+      - CONSTRAINT_KERNEL_GAP_TOY
+      - STRUCTURE_FUNCTION_NEGATIVE_CONTROL
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
