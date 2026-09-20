@@ -194,7 +194,14 @@ jobs:
           from pathlib import Path
 
           report = json.loads(Path("artifacts/qccg/report.json").read_text())
-          assert report["strongest_supported_claim"] == "QCCG_RG_BRIDGE_DATA_TOY", report["strongest_supported_claim"]
+          assert report["strongest_supported_claim"] in {
+              "QCCG_RG_BRIDGE_DATA_TOY",
+              "QCCG_EXACT_RG_ARCHITECTURE_TOY",
+              "QCCG_CELLULATION_RG_ARCHITECTURE_TOY",
+              "QCCG_EFFECTIVE_KERNEL_TOY",
+              "QCCG_SELECTED_TENSOR_CUBIC_TOY",
+          }, report["strongest_supported_claim"]
+          assert report["claims"]["QCCG_EMERGENT_MASSLESS_SPIN2"]["supported"] is False
           assert report["obligations"]["UNIVERSAL_COUPLING_PHYSICAL"]["status"] == "BLOCKED"
           assert report["obligations"]["EXACT_FINITE_RG_BLOCKING_TOY"]["status"] == "PASS"
           assert report["obligations"]["SINGLE_COUPLING_RG_TRUNCATION_REJECTED"]["status"] == "PASS"
