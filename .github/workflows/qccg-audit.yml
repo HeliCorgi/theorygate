@@ -110,6 +110,11 @@ jobs:
           python qccg/run_exact_rg_toy.py \
             --out artifacts/qccg/exact-rg-evidence.json
 
+      - name: Audit Feshbach effective-kernel coarse graining
+        run: |
+          python qccg/run_feshbach_rg_toy.py \
+            --out artifacts/qccg/feshbach-evidence.json
+
       - name: Audit soft-graviton universal coupling target
         run: |
           python qccg/run_soft_graviton_audit.py \
@@ -137,6 +142,7 @@ jobs:
             --evidence artifacts/qccg/emergent-structure-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
+            --evidence artifacts/qccg/feshbach-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --require QCCG_RG_BRIDGE_DATA_TOY
 
@@ -159,6 +165,7 @@ jobs:
             --evidence artifacts/qccg/emergent-structure-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
+            --evidence artifacts/qccg/feshbach-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
@@ -173,6 +180,10 @@ jobs:
           assert report["obligations"]["FULL_FINITE_HARMONIC_RG_CLOSURE_TOY"]["status"] == "PASS"
           assert report["obligations"]["TRIVIAL_RG_FLOW_NEGATIVE_CONTROL"]["status"] == "PASS"
           assert report["obligations"]["QCCG_NONPERTURBATIVE_RG_FLOW"]["status"] == "OPEN"
+          assert report["obligations"]["FESHBACH_COARSE_GRAINING_TOY"]["status"] == "PASS"
+          assert report["obligations"]["COARSE_OPERATOR_PROLIFERATION_DETECTED"]["status"] == "PASS"
+          assert report["obligations"]["ENERGY_DEPENDENT_EFFECTIVE_KERNEL_DETECTED"]["status"] == "PASS"
+          assert report["obligations"]["QCCG_GRAPH_CHANGING_EFFECTIVE_KERNEL"]["status"] == "OPEN"
           assert report["obligations"]["AS_FIXED_POINT_MATCH"]["status"] == "BLOCKED"
           assert any("QCCG_NONPERTURBATIVE_RG_FLOW=OPEN" in x or "ESSENTIAL_CRITICAL_EXPONENT_MATCH=OPEN" in x for x in report["obligations"]["AS_FIXED_POINT_MATCH"]["blockers"])
           assert report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["status"] == "OPEN"
