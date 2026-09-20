@@ -9,3 +9,6 @@ __pycache__/
 # Local virtual environments
 .venv/
 venv/
+
+# Generated audit outputs
+artifacts/
