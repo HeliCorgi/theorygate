@@ -211,6 +211,22 @@ obligations:
       - IR_TWO_POINT_MATCH_INSUFFICIENT
       - QCCG_NONPERTURBATIVE_RG_FLOW
       - ESSENTIAL_CRITICAL_EXPONENT_MATCH
+  - id: SOFT_GRAVITON_UNIVERSALITY_TARGET
+    title: "Leading soft-graviton gauge consistency enforces universal coupling at the target continuum level"
+    kind: formal-numerical
+    description: "Universal coupling cancels the leading soft gauge variation by momentum conservation in the audited scattering target."
+  - id: SOFT_NONUNIVERSAL_COUPLING_REJECTED
+    title: "Species-dependent soft-graviton coupling fails a gauge-consistency negative control"
+    kind: negative-control
+    description: "A nonuniversal coupling assignment leaves a nonzero weighted momentum in the audited soft limit."
+  - id: UNIVERSAL_COUPLING_PHYSICAL
+    title: "QCCG physically realizes the soft-graviton universal coupling"
+    kind: physics
+    description: "Requires an actual physical massless spin-2 continuum S-matrix/soft limit, not only the conditional target theorem."
+    depends_on:
+      - SOFT_GRAVITON_UNIVERSALITY_TARGET
+      - SOFT_NONUNIVERSAL_COUPLING_REJECTED
+      - QCCG_EMERGENT_MASSLESS_SPIN2
   - id: GR_IR_EFFECTIVE_ACTION
     title: "The infrared physical effective action reproduces GR plus controlled corrections"
     kind: physics
@@ -362,6 +378,14 @@ claims:
       - AS_FIXED_POINT_MATCH
       - CONTINUUM_DIFFEO_BRST
       - PHYSICAL_UNITARITY_SCALING_LIMIT
+
+  - id: QCCG_SOFT_UNIVERSALITY_TARGET
+    title: "Conditional soft-graviton universality target"
+    rank: 42
+    statement: "At the target massless spin-2 continuum level, universal coupling satisfies the audited leading soft gauge-consistency condition while a nonuniversal assignment fails."
+    requires:
+      - SOFT_GRAVITON_UNIVERSALITY_TARGET
+      - SOFT_NONUNIVERSAL_COUPLING_REJECTED
 
   - id: QCCG_GR_IR
     title: "QCCG/RFQG yields general relativity in the infrared"
