@@ -139,6 +139,22 @@ obligations:
       - FINITE_PARENT_UNITARITY
       - QUADRATIC_SCALING_ISOMETRY
       - INTERACTING_PHYSICAL_SCALING_UNITARITY
+  - id: CUBIC_VERTEX_OBSTRUCTION_DETECTED
+    title: "The cosine-only parent lacks a cubic collective vertex around the flat vacuum"
+    kind: negative-control
+    description: "The original even cosine parent has vanishing third derivative at the vacuum."
+  - id: GENERIC_CUBIC_INTERACTION_REPAIR
+    title: "A finite-Weyl three-body term adds cubic nonlinearity without changing the quadratic Hessian"
+    kind: formal-numerical
+    description: "The repair is Hermitian, stationary at the flat vacuum, has zero quadratic correction and nonzero cubic derivative in the audited weak-coupling regime."
+  - id: CUBIC_VACUUM_STABILITY_CONTROL
+    title: "The cubic repair's strong-coupling vacuum instability is detected"
+    kind: negative-control
+    description: "A stronger coupling must be able to shift the discrete vacuum, demonstrating a genuine stability bound."
+  - id: GR_CUBIC_VERTEX_MATCH
+    title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
+    kind: physics
+    description: "Requires nonlinear diffeomorphism/soft-graviton consistency, not merely a nonzero cubic derivative."
   - id: AS_FIXED_POINT_MATCH
     title: "QCCG coarse graining reaches the RFQG-5/asymptotic-safety universality class"
     kind: physics
@@ -251,6 +267,15 @@ claims:
       - LORENTZ_UNIVERSALITY
       - CONTINUUM_DIFFEO_BRST
       - PHYSICAL_UNITARITY_SCALING_LIMIT
+
+  - id: QCCG_GENERIC_NONLINEAR_PARENT_TOY
+    title: "Finite-Weyl parent with stable generic cubic self-interaction"
+    rank: 48
+    statement: "The audited parent has a stable weak-coupling cubic collective interaction that leaves the free quadratic spectrum unchanged; GR vertex matching is not claimed."
+    requires:
+      - CUBIC_VERTEX_OBSTRUCTION_DETECTED
+      - GENERIC_CUBIC_INTERACTION_REPAIR
+      - CUBIC_VACUUM_STABILITY_CONTROL
 
   - id: QCCG_RFQG_UNIVERSALITY
     title: "QCCG realizes the RFQG-5 continuum universality class"
