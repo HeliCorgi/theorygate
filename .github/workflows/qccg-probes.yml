@@ -113,6 +113,9 @@ jobs:
           - name: qccg-cdt-coefficient-bootstrap
             script: qccg/run_qccg_cdt_coefficient_uncertainty.py
             output: qccg-cdt-coefficient-bootstrap-evidence.json
+          - name: qccg-statistical-cdt-confirmation
+            script: qccg/run_qccg_statistical_cdt_confirmation.py
+            output: qccg-statistical-cdt-confirmation-evidence.json
           - name: qccg-cdt-potential-drift
             script: qccg/run_qccg_cdt_potential_drift_audit.py
             output: qccg-cdt-potential-drift-evidence.json
