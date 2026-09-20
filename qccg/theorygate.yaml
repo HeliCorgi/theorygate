@@ -170,14 +170,38 @@ obligations:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
       - QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
+  - id: CDT_MOVE4_VERTEX_REFINEMENT_TOY
+    title: "A local 4D causal vertex-changing 2->8 refinement move is realized"
+    kind: formal-numerical
+    description: "A spatial vertex is inserted within one slice and the surrounding (1,4)/(4,1) pair is refined to eight causal 4-simplices."
+  - id: CDT_MOVE4_BOUNDARY_PRESERVATION
+    title: "The local 2->8 causal refinement preserves the external subcomplex boundary and manifold incidence"
+    kind: formal-numerical
+    description: "The move preserves the tetrahedral boundary and adjacent-time simplex types."
+  - id: CDT_MOVE4_INVERSE_CONTROL
+    title: "The local vertex-changing causal move has an exact 8->2 inverse"
+    kind: formal-numerical
+    description: "The inserted spatial vertex has coordination eight and supports exact collapse."
+  - id: CDT_MOVE4_TIME_SKIP_NEGATIVE_CONTROL
+    title: "Wrong-time insertion is rejected by the causal move audit"
+    kind: negative-control
+    description: "A refinement vertex placed outside the adjacent slice structure creates invalid causal simplices."
+  - id: QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
+    title: "QCCG realizes a complete reversible local 4D causal move set with fixed-boundary connectivity"
+    kind: physics
+    description: "Requires the remaining causal local moves and connectivity/ergodicity tests across finite fixed-boundary state graphs."
   - id: QCCG_TIME_LOCAL_CAUSAL_DYNAMICS
     title: "QCCG has bounded-time-neighborhood local causal graph dynamics with independently evolving spatial slices"
     kind: physics
-    description: "Requires slice-dependent geometries and foliation-preserving local spacetime moves rather than global time-column updates."
+    description: "Requires slice-dependent geometries and a sufficiently complete foliation-preserving local 4D move set."
     depends_on:
       - TIME_LOCAL_SLICE_TRANSFER_TOY
       - TIME_NONLOCAL_JUMP_NEGATIVE_CONTROL
-      - QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
+      - CDT_MOVE4_VERTEX_REFINEMENT_TOY
+      - CDT_MOVE4_BOUNDARY_PRESERVATION
+      - CDT_MOVE4_INVERSE_CONTROL
+      - CDT_MOVE4_TIME_SKIP_NEGATIVE_CONTROL
+      - QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
   - id: CAUSAL_4D_SCALING_STABILITY
     title: "The causal-move ensemble has a stable four-dimensional scaling phase at increasing volume and time extent"
     kind: physics
@@ -676,6 +700,16 @@ claims:
     requires:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
+
+  - id: QCCG_CDT_VERTEX_MOVE_TOY
+    title: "Local vertex-changing 4D causal refinement architecture"
+    rank: 46
+    statement: "The audited QCCG/CDT-style local move changes spatial vertex number within a bounded time neighborhood while preserving causal 4D manifold incidence and admitting an exact inverse; full move-set connectivity is not claimed."
+    requires:
+      - CDT_MOVE4_VERTEX_REFINEMENT_TOY
+      - CDT_MOVE4_BOUNDARY_PRESERVATION
+      - CDT_MOVE4_INVERSE_CONTROL
+      - CDT_MOVE4_TIME_SKIP_NEGATIVE_CONTROL
 
   - id: QCCG_TIME_LOCAL_TRANSFER_TOY
     title: "Finite time-local evolving-slice architecture"
