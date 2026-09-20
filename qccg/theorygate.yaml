@@ -214,6 +214,14 @@ obligations:
     title: "Missing local slab simplices are detected after closed-slice completion"
     kind: negative-control
     description: "Deleting a required replacement simplex creates boundary or incidence defects in the completed closed-slice slab."
+  - id: GENERIC_LOCAL_SLAB_BUILDER_SCAN
+    title: "Constructive local strict-slab builders survive a multi-triangulation closed-S3 stress scan"
+    kind: numerical
+    description: "Deterministic random closed S3 triangulations are grown and both 1->4 and incidence-canonicalized 2->3 closed-slice slab builders are re-audited."
+  - id: LOCAL_SLAB_LABEL_GAUGE_CONTROL
+    title: "Numeric vertex labels are rejected as physical input to the local 2->3 slab builder"
+    kind: negative-control
+    description: "A naive numeric-order role assignment fails on a relabelled 2->3 move; incidence-based canonical roles preserve the label-gauge principle."
   - id: QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
     title: "Every allowed neighboring spatial slice pair has a bounded-time 4D causal simplicial interpolation"
     kind: physics
@@ -230,7 +238,8 @@ obligations:
       - CLOSED_SLICE_14_CAUSAL_SLAB_TOY
       - CLOSED_SLICE_23_CAUSAL_SLAB_TOY
       - CLOSED_SLICE_SLAB_COMPLETION_CONTROL
-      - QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
+      - GENERIC_LOCAL_SLAB_BUILDER_SCAN
+      - LOCAL_SLAB_LABEL_GAUGE_CONTROL
   - id: CDT_MOVE4_VERTEX_REFINEMENT_TOY
     title: "A local 4D causal vertex-changing 2->8 refinement move is realized"
     kind: formal-numerical
@@ -949,6 +958,14 @@ claims:
     requires:
       - CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
       - CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
+
+  - id: QCCG_GENERIC_LOCAL_SLAB_TOY
+    title: "Generic closed-S3 local slab builder stress test"
+    rank: 49
+    statement: "Constructive strict 1->4 and incidence-canonicalized 2->3 slab builders pass several grown closed-S3 triangulations and a label-gauge negative control; a universal proof for all triangulations is not claimed."
+    requires:
+      - GENERIC_LOCAL_SLAB_BUILDER_SCAN
+      - LOCAL_SLAB_LABEL_GAUGE_CONTROL
 
   - id: QCCG_CLOSED_SLICE_SLAB_TOY
     title: "Closed S3 embedding of both spatial Pachner slab generators"
