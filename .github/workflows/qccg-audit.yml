@@ -235,6 +235,16 @@ jobs:
           python qccg/run_qccg_cdt_diffusion_bridge.py \
             --out artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json
 
+      - name: Run large-volume QCCG diffusion scan
+        run: |
+          python qccg/run_qccg_large_volume_diffusion_scan.py \
+            --out artifacts/qccg/qccg-large-volume-diffusion-evidence.json
+
+      - name: Audit QCCG mesoscopic Gaussianization
+        run: |
+          python qccg/run_qccg_mesoscopic_clt_audit.py \
+            --out artifacts/qccg/qccg-mesoscopic-clt-evidence.json
+
       - name: Audit structural QCCG CDT action match
         run: |
           python qccg/run_qccg_cdt_structural_action_audit.py \
@@ -341,6 +351,8 @@ jobs:
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-transfer-match-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
+            --evidence artifacts/qccg/qccg-large-volume-diffusion-evidence.json \
+            --evidence artifacts/qccg/qccg-mesoscopic-clt-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-structural-action-evidence.json \
             --evidence artifacts/qccg/cdt-frg-reuter-anchor-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
@@ -398,6 +410,8 @@ jobs:
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-transfer-match-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
+            --evidence artifacts/qccg/qccg-large-volume-diffusion-evidence.json \
+            --evidence artifacts/qccg/qccg-mesoscopic-clt-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-structural-action-evidence.json \
             --evidence artifacts/qccg/cdt-frg-reuter-anchor-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
