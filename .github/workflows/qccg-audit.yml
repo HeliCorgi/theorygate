@@ -170,6 +170,11 @@ jobs:
           python qccg/run_tensor_cubic_lattice_audit.py \
             --out artifacts/qccg/tensor-cubic-evidence.json
 
+      - name: Stress tensor cubic across multiple kinematics
+        run: |
+          python qccg/run_tensor_cubic_stress_audit.py \
+            --out artifacts/qccg/tensor-cubic-stress-evidence.json
+
       - name: Audit soft-graviton universal coupling target
         run: |
           python qccg/run_soft_graviton_audit.py \
@@ -209,6 +214,7 @@ jobs:
             --evidence artifacts/qccg/cellulation-rg-evidence.json \
             --evidence artifacts/qccg/gr-cubic-ward-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-evidence.json \
+            --evidence artifacts/qccg/tensor-cubic-stress-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --require QCCG_RG_BRIDGE_DATA_TOY
 
@@ -243,6 +249,7 @@ jobs:
             --evidence artifacts/qccg/cellulation-rg-evidence.json \
             --evidence artifacts/qccg/gr-cubic-ward-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-evidence.json \
+            --evidence artifacts/qccg/tensor-cubic-stress-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --json > artifacts/qccg/report.json
           python qccg/check_promotion_boundaries.py \
