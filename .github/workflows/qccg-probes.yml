@@ -52,6 +52,9 @@ jobs:
           - name: causal-14-slab
             script: qccg/run_causal_refinement_slab_audit.py
             output: causal-14-slab-evidence.json
+          - name: causal-23-slab
+            script: qccg/run_causal_23_slab_audit.py
+            output: causal-23-slab-evidence.json
           - name: tensor-cubic-stress
             script: qccg/run_tensor_cubic_stress_audit.py
             output: tensor-cubic-stress-evidence.json
