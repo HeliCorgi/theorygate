@@ -171,10 +171,21 @@ obligations:
     title: "The cubic repair's strong-coupling vacuum instability is detected"
     kind: negative-control
     description: "A stronger coupling must be able to shift the discrete vacuum, demonstrating a genuine stability bound."
+  - id: NONDERIVATIVE_CUBIC_MISMATCH_DETECTED
+    title: "A non-derivative local cubic is rejected as insufficient for the GR-like three-graviton structure"
+    kind: negative-control
+    description: "The earlier local cubic acts on a uniform collective mode and lacks the required two-derivative structure."
+  - id: DERIVATIVE_CUBIC_REPAIR
+    title: "A link-based finite-Weyl cubic yields a field-times-two-derivatives continuum structure"
+    kind: formal-numerical
+    description: "The repair has zero linear/quadratic variation, nonzero cubic variation and vanishes on spatially uniform modes."
   - id: GR_CUBIC_VERTEX_MATCH
     title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
     kind: physics
-    description: "Requires nonlinear diffeomorphism/soft-graviton consistency, not merely a nonzero cubic derivative."
+    description: "Requires full tensor-index nonlinear diffeomorphism/soft-graviton consistency, not merely a derivative cubic scalar proxy."
+    depends_on:
+      - NONDERIVATIVE_CUBIC_MISMATCH_DETECTED
+      - DERIVATIVE_CUBIC_REPAIR
   - id: RG_BRIDGE_OBSERVABLES_EXTRACTED
     title: "QCCG bridge observables are extracted for continuum universality comparison"
     kind: rg-analytic
@@ -334,6 +345,14 @@ claims:
     requires:
       - RG_BRIDGE_OBSERVABLES_EXTRACTED
       - IR_TWO_POINT_MATCH_INSUFFICIENT
+
+  - id: QCCG_DERIVATIVE_CUBIC_TOY
+    title: "Derivative-cubic finite-Weyl repair"
+    rank: 48
+    statement: "The audited nonlinear parent replaces a non-derivative cubic proxy by a link-based finite-Weyl interaction whose continuum leading term is field-times-two-derivatives without changing the quadratic Hessian."
+    requires:
+      - NONDERIVATIVE_CUBIC_MISMATCH_DETECTED
+      - DERIVATIVE_CUBIC_REPAIR
 
   - id: QCCG_RFQG_UNIVERSALITY
     title: "QCCG realizes the RFQG-5 continuum universality class"
