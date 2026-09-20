@@ -214,10 +214,26 @@ obligations:
     title: "Wrong-time self-dual moves are rejected"
     kind: negative-control
     description: "A vertex outside adjacent time slices invalidates the causal 3->3 move."
+  - id: CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
+    title: "A finite mixed causal-move fixed-boundary sector is connected"
+    kind: formal-numerical
+    description: "A connected 4D manifold-with-boundary built from 2<->8, 4<->6 and 3<->3 local move patches has all eight local configurations in one move-graph component with identical external boundary."
+  - id: CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
+    title: "Removing a required move family is detected as finite-sector disconnection"
+    kind: negative-control
+    description: "The finite mixed-sector connectivity audit must split when one move family is removed."
+  - id: QCCG_CDT_SCALABLE_CONNECTIVITY
+    title: "Fixed-boundary causal move graphs remain connected across increasing generic triangulation sectors"
+    kind: physics
+    description: "Requires scalable enumeration/sampling and conserved-invariant searches beyond the finite glued sector."
   - id: QCCG_CDT_MOVESET_ERGODICITY
     title: "The realized local 4D causal move set is ergodic within the intended fixed-boundary causal triangulation sectors"
     kind: physics
     description: "Requires finite-state connectivity tests followed by scalable evidence; individual local move realizations are insufficient."
+    depends_on:
+      - CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
+      - CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
+      - QCCG_CDT_SCALABLE_CONNECTIVITY
   - id: QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
     title: "QCCG realizes a complete reversible local 4D causal move set with fixed-boundary connectivity"
     kind: physics
@@ -844,6 +860,14 @@ claims:
       - CAUSAL_LOCAL_MOVESET_TOY
       - CAUSAL_MOVE_HERMITIAN_TOY
       - CAUSAL_MOVE_NEGATIVE_CONTROL
+
+  - id: QCCG_CDT_FINITE_CONNECTIVITY_TOY
+    title: "Finite mixed CDT move connectivity sector"
+    rank: 49
+    statement: "The audited connected 4D fixed-boundary toy combines vertex-changing, connectivity-changing and self-dual causal moves into one connected eight-state move graph; general ergodicity is not claimed."
+    requires:
+      - CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
+      - CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
 
   - id: QCCG_CAUSAL_FOLIATION_ARCHITECTURE_TOY
     title: "Finite causal-foliation simplicial architecture"
