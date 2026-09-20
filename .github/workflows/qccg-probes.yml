@@ -40,6 +40,9 @@ jobs:
           - name: lattice-ward-scaling
             script: qccg/run_lattice_ward_scaling_audit.py
             output: lattice-ward-evidence.json
+          - name: tensor-cubic-continuum
+            script: qccg/run_tensor_cubic_continuum_limit.py
+            output: tensor-cubic-continuum-evidence.json
           - name: pachner-cobordism
             script: qccg/run_pachner_cobordism_audit.py
             output: pachner-cobordism-evidence.json
