@@ -89,6 +89,9 @@ jobs:
           - name: qccg-regge-curvature-scan
             script: qccg/run_qccg_curvature_weight_scan.py
             output: qccg-regge-curvature-scan-evidence.json
+          - name: qccg-curvature-critical-line
+            script: qccg/run_qccg_curvature_critical_line.py
+            output: qccg-curvature-critical-line-evidence.json
           - name: qccg-cdt-potential-drift
             script: qccg/run_qccg_cdt_potential_drift_audit.py
             output: qccg-cdt-potential-drift-evidence.json
