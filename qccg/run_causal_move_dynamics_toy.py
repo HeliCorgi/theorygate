@@ -315,7 +315,7 @@ def main():
                 "A time-skipping local replacement is rejected by the same causal/manifold audit.",
             ),
             evidence(
-                "qccg-causal-move-dynamics-open",
+                "qccg-causal-move-dynamics-finite-toy-open",
                 "QCCG_CAUSAL_MOVE_DYNAMICS",
                 "OPEN",
                 "A finite reversible causal 2<->4 move architecture is demonstrated, but ergodicity and scalable reversible dynamics over increasing foliated QCCG ensembles remain unproved.",
