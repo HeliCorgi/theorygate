@@ -73,11 +73,31 @@ jobs:
           ev = json.loads(Path("artifacts/qccg-lean/gluing-evidence.json").read_text())
           assert ev["status"] == "PASS", ev
           PY
-      - name: Promote only the formal gluing claim
+      - name: Collect axiom-free finite-history evidence
+        run: |
+          theorygate evidence lean \
+            --project qccg/lean \
+            --id qccg-finite-history-gluing-lean \
+            --obligation STRICT_FINITE_HISTORY_GLUE_LEMMA \
+            --import QCCG \
+            --theorem QCCG.finite_history_interfaces_two \
+            --theorem QCCG.finite_history_no_external_interfaces \
+            --output /tmp/qccg-finite-history-evidence.json \
+            --no-axioms
+          cp /tmp/qccg-finite-history-evidence.json artifacts/qccg-lean/finite-history-evidence.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          ev = json.loads(Path("artifacts/qccg-lean/finite-history-evidence.json").read_text())
+          assert ev["status"] == "PASS", ev
+          PY
+
+      - name: Promote only the formal gluing claims
         run: |
           theorygate check qccg/theorygate.yaml \
             --evidence artifacts/qccg-lean/gluing-evidence.json \
-            --require QCCG_FORMAL_GLUE_LEMMA
+            --evidence artifacts/qccg-lean/finite-history-evidence.json \
+            --require QCCG_FORMAL_FINITE_HISTORY_GLUE
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
