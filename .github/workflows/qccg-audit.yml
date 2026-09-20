@@ -175,6 +175,11 @@ jobs:
           python qccg/run_closed_slice_slab_audit.py \
             --out artifacts/qccg/closed-slice-slab-evidence.json
 
+      - name: Stress generic closed-S3 slab builders
+        run: |
+          python qccg/run_generic_closed_slice_slab_scan.py \
+            --out artifacts/qccg/generic-slab-scan-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -284,6 +289,7 @@ jobs:
             --evidence artifacts/qccg/causal-23-slab-evidence.json \
             --evidence artifacts/qccg/strict-slab-composition-evidence.json \
             --evidence artifacts/qccg/closed-slice-slab-evidence.json \
+            --evidence artifacts/qccg/generic-slab-scan-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -332,6 +338,7 @@ jobs:
             --evidence artifacts/qccg/causal-23-slab-evidence.json \
             --evidence artifacts/qccg/strict-slab-composition-evidence.json \
             --evidence artifacts/qccg/closed-slice-slab-evidence.json \
+            --evidence artifacts/qccg/generic-slab-scan-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
