@@ -240,6 +240,11 @@ jobs:
           python qccg/run_qccg_cdt_kinetic_coefficient_audit.py \
             --out artifacts/qccg/qccg-cdt-kinetic-coefficient-evidence.json
 
+      - name: Diagnose QCCG CDT potential sector
+        run: |
+          python qccg/run_qccg_cdt_potential_drift_audit.py \
+            --out artifacts/qccg/qccg-cdt-potential-drift-evidence.json
+
       - name: Run large-volume QCCG diffusion scan
         run: |
           python qccg/run_qccg_large_volume_diffusion_scan.py \
@@ -362,6 +367,7 @@ jobs:
             --evidence artifacts/qccg/qccg-cdt-transfer-match-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-kinetic-coefficient-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-potential-drift-evidence.json \
             --evidence artifacts/qccg/qccg-large-volume-diffusion-evidence.json \
             --evidence artifacts/qccg/qccg-mesoscopic-clt-evidence.json \
             --evidence artifacts/qccg/qccg-time-evolved-volume-kernel-evidence.json \
@@ -423,6 +429,7 @@ jobs:
             --evidence artifacts/qccg/qccg-cdt-transfer-match-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-kinetic-coefficient-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-potential-drift-evidence.json \
             --evidence artifacts/qccg/qccg-large-volume-diffusion-evidence.json \
             --evidence artifacts/qccg/qccg-mesoscopic-clt-evidence.json \
             --evidence artifacts/qccg/qccg-time-evolved-volume-kernel-evidence.json \
