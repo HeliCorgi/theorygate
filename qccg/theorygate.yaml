@@ -536,6 +536,22 @@ obligations:
     title: "Exact microscopic finite-spacing diffeomorphism Ward identities hold"
     kind: physics
     description: "The current local lattice derivative does not satisfy this; continuum restoration rather than exact finite-a symmetry is required."
+  - id: FINITE_WEYL_CUBIC_COEFFICIENT_EXACT
+    title: "Finite-Weyl sine coordinates leave the cubic field coefficient exact"
+    kind: formal-numerical
+    description: "Finite-delta corrections to the sine coordinate first modify quintic and higher field orders, not the cubic coefficient."
+  - id: TENSOR_CUBIC_OPERATOR_CONTINUUM_OA2
+    title: "The generic engineered h(dh)(dh) cubic operator converges to its continuum kernel at O(a^2)"
+    kind: formal-numerical
+    description: "Symmetric local derivatives produce only quadratic-in-spacing corrections to the generic cubic momentum kernel."
+  - id: TENSOR_CUBIC_FORWARD_OA_NEGATIVE_CONTROL
+    title: "A forward-derivative cubic discretization is rejected by its O(a) operator error"
+    kind: negative-control
+    description: "The lower-order discretization gives only linear-in-spacing restoration."
+  - id: QCCG_CUBIC_RG_DERIVATION
+    title: "Microscopic QCCG coarse graining selects the EH tensor cubic coefficients"
+    kind: physics
+    description: "Requires deriving the cubic tensor structure from a generic finite-Weyl interaction basis rather than inserting the Einstein-Hilbert target."
   - id: QCCG_FULL_CUBIC_WARD_MATCH
     title: "The QCCG tensor cubic satisfies the full nonlinear Ward identities and is selected by the microscopic RG flow"
     kind: physics
@@ -544,6 +560,10 @@ obligations:
       - QCCG_CUBIC_MULTI_KINEMATICS_STRESS
       - LATTICE_WARD_RESIDUAL_OA2
       - FORWARD_DIFFERENCE_WARD_OA_NEGATIVE_CONTROL
+      - FINITE_WEYL_CUBIC_COEFFICIENT_EXACT
+      - TENSOR_CUBIC_OPERATOR_CONTINUUM_OA2
+      - TENSOR_CUBIC_FORWARD_OA_NEGATIVE_CONTROL
+      - QCCG_CUBIC_RG_DERIVATION
   - id: GR_CUBIC_VERTEX_MATCH
     title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
     kind: physics
@@ -1006,6 +1026,15 @@ claims:
     requires:
       - LATTICE_WARD_RESIDUAL_OA2
       - FORWARD_DIFFERENCE_WARD_OA_NEGATIVE_CONTROL
+
+  - id: QCCG_CUBIC_OPERATOR_LIMIT_TOY
+    title: "Operator-level finite-Weyl cubic continuum limit"
+    rank: 49
+    statement: "At cubic field order the finite-Weyl coordinate is exact and the symmetric-derivative h(dh)(dh) kernel differs from continuum only at O(a^2); microscopic RG selection of the EH coefficients remains open."
+    requires:
+      - FINITE_WEYL_CUBIC_COEFFICIENT_EXACT
+      - TENSOR_CUBIC_OPERATOR_CONTINUUM_OA2
+      - TENSOR_CUBIC_FORWARD_OA_NEGATIVE_CONTROL
 
   - id: QCCG_SELECTED_TENSOR_CUBIC_TOY
     title: "Selected-kinematics finite-Weyl tensor cubic match"
