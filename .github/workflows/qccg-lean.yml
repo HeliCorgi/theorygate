@@ -43,8 +43,11 @@ jobs:
           lint: 'false'
           use-mathlib-cache: 'false'
           use-github-cache: 'false'
-      - name: Show provenance cleanliness before audit
-        run: git status --porcelain
+      - name: Assert provenance cleanliness before audit
+        run: |
+          status="$(git status --porcelain)"
+          printf '%s\n' "$status"
+          test -z "$status"
 
       - name: Collect axiom-free TheoryGate evidence
         run: |
