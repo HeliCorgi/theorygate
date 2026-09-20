@@ -134,10 +134,26 @@ obligations:
     title: "A two-move geometry jump is rejected by the nearest-time transfer rule"
     kind: negative-control
     description: "States at graph distance two are not direct one-step temporal neighbors."
+  - id: PACHNER_4SIMPLEX_COBORDISM_TOY
+    title: "Spatial 1<->4 and 2<->3 Pachner moves admit local 4-simplex cobordism blocks"
+    kind: formal-numerical
+    description: "Complementary tetrahedral facet sets of one 4-simplex realize the spatial Pachner transitions with identical boundary 2-complexes."
+  - id: PACHNER_COBORDISM_INVERSE_CONTROL
+    title: "The local Pachner cobordism blocks have exact complementary inverse moves"
+    kind: negative-control
+    description: "Swapping lower/upper facet sets realizes 4->1 and 3->2 inverse cobordisms."
+  - id: QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
+    title: "Arbitrary compositions of local Pachner cobordisms admit one consistent global causal foliation"
+    kind: physics
+    description: "Requires global time labels, manifold incidence and no time-skipping simplices after composing local 4D blocks."
   - id: QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
     title: "Every allowed neighboring spatial slice pair has a bounded-time 4D causal simplicial interpolation"
     kind: physics
-    description: "Requires explicit 4D manifold-compatible slab realizations and composition for all allowed spatial Pachner transitions."
+    description: "Requires explicit local Pachner cobordisms plus globally composable causal foliation."
+    depends_on:
+      - PACHNER_4SIMPLEX_COBORDISM_TOY
+      - PACHNER_COBORDISM_INVERSE_CONTROL
+      - QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
   - id: QCCG_TIME_LOCAL_CAUSAL_DYNAMICS
     title: "QCCG has bounded-time-neighborhood local causal graph dynamics with independently evolving spatial slices"
     kind: physics
@@ -628,6 +644,14 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_PACHNER_COBORDISM_TOY
+    title: "Local 4D Pachner cobordism architecture"
+    rank: 45
+    statement: "The audited spatial 1<->4 and 2<->3 Pachner transitions admit exact local 4-simplex cobordism blocks and complementary inverse moves; arbitrary global causal composition is not claimed."
+    requires:
+      - PACHNER_4SIMPLEX_COBORDISM_TOY
+      - PACHNER_COBORDISM_INVERSE_CONTROL
 
   - id: QCCG_TIME_LOCAL_TRANSFER_TOY
     title: "Finite time-local evolving-slice architecture"
