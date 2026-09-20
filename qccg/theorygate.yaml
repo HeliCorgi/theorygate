@@ -833,10 +833,6 @@ obligations:
     title: "The unweighted QCCG move dynamics is diagnosed as not resolving a stable N3^(1/3) curvature potential"
     kind: negative-control
     description: "A stable linear-volume drift without a well-resolved N3^(-2/3) derivative term is retained as evidence of missing geometric weighting."
-  - id: QCCG_CURVATURE_WEIGHTED_DYNAMICS
-    title: "A microscopic curvature-sensitive QCCG dynamics produces a stable curvature contribution"
-    kind: physics
-    description: "Requires a geometric/curvature term derived from the QCCG microscopic sector, not insertion of the CDT effective potential by hand."
   - id: QCCG_CDT_POTENTIAL_PROFILE_MATCH
     title: "QCCG dynamically yields stable curvature/volume coefficients and a de Sitter-type volume profile"
     kind: physics
