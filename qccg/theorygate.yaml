@@ -186,6 +186,22 @@ obligations:
     title: "Wrong-time insertion is rejected by the causal move audit"
     kind: negative-control
     description: "A refinement vertex placed outside the adjacent slice structure creates invalid causal simplices."
+  - id: CDT_MOVE46_CONNECTIVITY_TOY
+    title: "A local 4D causal connectivity-changing 4->6 move is realized"
+    kind: formal-numerical
+    description: "A shared spatial triangle is replaced by its dual spatial edge while preserving the external causal subcomplex boundary."
+  - id: CDT_MOVE46_BOUNDARY_PRESERVATION
+    title: "The local 4->6 causal move preserves manifold incidence and adjacent-time simplex structure"
+    kind: formal-numerical
+    description: "The connectivity-changing move stays within the causal manifold class."
+  - id: CDT_MOVE46_INVERSE_CONTROL
+    title: "The local 4->6 causal connectivity move has an exact 6->4 inverse signal"
+    kind: formal-numerical
+    description: "The new spatial edge has coordination six."
+  - id: CDT_MOVE46_TIME_SKIP_NEGATIVE_CONTROL
+    title: "Wrong-time connectivity moves are rejected"
+    kind: negative-control
+    description: "Moving a spatial vertex outside the adjacent slice structure invalidates the causal simplex types."
   - id: QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
     title: "QCCG realizes a complete reversible local 4D causal move set with fixed-boundary connectivity"
     kind: physics
@@ -201,6 +217,10 @@ obligations:
       - CDT_MOVE4_BOUNDARY_PRESERVATION
       - CDT_MOVE4_INVERSE_CONTROL
       - CDT_MOVE4_TIME_SKIP_NEGATIVE_CONTROL
+      - CDT_MOVE46_CONNECTIVITY_TOY
+      - CDT_MOVE46_BOUNDARY_PRESERVATION
+      - CDT_MOVE46_INVERSE_CONTROL
+      - CDT_MOVE46_TIME_SKIP_NEGATIVE_CONTROL
       - QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
   - id: CAUSAL_4D_SCALING_STABILITY
     title: "The causal-move ensemble has a stable four-dimensional scaling phase at increasing volume and time extent"
@@ -700,6 +720,16 @@ claims:
     requires:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
+
+  - id: QCCG_CDT_CONNECTIVITY_MOVE_TOY
+    title: "Local connectivity-changing 4D causal move architecture"
+    rank: 46
+    statement: "The audited local causal move changes spatial connectivity within a bounded time neighborhood while preserving the subcomplex boundary, manifold incidence and exact inverse signal."
+    requires:
+      - CDT_MOVE46_CONNECTIVITY_TOY
+      - CDT_MOVE46_BOUNDARY_PRESERVATION
+      - CDT_MOVE46_INVERSE_CONTROL
+      - CDT_MOVE46_TIME_SKIP_NEGATIVE_CONTROL
 
   - id: QCCG_CDT_VERTEX_MOVE_TOY
     title: "Local vertex-changing 4D causal refinement architecture"
