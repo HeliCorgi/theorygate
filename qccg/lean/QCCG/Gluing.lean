@@ -25,9 +25,7 @@ theorem interface_incidence_two
     (hleft : x.left = 1)
     (hright : x.right = 1) :
     gluedIncidence x = 2 := by
-  cases hleft
-  cases hright
-  rfl
+  simp [gluedIncidence, hleft, hright]
 
 theorem interface_remains_manifold_codim_one
     (x : FaceIncidence)
@@ -67,8 +65,6 @@ theorem interface_not_external_after_gluing
     (hleft : x.left = 1)
     (hright : x.right = 1) :
     gluedIncidence x ≠ 1 := by
-  cases hleft
-  cases hright
-  decide
+  simp [gluedIncidence, hleft, hright]
 
 end QCCG
