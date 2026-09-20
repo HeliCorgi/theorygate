@@ -276,7 +276,7 @@ jobs:
           assert report["obligations"]["QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS"]["status"] == "BLOCKED"
           assert any("QCCG_CAUSAL_MOVE_DYNAMICS=OPEN" in x for x in report["obligations"]["QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS"]["blockers"])
           assert report["obligations"]["QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE"]["status"] == "BLOCKED"
-          assert any("QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS=OPEN" in x for x in report["obligations"]["QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE"]["blockers"])
+          assert any("QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS=BLOCKED" in x for x in report["obligations"]["QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE"]["blockers"])
           assert report["obligations"]["QCCG_CELLULATION_GEOMETRY_MEASURED"]["status"] == "BLOCKED"
           assert any("QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE=BLOCKED" in x for x in report["obligations"]["QCCG_CELLULATION_GEOMETRY_MEASURED"]["blockers"])
           assert report["obligations"]["MANIFOLD_LIKENESS_SCALING"]["status"] == "BLOCKED"
