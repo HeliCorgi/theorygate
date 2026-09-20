@@ -202,6 +202,18 @@ obligations:
     title: "Wrong-time connectivity moves are rejected"
     kind: negative-control
     description: "Moving a spatial vertex outside the adjacent slice structure invalidates the causal simplex types."
+  - id: CDT_MOVE33_SELFDUAL_TOY
+    title: "A local 4D causal self-dual 3->3 move is realized"
+    kind: formal-numerical
+    description: "A timelike coordination-three triangle is exchanged with its dual timelike triangle without changing simplex count."
+  - id: CDT_MOVE33_BOUNDARY_PRESERVATION
+    title: "The local 3->3 causal move preserves manifold incidence and boundary"
+    kind: formal-numerical
+    description: "The self-dual move remains in the adjacent-time causal manifold class."
+  - id: CDT_MOVE33_TIME_SKIP_NEGATIVE_CONTROL
+    title: "Wrong-time self-dual moves are rejected"
+    kind: negative-control
+    description: "A vertex outside adjacent time slices invalidates the causal 3->3 move."
   - id: QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
     title: "QCCG realizes a complete reversible local 4D causal move set with fixed-boundary connectivity"
     kind: physics
@@ -221,6 +233,9 @@ obligations:
       - CDT_MOVE46_BOUNDARY_PRESERVATION
       - CDT_MOVE46_INVERSE_CONTROL
       - CDT_MOVE46_TIME_SKIP_NEGATIVE_CONTROL
+      - CDT_MOVE33_SELFDUAL_TOY
+      - CDT_MOVE33_BOUNDARY_PRESERVATION
+      - CDT_MOVE33_TIME_SKIP_NEGATIVE_CONTROL
       - QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
   - id: CAUSAL_4D_SCALING_STABILITY
     title: "The causal-move ensemble has a stable four-dimensional scaling phase at increasing volume and time extent"
@@ -720,6 +735,15 @@ claims:
     requires:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
+
+  - id: QCCG_CDT_SELFDUAL_MOVE_TOY
+    title: "Local self-dual 4D causal connectivity move"
+    rank: 46
+    statement: "The audited local 3->3 move changes timelike connectivity without changing simplex count while preserving the causal subcomplex boundary and rejecting wrong-time variants."
+    requires:
+      - CDT_MOVE33_SELFDUAL_TOY
+      - CDT_MOVE33_BOUNDARY_PRESERVATION
+      - CDT_MOVE33_TIME_SKIP_NEGATIVE_CONTROL
 
   - id: QCCG_CDT_CONNECTIVITY_MOVE_TOY
     title: "Local connectivity-changing 4D causal move architecture"
