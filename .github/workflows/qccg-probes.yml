@@ -58,6 +58,9 @@ jobs:
           - name: strict-slab-composition
             script: qccg/run_strict_slab_composition_audit.py
             output: strict-slab-composition-evidence.json
+          - name: closed-slice-slabs
+            script: qccg/run_closed_slice_slab_audit.py
+            output: closed-slice-slab-evidence.json
           - name: tensor-cubic-stress
             script: qccg/run_tensor_cubic_stress_audit.py
             output: tensor-cubic-stress-evidence.json
