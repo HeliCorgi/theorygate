@@ -3,7 +3,7 @@ Copyright 2026 HeliCorgi
 SPDX-License-Identifier: Apache-2.0
 
 Formal scope: arithmetic/label bookkeeping for gluing already-audited causal
-slabs.  These theorems do not assert that a given physical complex satisfies
+slabs. These theorems do not assert that a given physical complex satisfies
 the hypotheses; Python incidence audits establish those hypotheses.
 -/
 
@@ -25,7 +25,9 @@ theorem interface_incidence_two
     (hleft : x.left = 1)
     (hright : x.right = 1) :
     gluedIncidence x = 2 := by
-  simp [gluedIncidence, hleft, hright]
+  cases hleft
+  cases hright
+  rfl
 
 theorem interface_remains_manifold_codim_one
     (x : FaceIncidence)
@@ -37,11 +39,14 @@ theorem interface_remains_manifold_codim_one
 
 theorem left_external_incidence_preserved (n : Nat) :
     n + 0 = n := by
-  simp
+  rfl
 
 theorem right_external_incidence_preserved (n : Nat) :
     0 + n = n := by
-  simp
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      exact congrArg Nat.succ ih
 
 def adjacentSlices (lo hi : Nat) : Prop :=
   hi = lo + 1
@@ -55,14 +60,15 @@ theorem two_consecutive_layers (n : Nat) :
     adjacentSlices (n + 1) (n + 2) := by
   constructor
   · rfl
-  · simp [adjacentSlices, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm]
+  · rfl
 
 theorem interface_not_external_after_gluing
     (x : FaceIncidence)
     (hleft : x.left = 1)
     (hright : x.right = 1) :
     gluedIncidence x ≠ 1 := by
-  rw [interface_incidence_two x hleft hright]
+  cases hleft
+  cases hright
   decide
 
 end QCCG
