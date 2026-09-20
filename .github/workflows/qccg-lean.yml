@@ -60,6 +60,11 @@ jobs:
             --output artifacts/qccg-lean/gluing-evidence.json \
             --no-axioms \
             --require-pass
+      - name: Promote only the formal gluing claim
+        run: |
+          theorygate check qccg/theorygate.yaml \
+            --evidence artifacts/qccg-lean/gluing-evidence.json \
+            --require QCCG_FORMAL_GLUE_LEMMA
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
