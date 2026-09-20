@@ -130,6 +130,11 @@ jobs:
           python qccg/run_cdt_move46_audit.py \
             --out artifacts/qccg/cdt-move46-evidence.json
 
+      - name: Audit local self-dual 4D causal move
+        run: |
+          python qccg/run_cdt_move33_audit.py \
+            --out artifacts/qccg/cdt-move33-evidence.json
+
       - name: Audit local 4D Pachner cobordisms
         run: |
           python qccg/run_pachner_cobordism_audit.py \
@@ -231,6 +236,7 @@ jobs:
             --evidence artifacts/qccg/time-local-transfer-evidence.json \
             --evidence artifacts/qccg/cdt-move4-evidence.json \
             --evidence artifacts/qccg/cdt-move46-evidence.json \
+            --evidence artifacts/qccg/cdt-move33-evidence.json \
             --evidence artifacts/qccg/pachner-cobordism-evidence.json \
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
@@ -271,6 +277,7 @@ jobs:
             --evidence artifacts/qccg/time-local-transfer-evidence.json \
             --evidence artifacts/qccg/cdt-move4-evidence.json \
             --evidence artifacts/qccg/cdt-move46-evidence.json \
+            --evidence artifacts/qccg/cdt-move33-evidence.json \
             --evidence artifacts/qccg/pachner-cobordism-evidence.json \
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
