@@ -78,10 +78,26 @@ obligations:
     title: "A simple Euclidean Regge-like N2 weight is insufficient in the audited finite scan"
     kind: negative-control
     description: "No preregistered finite kappa2 point reaches even the broad spectral/volume four-dimensional target."
+  - id: CAUSAL_FOLIATED_4D_ARCHITECTURE
+    title: "A finite 4D foliated causal simplicial architecture is explicitly constructed"
+    kind: formal-numerical
+    description: "Adjacent-time (4,1)/(3,2)/(2,3)/(1,4) simplices form a 4D simplicial cylinder with correct interior and spatial-boundary incidence."
+  - id: CAUSAL_FOLIATION_NEGATIVE_CONTROL
+    title: "Nonadjacent-time simplices are detected as causal/foliation violations"
+    kind: negative-control
+    description: "A deliberately inserted time-skipping simplex fails the causal building-block rule."
+  - id: QCCG_CAUSAL_MOVE_DYNAMICS
+    title: "QCCG has a reversible local graph-changing dynamics closed within the causal foliated cellulation class"
+    kind: physics
+    description: "Requires an ergodic foliation-preserving move set and compatible Hermitian/weighted dynamics."
   - id: QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS
     title: "QCCG realizes a causal/foliated weighted cellulation dynamics with a stable 4D critical phase"
     kind: physics
     description: "Requires stronger geometric/causal structure beyond the failed uniform and simple Euclidean Regge-weighted ensembles."
+    depends_on:
+      - CAUSAL_FOLIATED_4D_ARCHITECTURE
+      - CAUSAL_FOLIATION_NEGATIVE_CONTROL
+      - QCCG_CAUSAL_MOVE_DYNAMICS
   - id: QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE
     title: "QCCG specifies and realizes a weighted critical cellulation ensemble with 4D manifold-like scaling"
     kind: physics
@@ -535,6 +551,14 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_CAUSAL_FOLIATION_ARCHITECTURE_TOY
+    title: "Finite causal-foliation simplicial architecture"
+    rank: 42
+    statement: "A finite 4D simplicial cylinder with CDT-like adjacent-slice building blocks and correct manifold incidence is explicitly constructed, while time-skipping simplices are rejected; no causal critical dynamics is claimed."
+    requires:
+      - CAUSAL_FOLIATED_4D_ARCHITECTURE
+      - CAUSAL_FOLIATION_NEGATIVE_CONTROL
 
   - id: QCCG_REGGE_WEIGHT_REPAIR_DIAGNOSTIC
     title: "Finite Regge-weight repair negative control"
