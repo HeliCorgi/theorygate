@@ -810,6 +810,18 @@ obligations:
     title: "Independent-seed curvature-weighted QCCG time evolution is measured before confirmation thresholds are frozen"
     kind: numerical
     description: "Exploratory weighted evolution records kinetic/potential fit distributions but cannot promote the confirmation gate."
+  - id: QCCG_FIXED_VOLUME_CURVATURE_THERMALIZATION
+    title: "Curvature-weighted internal geometry is thermalized conditionally at fixed N3"
+    kind: numerical
+    description: "A volume-fixed Metropolis-Hastings chain samples exact-N3 spatial triangulations with conditional weight proportional to exp(-kappa_R R_Regge)."
+  - id: QCCG_INTERNAL_GEOMETRY_RELAXATION_DIAGNOSTIC
+    title: "Internal geometry relaxation relative to the original seed ensemble is detected"
+    kind: negative-control
+    description: "Equilibrated exact-volume samples change internal Pachner move-count statistics relative to the previous deterministic/mildly mixed seed geometries."
+  - id: QCCG_EQUILIBRATED_CDT_COEFFICIENT_CONFIRMATION
+    title: "CDT kinetic and potential coefficient stability is confirmed from curvature-equilibrated fixed-volume initial slices"
+    kind: physics
+    description: "Requires fresh weighted time evolution initialized from independent fixed-volume equilibrium geometries and the preregistered kinetic/potential gates."
   - id: QCCG_CURVATURE_CRITICAL_TIME_CONFIRMATION
     title: "The selected curvature-weighted critical point is confirmed by independent time-evolved QCCG dynamics"
     kind: physics
@@ -840,6 +852,14 @@ obligations:
     depends_on:
       - QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
       - QCCG_CURVATURE_WEIGHTED_DYNAMICS
+  - id: QCCG_FIXED_VOLUME_CURVATURE_EQUILIBRATION_TOY
+    title: "Fixed-volume curvature-equilibrated spatial ensemble"
+    rank: 49
+    statement: "At every audited N3, a detailed-balance Metropolis-Hastings chain produces separated exact-volume curvature-weighted spatial triangulations and demonstrates internal-geometry relaxation relative to the original seed states."
+    requires:
+      - QCCG_FIXED_VOLUME_CURVATURE_THERMALIZATION
+      - QCCG_INTERNAL_GEOMETRY_RELAXATION_DIAGNOSTIC
+
   - id: QCCG_CURVATURE_WEIGHTED_TIME_EXPLORATION_TOY
     title: "Exploratory time-evolved curvature-weighted critical dynamics"
     rank: 49
