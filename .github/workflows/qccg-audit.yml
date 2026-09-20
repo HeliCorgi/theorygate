@@ -80,6 +80,11 @@ jobs:
           python qccg/run_manifold_diagnostic_audit.py \
             --out artifacts/qccg/manifold-diagnostic-evidence.json
 
+      - name: Audit explicit 4D Pachner cellulation ensemble
+        run: |
+          python qccg/run_pachner_ensemble_audit.py \
+            --out artifacts/qccg/pachner-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -151,6 +156,7 @@ jobs:
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/manifold-diagnostic-evidence.json \
+            --evidence artifacts/qccg/pachner-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -177,6 +183,7 @@ jobs:
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/manifold-diagnostic-evidence.json \
+            --evidence artifacts/qccg/pachner-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -230,6 +237,12 @@ jobs:
           assert report["obligations"]["DERIVATIVE_CUBIC_REPAIR"]["status"] == "PASS"
           assert report["obligations"]["MANIFOLD_DIAGNOSTIC_CALIBRATED"]["status"] == "PASS"
           assert report["obligations"]["MANIFOLD_DIMENSION_CONTROLS"]["status"] == "PASS"
+          assert report["obligations"]["PACHNER_4D_MANIFOLD_TOPOLOGY_CONTROL"]["status"] == "PASS"
+          assert report["obligations"]["UNWEIGHTED_PACHNER_DIMENSION_FAILURE_DETECTED"]["status"] == "PASS"
+          assert report["obligations"]["PACHNER_MOVESET_REPAIR_INSUFFICIENT"]["status"] == "PASS"
+          assert report["obligations"]["QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE"]["status"] == "OPEN"
+          assert report["obligations"]["QCCG_CELLULATION_GEOMETRY_MEASURED"]["status"] == "BLOCKED"
+          assert any("QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE=OPEN" in x for x in report["obligations"]["QCCG_CELLULATION_GEOMETRY_MEASURED"]["blockers"])
           assert report["obligations"]["MANIFOLD_LIKENESS_SCALING"]["status"] == "BLOCKED"
           assert any("QCCG_CELLULATION_GEOMETRY_MEASURED=OPEN" in x for x in report["obligations"]["MANIFOLD_LIKENESS_SCALING"]["blockers"])
           assert report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["status"] == "BLOCKED"
