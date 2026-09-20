@@ -6,6 +6,10 @@ on:
     paths:
       - "qccg/**"
       - ".github/workflows/qccg-probes.yml"
+  pull_request:
+    paths:
+      - "qccg/**"
+      - ".github/workflows/qccg-probes.yml"
   workflow_dispatch:
 
 permissions:
