@@ -181,6 +181,14 @@ obligations:
     title: "The code-subspace structure-function approximation fails near the periodic chart boundary"
     kind: negative-control
     description: "Boundary-localized packets retain a large residual, preventing promotion to an exact global finite-Hilbert identity."
+  - id: ONE_D_HDA_STRUCTURE_FUNCTION_CODE_MATCH
+    title: "A finite-Weyl low-energy code subspace reproduces a smeared 1D HDA analogue with noncentral metric-like structure function"
+    kind: numerical
+    description: "Symmetrized finite spectral/Weyl generators reproduce [H[N],H[M]]≈-i D[f(X)^2(NM'-MN')] on smooth low-Fourier states."
+  - id: ONE_D_HDA_ALIASING_NEGATIVE_CONTROL
+    title: "Near-Nyquist states are detected as outside the 1D HDA code-subspace regime"
+    kind: negative-control
+    description: "Aliasing produces a large commutator residual near the finite spectral cutoff."
   - id: GR_HDA_STRUCTURE_FUNCTION_MATCH
     title: "The finite-Weyl nonlinear constraints reproduce the dynamical GR HDA structure functions"
     kind: physics
@@ -189,6 +197,8 @@ obligations:
       - FINITE_GLOBAL_CCR_NO_GO
       - LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE
       - STRUCTURE_FUNCTION_PATCH_CONTROL
+      - ONE_D_HDA_STRUCTURE_FUNCTION_CODE_MATCH
+      - ONE_D_HDA_ALIASING_NEGATIVE_CONTROL
   - id: NONLINEAR_CONSTRAINT_CLOSURE
     title: "The nonlinear interacting constraint/BRST algebra closes anomaly-free"
     kind: physics
@@ -559,6 +569,14 @@ claims:
       - STRUCTURE_FUNCTION_CLOSURE_TOY
       - CONSTRAINT_KERNEL_GAP_TOY
       - STRUCTURE_FUNCTION_NEGATIVE_CONTROL
+
+  - id: QCCG_1D_HDA_CODE_TOY
+    title: "Smeared noncentral 1D HDA finite-Weyl code pilot"
+    rank: 49
+    statement: "A smooth low-Fourier finite-Weyl code subspace reproduces a smeared 1D HDA analogue with a nonconstant metric-like structure function, while near-cutoff states fail as an aliasing control; full 3+1 HDA matching is not claimed."
+    requires:
+      - ONE_D_HDA_STRUCTURE_FUNCTION_CODE_MATCH
+      - ONE_D_HDA_ALIASING_NEGATIVE_CONTROL
 
   - id: QCCG_CODE_SUBSPACE_STRUCTURE_FUNCTION_TOY
     title: "Emergent noncentral structure-function code-subspace pilot"
