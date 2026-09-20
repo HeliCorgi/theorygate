@@ -86,6 +86,9 @@ jobs:
           - name: qccg-cdt-kinetic-coefficient
             script: qccg/run_qccg_cdt_kinetic_coefficient_audit.py
             output: qccg-cdt-kinetic-coefficient-evidence.json
+          - name: qccg-cdt-potential-drift
+            script: qccg/run_qccg_cdt_potential_drift_audit.py
+            output: qccg-cdt-potential-drift-evidence.json
           - name: qccg-cdt-diffusion-bridge
             script: qccg/run_qccg_cdt_diffusion_bridge.py
             output: qccg-cdt-diffusion-bridge-evidence.json
