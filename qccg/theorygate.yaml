@@ -106,6 +106,10 @@ obligations:
     title: "The finite causal-move ensemble reaches a broad four-dimensional geometry diagnostic"
     kind: physics
     description: "A finite-volume diagnostic only; PASS does not establish a continuum four-dimensional phase and FAIL is a valid negative result."
+  - id: CAUSAL_FIXED_VERTEX_MOVESET_INSUFFICIENT
+    title: "The fixed-vertex causal 2<->4 move ensemble is diagnosed as insufficient when it fails the finite 4D geometry target"
+    kind: negative-control
+    description: "The local 2<->4 move set preserves the microscopic vertex set, so a failed extended-geometry diagnostic motivates vertex-changing causal moves."
   - id: CAUSAL_4D_SCALING_STABILITY
     title: "The causal-move ensemble has a stable four-dimensional scaling phase at increasing volume and time extent"
     kind: physics
@@ -582,6 +586,14 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_CAUSAL_FIXED_VERTEX_DIAGNOSTIC
+    title: "Fixed-vertex causal-move limitation diagnostic"
+    rank: 44
+    statement: "The audited local causal 2<->4 ensemble is shown to preserve the microscopic vertex set; its failure to reach the finite 4D geometry target is retained as a move-set limitation rather than hidden."
+    requires:
+      - CAUSAL_MOVE_ENSEMBLE_SCAN_EXECUTED
+      - CAUSAL_FIXED_VERTEX_MOVESET_INSUFFICIENT
 
   - id: QCCG_CAUSAL_ENSEMBLE_SCAN
     title: "Finite reversible causal geometry ensemble scan"
