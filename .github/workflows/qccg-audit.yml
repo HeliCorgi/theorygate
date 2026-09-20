@@ -70,6 +70,11 @@ jobs:
           python qccg/run_cubic_interaction_audit.py \
             --out artifacts/qccg/cubic-evidence.json
 
+      - name: Refine cubic repair to derivative interaction
+        run: |
+          python qccg/run_derivative_cubic_audit.py \
+            --out artifacts/qccg/derivative-cubic-evidence.json
+
       - name: Audit finite structure-function constraint toy
         run: |
           python qccg/run_structure_function_toy.py \
@@ -94,6 +99,7 @@ jobs:
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
+            --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --require QCCG_RG_BRIDGE_DATA_TOY
@@ -109,6 +115,7 @@ jobs:
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
+            --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --json > artifacts/qccg/report.json
@@ -121,6 +128,7 @@ jobs:
           assert report["obligations"]["AS_FIXED_POINT_MATCH"]["status"] == "BLOCKED"
           assert any("QCCG_NONPERTURBATIVE_RG_FLOW=OPEN" in x or "ESSENTIAL_CRITICAL_EXPONENT_MATCH=OPEN" in x for x in report["obligations"]["AS_FIXED_POINT_MATCH"]["blockers"])
           assert report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["status"] == "OPEN"
+          assert report["obligations"]["DERIVATIVE_CUBIC_REPAIR"]["status"] == "PASS"
           assert report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["status"] == "BLOCKED"
           assert any("MANIFOLD_LIKENESS_SCALING=OPEN" in x for x in report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["blockers"])
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
