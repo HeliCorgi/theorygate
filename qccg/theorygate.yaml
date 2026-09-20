@@ -150,10 +150,21 @@ obligations:
     title: "Overgluing an already-internal tetrahedron is detected"
     kind: negative-control
     description: "A third simplex attached to an internal tetrahedron creates incidence three and is rejected."
+  - id: STRICT_23_ROUNDTRIP_COMPOSITION_TOY
+    title: "Strict 2->3 and 3->2 causal slabs compose through one shared intermediate slice"
+    kind: formal-numerical
+    description: "The explicit slabs glue on the same t=1 triangulation so the middle spatial tetrahedra have incidence two and disappear from the external boundary."
+  - id: STRICT_SLAB_GLUE_NEGATIVE_CONTROL
+    title: "Incorrectly duplicated intermediate slice vertices are detected"
+    kind: negative-control
+    description: "Using a distinct copy of the middle slice prevents exact slab composition and leaves disconnection or spurious intermediate boundary."
   - id: QCCG_STRICT_FOLIATION_COMPOSITION
     title: "Mixed local cobordism histories admit one strict equal-time global foliation"
     kind: physics
-    description: "Requires globally consistent slice labels for arbitrary compositions, beyond manifold-with-boundary composition."
+    description: "Requires globally consistent slice labels for arbitrary compositions, beyond the finite round-trip composition toy."
+    depends_on:
+      - STRICT_23_ROUNDTRIP_COMPOSITION_TOY
+      - STRICT_SLAB_GLUE_NEGATIVE_CONTROL
   - id: QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
     title: "Arbitrary compositions of local Pachner cobordisms admit one consistent global causal foliation"
     kind: physics
@@ -918,6 +929,14 @@ claims:
     requires:
       - CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
       - CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
+
+  - id: QCCG_STRICT_SLAB_COMPOSITION_TOY
+    title: "Finite strict causal slab composition"
+    rank: 49
+    statement: "The audited strict 2->3 slab and its 3->2 time reverse compose on one shared intermediate triangulation into a connected three-slice causal 4D manifold; arbitrary mixed histories remain open."
+    requires:
+      - STRICT_23_ROUNDTRIP_COMPOSITION_TOY
+      - STRICT_SLAB_GLUE_NEGATIVE_CONTROL
 
   - id: QCCG_CAUSAL_23_SLAB_TOY
     title: "Strict causal spatial 2<->3 slab"
