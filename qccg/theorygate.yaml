@@ -818,6 +818,18 @@ obligations:
     title: "Internal geometry relaxation relative to the original seed ensemble is detected"
     kind: negative-control
     description: "Equilibrated exact-volume samples change internal Pachner move-count statistics relative to the previous deterministic/mildly mixed seed geometries."
+  - id: QCCG_EQUILIBRATED_CRITICAL_LINE
+    title: "The curvature/volume zero-drift line is recomputed on curvature-equilibrated fixed-volume geometry ensembles"
+    kind: numerical
+    description: "The equilibrium-conditioned move counts determine a corrected volume/cosmological coupling without fitting CDT effective coefficients."
+  - id: QCCG_CRITICAL_LINE_SEED_BIAS_DETECTED
+    title: "The pre-equilibration zero-drift line is detected to shift after internal-geometry thermalization"
+    kind: negative-control
+    description: "A nonzero shift diagnoses seed-geometry bias in the earlier critical-line estimate."
+  - id: QCCG_EQUILIBRATED_CRITICAL_TIME_CONFIRMATION
+    title: "The original preregistered CDT kinetic/potential criteria are confirmed at the equilibrated critical-line coupling"
+    kind: physics
+    description: "Requires fresh conditional-geometry thermalization and fresh dynamics at the equilibrated zero-drift coupling."
   - id: QCCG_EQUILIBRATED_CDT_COEFFICIENT_CONFIRMATION
     title: "CDT kinetic and potential coefficient stability is confirmed from curvature-equilibrated fixed-volume initial slices"
     kind: physics
@@ -852,6 +864,14 @@ obligations:
     depends_on:
       - QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
       - QCCG_CURVATURE_WEIGHTED_DYNAMICS
+  - id: QCCG_EQUILIBRATED_CRITICAL_LINE_TOY
+    title: "Equilibrated zero-drift QCCG critical-line reconstruction"
+    rank: 49
+    statement: "The curvature/volume critical line is recomputed from exact-volume curvature-equilibrated geometry ensembles, retaining a positive CDT-inspired curvature-plus-volume potential shape and exposing the prior seed-geometry bias."
+    requires:
+      - QCCG_EQUILIBRATED_CRITICAL_LINE
+      - QCCG_CRITICAL_LINE_SEED_BIAS_DETECTED
+
   - id: QCCG_FIXED_VOLUME_CURVATURE_EQUILIBRATION_TOY
     title: "Fixed-volume curvature-equilibrated spatial ensemble"
     rank: 49
