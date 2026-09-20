@@ -904,6 +904,14 @@ obligations:
       - QCCG_CURVATURE_WEIGHT_DETAILED_BALANCE
       - QCCG_CURVATURE_POTENTIAL_RESOLUTION_SCAN
 
+  - id: QCCG_CDT_COEFFICIENT_BOOTSTRAP_DIAGNOSTIC
+    title: "Finite-block QCCG CDT coefficient inference has explicit bootstrap uncertainty"
+    kind: numerical
+    description: "Fresh curvature-equilibrated trajectories are bootstrapped to quantify uncertainty in mu/lambda and kinetic fits before interpreting block dependence as RG flow."
+  - id: QCCG_CDT_GENERATOR_FINITEBLOCK_OVERLAP_DIAGNOSTIC
+    title: "Finite-block coefficient confidence intervals are compared with the instantaneous equilibrium generator"
+    kind: diagnostic
+    description: "Tests whether at least one finite block is statistically compatible with the infinitesimal equilibrium-generator mu/lambda."
   - id: QCCG_CDT_EFFECTIVE_COEFFICIENT_MATCH
     title: "QCCG large-volume effective Gamma, mu, lambda and omega are measured and stable"
     kind: physics
@@ -1188,6 +1196,13 @@ claims:
     statement: "Using Pachner's theorem and the audited reversible 1<->4 and 2<->3 QCCG spatial move families, any two triangulations in the same closed PL 3-manifold slice class are connected by a finite QCCG spatial move sequence; no full 4D causal ergodicity is claimed."
     requires:
       - QCCG_SPATIAL_SLICE_PL_CONNECTIVITY
+
+  - id: QCCG_CDT_COEFFICIENT_UNCERTAINTY_TOY
+    title: "Bootstrap-resolved CDT coefficient diagnostic"
+    rank: 49
+    statement: "Finite-block QCCG CDT coefficient estimates carry explicit bootstrap intervals and are compared against the instantaneous equilibrium generator before any block dependence is promoted as physical RG running."
+    requires:
+      - QCCG_CDT_COEFFICIENT_BOOTSTRAP_DIAGNOSTIC
 
   - id: QCCG_CDT_CONNECTIVITY_SCALING_TOY
     title: "Finite-size constructive CDT connectivity scan"
