@@ -50,6 +50,11 @@ jobs:
           python qccg/run_unitarity_audit.py \
             --out artifacts/qccg/unitarity-evidence.json
 
+      - name: Audit interacting scaling-isometry architecture
+        run: |
+          python qccg/run_interacting_scaling_toy.py \
+            --out artifacts/qccg/interacting-scaling-evidence.json
+
       - name: Audit linearized spin-2 constraint target
         run: |
           python qccg/run_linearized_constraint_audit.py \
@@ -110,6 +115,7 @@ jobs:
             --evidence artifacts/qccg/parent-evidence.json \
             --evidence artifacts/qccg/lorentz-evidence.json \
             --evidence artifacts/qccg/unitarity-evidence.json \
+            --evidence artifacts/qccg/interacting-scaling-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
@@ -129,6 +135,7 @@ jobs:
             --evidence artifacts/qccg/parent-evidence.json \
             --evidence artifacts/qccg/lorentz-evidence.json \
             --evidence artifacts/qccg/unitarity-evidence.json \
+            --evidence artifacts/qccg/interacting-scaling-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
@@ -157,6 +164,8 @@ jobs:
           assert any("MANIFOLD_LIKENESS_SCALING=OPEN" in x for x in report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["blockers"])
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
           assert any("MARGINAL_LV_STABILITY=OPEN" in x for x in report["obligations"]["LORENTZ_UNIVERSALITY"]["blockers"])
+          assert report["obligations"]["INTERACTING_CODE_INTERTWINER_TOY"]["status"] == "PASS"
+          assert report["obligations"]["SCALING_LEAKAGE_NEGATIVE_CONTROL"]["status"] == "PASS"
           assert report["obligations"]["PHYSICAL_UNITARITY_SCALING_LIMIT"]["status"] == "BLOCKED"
           assert report["obligations"]["LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE"]["status"] == "PASS"
           assert report["obligations"]["STRUCTURE_FUNCTION_PATCH_CONTROL"]["status"] == "PASS"
