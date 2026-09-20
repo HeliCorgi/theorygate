@@ -189,16 +189,54 @@ MOVES = (
 
 
 def canonical_relabel(S):
-    """Canonicalize labels by first occurrence in sorted simplices.
+    """Canonical key for an unlabeled tetrahedral complex.
 
-    This quotients irrelevant vertex names sufficiently for this finite toy.
+    Vertex names are gauge.  A simple sorted-label compression is not invariant
+    when a 4->1 move removes a non-maximal label: the remaining labels are
+    permuted relative to the prior representative.  We therefore partition
+    vertices by an isomorphism-invariant local signature and exhaust all
+    permutations within equal-signature classes, taking the lexicographically
+    minimal relabelled complex.
+
+    The audited state graph has at most seven vertices at MAX_DEPTH=2, so this
+    exact finite canonicalization is inexpensive.
     """
-    simplices = [tuple(t) for t in sorted(S)]
-    verts = sorted({v for tet in simplices for v in tet})
-    # Brute-force canonicalization is unnecessary; normalize by sorted label.
-    mp = {v: i for i, v in enumerate(verts)}
-    return tuple(sorted(tuple(sorted(mp[v] for v in tet)) for tet in simplices))
+    verts = sorted({v for tet in S for v in tet})
 
+    def signature(v):
+        incident = [tet for tet in S if v in tet]
+        neigh = set()
+        for tet in incident:
+            neigh.update(tet)
+        neigh.discard(v)
+        # Incidence and neighbour count are invariant under relabelling.
+        return (len(incident), len(neigh))
+
+    groups = collections.defaultdict(list)
+    for v in verts:
+        groups[signature(v)].append(v)
+
+    classes = [groups[sig] for sig in sorted(groups)]
+    label_blocks = []
+    offset = 0
+    for cls in classes:
+        block = list(range(offset, offset + len(cls)))
+        label_blocks.append(block)
+        offset += len(cls)
+
+    best = None
+    perm_families = [itertools.permutations(cls) for cls in classes]
+    for chosen in itertools.product(*perm_families):
+        mp = {}
+        for perm, block in zip(chosen, label_blocks):
+            for old, new in zip(perm, block):
+                mp[old] = new
+        key = tuple(
+            sorted(tuple(sorted(mp[v] for v in tet)) for tet in S)
+        )
+        if best is None or key < best:
+            best = key
+    return best
 
 def neighbors(S):
     out = {}
@@ -234,9 +272,11 @@ def build_state_graph():
     inverse_ok = True
     inverse_failures = []
 
+    neighbor_cache = {k: neighbors(S) for k, S in states.items()}
+
     for k, S in states.items():
         i = idx[k]
-        for nk, (typ, _S2) in neighbors(S).items():
+        for nk, (typ, _S2) in neighbor_cache[k].items():
             if nk not in idx:
                 continue
             j = idx[nk]
@@ -246,7 +286,7 @@ def build_state_graph():
             edges.add(e)
             edge_types.setdefault(str(e), set()).add(typ)
             # Reverse adjacency is the operational inverse check.
-            reverse_neighbors = neighbors(states[nk])
+            reverse_neighbors = neighbor_cache[nk]
             if k not in reverse_neighbors:
                 inverse_ok = False
                 inverse_failures.append({
@@ -350,7 +390,7 @@ def main():
                 edge_types={k: sorted(v) for k, v in edge_types.items()},
                 inverse_ok=inverse_ok,
                 inverse_failures=inverse_failures,
-                label_policy="1->4 reuses vacant labels before/alongside a fresh label; labels are gauge",
+                label_policy="vertex names are quotiented by exact finite unlabeled-complex canonicalization within invariant signature classes",
                 hermitian=hermitian,
                 uniform_zero=uniform_zero,
                 nullity=nullity,
