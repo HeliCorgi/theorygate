@@ -225,6 +225,26 @@ jobs:
           python qccg/run_rg_bridge_audit.py \
             --out artifacts/qccg/rg-bridge-evidence.json
 
+      - name: Run QCCG to CDT transfer matching
+        run: |
+          python qccg/run_qccg_cdt_transfer_match.py \
+            --out artifacts/qccg/qccg-cdt-transfer-match-evidence.json
+
+      - name: Audit QCCG CDT diffusion mechanism
+        run: |
+          python qccg/run_qccg_cdt_diffusion_bridge.py \
+            --out artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json
+
+      - name: Audit structural QCCG CDT action match
+        run: |
+          python qccg/run_qccg_cdt_structural_action_audit.py \
+            --out artifacts/qccg/qccg-cdt-structural-action-evidence.json
+
+      - name: Audit CDT FRG and Reuter literature anchors
+        run: |
+          python qccg/run_cdt_frg_anchor_audit.py \
+            --out artifacts/qccg/cdt-frg-reuter-anchor-evidence.json
+
       - name: Run exact finite-state RG blocking toy
         run: |
           python qccg/run_exact_rg_toy.py \
@@ -319,6 +339,10 @@ jobs:
             --evidence artifacts/qccg/emergent-structure-evidence.json \
             --evidence artifacts/qccg/hda-1d-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-transfer-match-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-structural-action-evidence.json \
+            --evidence artifacts/qccg/cdt-frg-reuter-anchor-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
             --evidence artifacts/qccg/feshbach-evidence.json \
             --evidence artifacts/qccg/cellulation-rg-evidence.json \
@@ -372,6 +396,10 @@ jobs:
             --evidence artifacts/qccg/emergent-structure-evidence.json \
             --evidence artifacts/qccg/hda-1d-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-transfer-match-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
+            --evidence artifacts/qccg/qccg-cdt-structural-action-evidence.json \
+            --evidence artifacts/qccg/cdt-frg-reuter-anchor-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
             --evidence artifacts/qccg/feshbach-evidence.json \
             --evidence artifacts/qccg/cellulation-rg-evidence.json \
