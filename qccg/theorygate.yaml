@@ -187,10 +187,21 @@ obligations:
     title: "A microscopic perturbation that violates the code constraint is detected as scaling leakage"
     kind: negative-control
     description: "A single-site perturbation must leak outside the embedded code and fail the constraint commutator."
+  - id: GRAPH_CHANGE_INTERTWINER_TOY
+    title: "A coarse/refined graph-change move preserves a physical code isometrically"
+    kind: formal-numerical
+    description: "A finite direct-sum cellulation toy exactly maps a coarse logical state to a refined constrained code and back."
+  - id: GRAPH_CHANGE_LEAKAGE_NEGATIVE_CONTROL
+    title: "An incorrect refinement map is detected as graph-change leakage"
+    kind: negative-control
+    description: "A wrong coarse-to-refined map must leak into the constraint-violating refined sector."
   - id: QCCG_GRAPH_CHANGING_SCALING_MAP
     title: "The actual graph-changing QCCG physical Hilbert space has an isometric coarse-graining intertwiner"
     kind: physics
-    description: "Requires scaling maps between increasing cellulation sectors, not only a fixed two-qubit code toy."
+    description: "Requires a compatible family of scaling maps over the actual cellulation graph, not only finite direct-sum toys."
+    depends_on:
+      - GRAPH_CHANGE_INTERTWINER_TOY
+      - GRAPH_CHANGE_LEAKAGE_NEGATIVE_CONTROL
   - id: INTERACTING_PHYSICAL_SCALING_UNITARITY
     title: "The interacting graph-changing physical Hilbert space has a controlled unitary scaling limit"
     kind: physics
@@ -416,6 +427,14 @@ claims:
     requires:
       - INTERACTING_CODE_INTERTWINER_TOY
       - SCALING_LEAKAGE_NEGATIVE_CONTROL
+
+  - id: QCCG_GRAPH_CHANGE_SCALING_TOY
+    title: "Finite graph-change scaling isometry toy"
+    rank: 47
+    statement: "A finite coarse/refined cellulation toy preserves logical information through an exact physical-subspace graph-change isometry and detects an incorrect leaking refinement map."
+    requires:
+      - GRAPH_CHANGE_INTERTWINER_TOY
+      - GRAPH_CHANGE_LEAKAGE_NEGATIVE_CONTROL
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
