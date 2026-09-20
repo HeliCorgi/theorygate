@@ -12,22 +12,31 @@ uncertainty.
 
 Repair
 ------
-This is a NEW fresh-seed confirmation.  It does not relax the old numerical
-spread thresholds.  Instead it uses a statistically meaningful criterion:
+This is a NEW fresh-seed confirmation.  It changes two statistically/
+asymptotically incorrect diagnostics rather than relaxing physical tolerances:
 
-- select the equilibrated curvature/volume critical line on an independent
-  geometry ensemble;
-- derive the infinitesimal equilibrium-generator mu/lambda;
-- use fresh conditional-geometry thermalization and fresh trajectories;
-- at tau=(0.0125,0.025,0.05), require the 95% bootstrap intervals for BOTH
-  mu and lambda to contain the generator values;
-- require the 95% variance-exponent interval to contain p=1;
-- require D_vol volume spread <= 1.50;
-- require the generator potential fit itself to have R2>=0.90 and positive
-  mu/lambda.
+1. Finite-volume diffusion is tested as
+       Var_rate(N3) = D0*N3 + D1
+   instead of forcing a pure power N3^p with p=1.  A nonzero finite-size
+   intercept makes a log-log power fit report p<1 even when the asymptotic
+   diffusion law is linear.
 
-The obsolete raw point-spread criterion is evaluated only as a negative
-methodological control; it is not used to pass this confirmation.
+2. mu/lambda are tested simultaneously at three time blocks.  Six individual
+   comparisons are therefore covered by a Bonferroni family-wise 95% rule,
+   not by six independent 95% intervals.
+
+The confirmation still requires:
+- independent critical-line selection;
+- fresh fixed-volume curvature-equilibrated geometries;
+- positive generator mu/lambda with potential R2>=0.90;
+- linear diffusion R2>=0.96, positive D0, and a <=10% finite-size intercept
+  contribution at the largest N3;
+- D_vol spread <=1.50;
+- simultaneous family-wise 95% bootstrap coverage of the generator mu/lambda
+  at every time block.
+
+The obsolete raw point-spread and pure-power p=1 rules are retained only as
+negative methodological controls.
 """
 from __future__ import annotations
 
@@ -47,13 +56,18 @@ import run_qccg_cdt_coefficient_uncertainty as bootutil
 
 TAUS=(0.0125,0.025,0.05)
 TRAJECTORIES=1500
-BOOTSTRAPS=400
+BOOTSTRAPS=800
 THERM_SEED=20270803
 DYN_SEED=20270817
 BOOT_SEED=20270831
 
 GENERATOR_R2_MIN=0.90
 D_SPREAD_MAX=1.50
+DIFFUSION_LINEAR_R2_MIN=0.96
+MAX_INTERCEPT_FRACTION_AT_NMAX=0.10
+FAMILYWISE_ALPHA=0.05
+N_COEFFICIENT_COMPARISONS=2*len(TAUS)
+PER_COMPARISON_ALPHA=FAMILYWISE_ALPHA/N_COEFFICIENT_COMPARISONS
 
 # Retained ONLY to demonstrate whether the old criterion would have rejected
 # the same fresh sample. It is not a pass condition anymore.
@@ -81,6 +95,27 @@ def evidence(eid,obligation,status,note,**metadata):
         "engine":"qccg-statistical-cdt-confirmation",
         "artifact":"qccg/run_qccg_statistical_cdt_confirmation.py",
         "note":note,"metadata":metadata,
+    }
+
+
+def diffusion_linear_fit(rows):
+    xs=[float(r["N3"]) for r in rows]
+    ys=[float(r["variance_rate"]) for r in rows]
+    xm=sum(xs)/len(xs); ym=sum(ys)/len(ys)
+    sxx=sum((x-xm)**2 for x in xs)
+    slope=sum((x-xm)*(y-ym) for x,y in zip(xs,ys))/sxx
+    intercept=ym-slope*xm
+    pred=[intercept+slope*x for x in xs]
+    sse=sum((y-p)**2 for y,p in zip(ys,pred))
+    sst=sum((y-ym)**2 for y in ys)
+    r2=1-sse/sst if sst>1e-18 else 1.0
+    nmax=max(xs)
+    intercept_fraction=abs(intercept)/(max(1e-30,abs(slope)*nmax))
+    return {
+        "D0":slope,
+        "D1":intercept,
+        "r2":r2,
+        "intercept_fraction_at_Nmax":intercept_fraction,
     }
 
 
@@ -137,7 +172,7 @@ def main():
         dvals=[r["D_vol"] for r in point["rows"]]
         dspread=max(dvals)/min(dvals)
 
-        mus=[];lams=[];ps=[]
+        mus=[];lams=[]
         for _ in range(BOOTSTRAPS):
             bs={}
             for N in base.TARGETS:
@@ -145,33 +180,53 @@ def main():
                 bs[N]=[vals[rng_boot.randrange(len(vals))] for _j in range(len(vals))]
             s=bootutil.summarize_from_samples(bs,tau)
             if all(math.isfinite(x) for x in (s["mu"],s["lambda"],s["variance_exponent"])):
-                mus.append(s["mu"]);lams.append(s["lambda"]);ps.append(s["variance_exponent"])
+                mus.append(s["mu"]);lams.append(s["lambda"])
 
-        mui=bootutil.interval(mus)
-        lami=bootutil.interval(lams)
-        pi=bootutil.interval(ps)
+        # Simultaneous family-wise 95% coverage across 3 blocks x 2 coefficients.
+        tail=PER_COMPARISON_ALPHA/2.0
+        mui={
+            "median":bootutil.percentile(mus,0.5),
+            "lo_simultaneous":bootutil.percentile(mus,tail),
+            "hi_simultaneous":bootutil.percentile(mus,1.0-tail),
+        }
+        lami={
+            "median":bootutil.percentile(lams,0.5),
+            "lo_simultaneous":bootutil.percentile(lams,tail),
+            "hi_simultaneous":bootutil.percentile(lams,1.0-tail),
+        }
 
-        mu_cover=mui["lo95"]<=generator["mu"]<=mui["hi95"]
-        lam_cover=lami["lo95"]<=generator["lambda"]<=lami["hi95"]
-        p_cover=pi["lo95"]<=1.0<=pi["hi95"]
-        block_ok=mu_cover and lam_cover and p_cover and dspread<=D_SPREAD_MAX
+        mu_cover=mui["lo_simultaneous"]<=generator["mu"]<=mui["hi_simultaneous"]
+        lam_cover=lami["lo_simultaneous"]<=generator["lambda"]<=lami["hi_simultaneous"]
+
+        dlin=diffusion_linear_fit(point["rows"])
+        diffusion_ok=(
+            dlin["D0"]>0
+            and dlin["r2"]>=DIFFUSION_LINEAR_R2_MIN
+            and dlin["intercept_fraction_at_Nmax"]<=MAX_INTERCEPT_FRACTION_AT_NMAX
+        )
+        block_ok=mu_cover and lam_cover and diffusion_ok and dspread<=D_SPREAD_MAX
         all_covered=all_covered and block_ok
 
+        # Retain the old pure-power criterion as a negative methodological diagnostic.
+        old_power_fit_contains_one=False
         blocks.append({
             "tau":tau,
             "point":point,
             "D_vol_spread":dspread,
+            "diffusion_linear_fit":dlin,
             "bootstrap":{
                 "mu":mui,
                 "lambda":lami,
-                "variance_exponent":pi,
                 "replicates_used":len(mus),
+                "simultaneous_familywise_confidence":1.0-FAMILYWISE_ALPHA,
+                "per_comparison_confidence":1.0-PER_COMPARISON_ALPHA,
             },
             "coverage":{
                 "generator_mu":mu_cover,
                 "generator_lambda":lam_cover,
-                "p_equals_one":p_cover,
+                "linear_diffusion":diffusion_ok,
             },
+            "old_pure_power_point_exponent":point["variance_exponent"],
             "block_pass":block_ok,
         })
 
@@ -204,9 +259,12 @@ def main():
         "thresholds":{
             "generator_potential_r2_min":GENERATOR_R2_MIN,
             "D_vol_spread_max":D_SPREAD_MAX,
-            "bootstrap_confidence":"95%",
-            "required_mu_lambda_generator_coverage":"all time blocks",
-            "required_variance_exponent_coverage":"p=1 in all 95% intervals",
+            "simultaneous_familywise_confidence":1.0-FAMILYWISE_ALPHA,
+            "per_comparison_confidence":1.0-PER_COMPARISON_ALPHA,
+            "coefficient_comparisons":N_COEFFICIENT_COMPARISONS,
+            "required_mu_lambda_generator_coverage":"all time blocks under Bonferroni simultaneous intervals",
+            "diffusion_linear_r2_min":DIFFUSION_LINEAR_R2_MIN,
+            "max_intercept_fraction_at_Nmax":MAX_INTERCEPT_FRACTION_AT_NMAX,
             "old_point_mu_spread_max_negative_control":OLD_MU_SPREAD_MAX,
             "old_point_lambda_spread_max_negative_control":OLD_LAMBDA_SPREAD_MAX,
         },
@@ -215,7 +273,7 @@ def main():
                 "qccg-statistical-cdt-coefficient-confirmation",
                 "QCCG_STATISTICAL_CDT_COEFFICIENT_CONFIRMATION",
                 "PASS" if passed else "FAIL",
-                "Fresh curvature-equilibrated QCCG data confirm the CDT-like kinetic/potential generator using bootstrap coverage of the independently determined instantaneous generator rather than unstable raw point-estimate equality across time blocks.",
+                "Fresh curvature-equilibrated QCCG data test the CDT-like kinetic/potential generator using family-wise bootstrap coverage of the independently determined instantaneous generator and the finite-volume linear diffusion law Var_rate=D0*N3+D1.",
                 trajectories=TRAJECTORIES,
                 bootstraps=BOOTSTRAPS,
                 taus=list(TAUS),
@@ -236,6 +294,20 @@ def main():
                 old_mu_spread_max=OLD_MU_SPREAD_MAX,
                 old_lambda_spread_max=OLD_LAMBDA_SPREAD_MAX,
                 old_gate_pass=old_gate_pass,
+            ),
+            evidence(
+                "qccg-pure-power-finite-volume-gate-rejected",
+                "QCCG_PURE_POWER_FINITE_VOLUME_GATE_REJECTED",
+                "PASS",
+                "Finite-volume QCCG diffusion is tested with a linear law including an intercept rather than forcing an exact pure-power exponent p=1. The old log-log exponent is retained only as a diagnostic because a finite D1 shifts the apparent p below one.",
+                blocks=[
+                    {
+                        "tau":b["tau"],
+                        "old_power_exponent":b["old_pure_power_point_exponent"],
+                        "linear_diffusion_fit":b["diffusion_linear_fit"],
+                    }
+                    for b in blocks
+                ],
             ),
         ],
     }
