@@ -98,6 +98,9 @@ jobs:
           - name: qccg-curvature-weighted-time-confirmation
             script: qccg/run_qccg_curvature_weighted_time_confirmation.py
             output: qccg-curvature-weighted-time-confirmation-evidence.json
+          - name: qccg-fixed-volume-curvature-thermalization
+            script: qccg/run_qccg_fixed_volume_curvature_thermalization.py
+            output: qccg-fixed-volume-curvature-thermalization-evidence.json
           - name: qccg-cdt-potential-drift
             script: qccg/run_qccg_cdt_potential_drift_audit.py
             output: qccg-cdt-potential-drift-evidence.json
