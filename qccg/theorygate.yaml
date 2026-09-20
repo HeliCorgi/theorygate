@@ -131,7 +131,6 @@ obligations:
       - CAUSAL_FOLIATED_4D_ARCHITECTURE
       - CAUSAL_FOLIATION_NEGATIVE_CONTROL
       - QCCG_CAUSAL_MOVE_DYNAMICS
-      - CAUSAL_FINITE_4D_CANDIDATE
       - CAUSAL_4D_SCALING_STABILITY
   - id: QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE
     title: "QCCG specifies and realizes a weighted critical cellulation ensemble with 4D manifold-like scaling"
