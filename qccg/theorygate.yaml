@@ -282,6 +282,26 @@ obligations:
     title: "QCCG essential UV critical exponents match the RFQG-5/asymptotic-safety target"
     kind: physics
     description: "Requires a controlled QCCG UV fixed point and essential relevant-direction spectrum."
+  - id: FESHBACH_COARSE_GRAINING_TOY
+    title: "Exact defect elimination produces a finite low-energy effective kernel"
+    kind: formal-numerical
+    description: "A finite P/Q sector toy satisfies the exact Feshbach/Schur complement identity."
+  - id: COARSE_OPERATOR_PROLIFERATION_DETECTED
+    title: "Exact coarse graining generates low-energy operators absent from the bare truncation"
+    kind: negative-control
+    description: "Defect elimination generates off-diagonal effective operators beyond the bare I+sigma_z ansatz."
+  - id: FINITE_EFFECTIVE_BASIS_CLOSURE_TOY
+    title: "The complete finite Hermitian operator basis closes the finite effective kernel"
+    kind: formal-numerical
+    description: "The full two-state Hermitian operator basis reconstructs the exact finite effective kernel."
+  - id: ENERGY_DEPENDENT_EFFECTIVE_KERNEL_DETECTED
+    title: "Exact coarse graining generates a frequency/energy-dependent effective kernel"
+    kind: formal-numerical
+    description: "The Feshbach kernel depends nontrivially on E, providing a finite analogue of momentum-dependent form factors."
+  - id: QCCG_GRAPH_CHANGING_EFFECTIVE_KERNEL
+    title: "The actual graph-changing QCCG ensemble yields a controlled momentum-dependent effective kernel"
+    kind: physics
+    description: "Requires applying the coarse/defect elimination to increasing constrained QCCG cellulation sectors."
   - id: AS_FIXED_POINT_MATCH
     title: "QCCG coarse graining reaches the RFQG-5/asymptotic-safety universality class"
     kind: physics
@@ -290,6 +310,7 @@ obligations:
       - RG_BRIDGE_OBSERVABLES_EXTRACTED
       - IR_TWO_POINT_MATCH_INSUFFICIENT
       - QCCG_NONPERTURBATIVE_RG_FLOW
+      - QCCG_GRAPH_CHANGING_EFFECTIVE_KERNEL
       - ESSENTIAL_CRITICAL_EXPONENT_MATCH
   - id: PHYSICAL_MASSLESS_SPIN2_CONTINUUM
     title: "A physical massless helicity-2 continuum sector is established"
@@ -498,6 +519,16 @@ claims:
       - SINGLE_COUPLING_RG_TRUNCATION_REJECTED
       - FULL_FINITE_HARMONIC_RG_CLOSURE_TOY
       - TRIVIAL_RG_FLOW_NEGATIVE_CONTROL
+
+  - id: QCCG_EFFECTIVE_KERNEL_TOY
+    title: "Finite QCCG coarse-graining form-factor architecture toy"
+    rank: 49
+    statement: "Exact finite defect elimination generates operator proliferation and a genuinely energy-dependent effective kernel, while the complete finite Hermitian basis closes the toy."
+    requires:
+      - FESHBACH_COARSE_GRAINING_TOY
+      - COARSE_OPERATOR_PROLIFERATION_DETECTED
+      - FINITE_EFFECTIVE_BASIS_CLOSURE_TOY
+      - ENERGY_DEPENDENT_EFFECTIVE_KERNEL_DETECTED
 
   - id: QCCG_RFQG_UNIVERSALITY
     title: "QCCG realizes the RFQG-5 continuum universality class"
