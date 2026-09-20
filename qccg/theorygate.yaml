@@ -142,10 +142,26 @@ obligations:
     title: "The local Pachner cobordism blocks have exact complementary inverse moves"
     kind: negative-control
     description: "Swapping lower/upper facet sets realizes 4->1 and 3->2 inverse cobordisms."
+  - id: PACHNER_COBORDISM_COMPOSITION_TOY
+    title: "Sequential local 4-simplex Pachner cobordisms compose to a 4D manifold-with-boundary"
+    kind: formal-numerical
+    description: "Two local refinement blocks glue along one tetrahedron with incidence two and a tree-like causal attachment graph."
+  - id: PACHNER_COBORDISM_OVERGLUE_NEGATIVE_CONTROL
+    title: "Overgluing an already-internal tetrahedron is detected"
+    kind: negative-control
+    description: "A third simplex attached to an internal tetrahedron creates incidence three and is rejected."
+  - id: QCCG_STRICT_FOLIATION_COMPOSITION
+    title: "Mixed local cobordism histories admit one strict equal-time global foliation"
+    kind: physics
+    description: "Requires globally consistent slice labels for arbitrary compositions, beyond manifold-with-boundary composition."
   - id: QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
     title: "Arbitrary compositions of local Pachner cobordisms admit one consistent global causal foliation"
     kind: physics
     description: "Requires global time labels, manifold incidence and no time-skipping simplices after composing local 4D blocks."
+    depends_on:
+      - PACHNER_COBORDISM_COMPOSITION_TOY
+      - PACHNER_COBORDISM_OVERGLUE_NEGATIVE_CONTROL
+      - QCCG_STRICT_FOLIATION_COMPOSITION
   - id: QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
     title: "Every allowed neighboring spatial slice pair has a bounded-time 4D causal simplicial interpolation"
     kind: physics
@@ -644,6 +660,14 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_PACHNER_COMPOSITION_TOY
+    title: "Finite sequential Pachner-cobordism composition"
+    rank: 46
+    statement: "The audited local 4-simplex refinement blocks compose to a manifold-with-boundary with a tree-like attachment graph, while overgluing is rejected; strict global foliation remains open."
+    requires:
+      - PACHNER_COBORDISM_COMPOSITION_TOY
+      - PACHNER_COBORDISM_OVERGLUE_NEGATIVE_CONTROL
 
   - id: QCCG_PACHNER_COBORDISM_TOY
     title: "Local 4D Pachner cobordism architecture"
