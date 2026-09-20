@@ -729,10 +729,33 @@ obligations:
     title: "Finite QCCG volume-jump moments remain O(N3)"
     kind: numerical
     description: "Across the audited finite state graph the equal-site-rate second volume-jump moment divided by N3 stays bounded."
+  - id: QCCG_LARGE_VOLUME_PACHNER_SCAN
+    title: "Increasing closed-S3 QCCG triangulations are generated for large-volume move-count scaling"
+    kind: numerical
+    description: "Multiple geometry-mixed triangulations are audited at N3=20,41,80,119 while preserving manifold incidence."
+  - id: QCCG_LARGE_VOLUME_DIFFUSION_EXPONENT
+    title: "The QCCG Pachner second volume-jump moment is extensive at increasing N3"
+    kind: numerical
+    description: "The equal-local-rate second jump moment is fitted to D2=A*N3^p and must approach p=1 with high log-log fit quality."
+  - id: QCCG_MESOSCOPIC_VOLUME_CLT_SCALING
+    title: "Mesoscopic QCCG volume-jump cumulants scale toward a Gaussian regime"
+    kind: numerical
+    description: "At tau_N=N3^(-1/2), standardized skewness and excess kurtosis decrease with the expected central-limit powers while relative drift vanishes."
+  - id: QCCG_FROZEN_GENERATOR_GAUSSIANIZATION
+    title: "The frozen local QCCG Pachner generator Gaussianizes in the mesoscopic scaling window"
+    kind: numerical
+    description: "Higher standardized volume cumulants vanish on increasing triangulations at fixed local generator data."
   - id: QCCG_CDT_DIFFUSIVE_KINETIC_LIMIT
     title: "Increasing QCCG ensembles reach a Gaussian diffusive volume regime with CDT kinetic scaling"
     kind: physics
-    description: "Requires measured Gaussianity/time-blocking stability and Var(Delta N3|N3) proportional to N3 over an expanding large-volume window."
+    description: "Requires the fully state-dependent time-evolved transition histograms to retain Gaussianity and Var(Delta N3|N3) proportional to N3 under time blocking."
+    depends_on:
+      - QCCG_PACHNER_EXTENSIVE_VOLUME_DIFFUSION
+      - QCCG_VOLUME_DIFFUSION_SCALING_DIAGNOSTIC
+      - QCCG_LARGE_VOLUME_PACHNER_SCAN
+      - QCCG_LARGE_VOLUME_DIFFUSION_EXPONENT
+      - QCCG_MESOSCOPIC_VOLUME_CLT_SCALING
+      - QCCG_FROZEN_GENERATOR_GAUSSIANIZATION
   - id: QCCG_S3_CURVATURE_POTENTIAL_SCALING
     title: "Round-S3 intrinsic curvature gives an N3^(1/3) coarse potential"
     kind: formal
