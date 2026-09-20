@@ -288,6 +288,7 @@ def sample(kappa2, seed):
     types = ("15", "51", "24", "42")
     accepted = 0
     attempted = 0
+    topology_rejected_proposals = 0
 
     for _ in range(STEPS):
         typ = rng.choice(types)
@@ -297,6 +298,13 @@ def sample(kappa2, seed):
         attempted += 1
         S2, nextv2, reverse = propose(S, typ, rng, nextv)
         if S2 is None:
+            continue
+        # Candidate enumeration is intentionally treated as permissive.
+        # A purported inverse Pachner pattern is not trusted until the
+        # proposed complex itself passes the closed-manifold incidence audit.
+        # Invalid proposals become self-loops and never enter the MH ratio.
+        if not manifold_ok(S2):
+            topology_rejected_proposals += 1
             continue
         nr = candidate_count(S2, reverse)
         if nr == 0:
@@ -317,6 +325,7 @@ def sample(kappa2, seed):
         "attempted": attempted,
         "accepted": accepted,
         "acceptance_fraction": accepted / max(1, attempted),
+        "topology_rejected_proposals": topology_rejected_proposals,
         "N2": n2,
         "N4": n4,
         "action": act,
@@ -361,6 +370,11 @@ def main():
                 target_N4=TARGET_N4,
                 volume_epsilon=VOLUME_EPS,
                 rows=rows,
+                topology_guard=(
+                    "Every proposed move is revalidated by tetrahedral-face incidence "
+                    "before the Metropolis-Hastings ratio; invalid inverse-move patterns "
+                    "are rejected as self-loops."
+                ),
             ),
             evidence(
                 "qccg-regge-weight-no-4d-plateau",
