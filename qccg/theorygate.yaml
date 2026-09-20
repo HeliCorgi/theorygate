@@ -176,8 +176,16 @@ obligations:
     description: "Moving the new upper vertex beyond the adjacent slice creates invalid nonlocal-time simplices."
   - id: CAUSAL_23_SPACETIME_SLAB_REALIZATION
     title: "A strict adjacent-slice 4D slab realizes a spatial 2<->3 Pachner transition"
-    kind: physics
-    description: "Requires a causal slab with both old and new spatial vertices assigned to adjacent equal-time slices, beyond the abstract 4-simplex cobordism."
+    kind: formal-numerical
+    description: "An explicit nine-simplex adjacent-slice slab has exactly the old two-tetrahedron lower boundary, new three-tetrahedron upper boundary, common lateral boundary and incidence-two interior."
+  - id: CAUSAL_23_SLAB_INVERSE_CONTROL
+    title: "The strict 2<->3 causal slab has an exact time-reversed inverse"
+    kind: formal-numerical
+    description: "Swapping lower and upper vertex copies gives a valid strict 3->2 slab with the reversed prescribed boundary."
+  - id: CAUSAL_23_SLAB_COMPLETENESS_CONTROL
+    title: "Missing 4-simplices are detected in the strict 2<->3 slab"
+    kind: negative-control
+    description: "Deleting any one required 4-simplex breaks the prescribed boundary or manifold incidence."
   - id: QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
     title: "Every allowed neighboring spatial slice pair has a bounded-time 4D causal simplicial interpolation"
     kind: physics
@@ -189,6 +197,8 @@ obligations:
       - CAUSAL_14_SLAB_INVERSE_CONTROL
       - CAUSAL_14_SLAB_TIME_SKIP_CONTROL
       - CAUSAL_23_SPACETIME_SLAB_REALIZATION
+      - CAUSAL_23_SLAB_INVERSE_CONTROL
+      - CAUSAL_23_SLAB_COMPLETENESS_CONTROL
       - QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
   - id: CDT_MOVE4_VERTEX_REFINEMENT_TOY
     title: "A local 4D causal vertex-changing 2->8 refinement move is realized"
@@ -908,6 +918,15 @@ claims:
     requires:
       - CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
       - CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
+
+  - id: QCCG_CAUSAL_23_SLAB_TOY
+    title: "Strict causal spatial 2<->3 slab"
+    rank: 48
+    statement: "An explicit nine-simplex adjacent-slice 4D slab realizes the spatial 2<->3 Pachner transition with exact reversed 3->2 slab and single-simplex removal controls; arbitrary global composition is not claimed."
+    requires:
+      - CAUSAL_23_SPACETIME_SLAB_REALIZATION
+      - CAUSAL_23_SLAB_INVERSE_CONTROL
+      - CAUSAL_23_SLAB_COMPLETENESS_CONTROL
 
   - id: QCCG_CAUSAL_14_SLAB_TOY
     title: "Strict causal spatial 1<->4 slab"
