@@ -211,6 +211,16 @@ obligations:
       - IR_TWO_POINT_MATCH_INSUFFICIENT
       - QCCG_NONPERTURBATIVE_RG_FLOW
       - ESSENTIAL_CRITICAL_EXPONENT_MATCH
+  - id: PHYSICAL_MASSLESS_SPIN2_CONTINUUM
+    title: "A physical massless helicity-2 continuum sector is established"
+    kind: physics
+    description: "Requires derivation from the explicit parent, a Lorentzian manifold phase, common Lorentz cone, continuum gauge/BRST structure, physical unitarity, and an explicit physical spin-2 spectral identification."
+    depends_on:
+      - FULL_MICROSCOPIC_DERIVATION
+      - CONTINUUM_MANIFOLD_PHASE
+      - LORENTZ_UNIVERSALITY
+      - CONTINUUM_DIFFEO_BRST
+      - PHYSICAL_UNITARITY_SCALING_LIMIT
   - id: SOFT_GRAVITON_UNIVERSALITY_TARGET
     title: "Leading soft-graviton gauge consistency enforces universal coupling at the target continuum level"
     kind: formal-numerical
@@ -226,7 +236,7 @@ obligations:
     depends_on:
       - SOFT_GRAVITON_UNIVERSALITY_TARGET
       - SOFT_NONUNIVERSAL_COUPLING_REJECTED
-      - QCCG_EMERGENT_MASSLESS_SPIN2
+      - PHYSICAL_MASSLESS_SPIN2_CONTINUUM
   - id: GR_IR_EFFECTIVE_ACTION
     title: "The infrared physical effective action reproduces GR plus controlled corrections"
     kind: physics
@@ -339,11 +349,7 @@ claims:
     rank: 50
     statement: "A fully explicit QCCG parent Hamiltonian has a physical continuum containing only the required massless helicity-2 gravitational sector."
     requires:
-      - FULL_MICROSCOPIC_DERIVATION
-      - CONTINUUM_MANIFOLD_PHASE
-      - LORENTZ_UNIVERSALITY
-      - CONTINUUM_DIFFEO_BRST
-      - PHYSICAL_UNITARITY_SCALING_LIMIT
+      - PHYSICAL_MASSLESS_SPIN2_CONTINUUM
 
   - id: QCCG_GENERIC_NONLINEAR_PARENT_TOY
     title: "Finite-Weyl parent with stable generic cubic self-interaction"
