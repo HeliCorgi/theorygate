@@ -56,3 +56,43 @@ QCCG microscopic dynamics
 
 A literature result can establish that a bridge or target exists.  It cannot
 establish that QCCG lands on that target without a QCCG calculation.
+
+
+## Essential Reuter fixed-point target
+
+4. A. Baldazzi, K. Falls, Y. Kluth, B. Knorr,
+   **Robustness of the derivative expansion in asymptotic safety**,
+   Phys. Rev. D 113, 026005 (2026).
+   - arXiv:2312.03831
+   - DOI: 10.1103/hlrm-d4g2
+   - Use here: external essential-coupling comparison target at sixth derivative
+     order.  The published fixed point has
+     ```text
+     g_N* = 0.364
+     g_C3* = 4.490e-7
+     theta_1 = 2.225
+     theta_2 = -3.850
+     ```
+     and one relevant direction.
+   - Important limitation: these numbers are an FRG target, not QCCG evidence.
+
+## CDT -> FRG matching coordinates
+
+For the 2024 CDT/FRG comparison, the round-four-sphere scale-factor variables
+obey the published relation
+
+```text
+g_eff^2 = 24*pi*G_k/sqrt(V4)
+        = (4/sqrt(6))*lambda_k*g_k
+        ~= 1.633*lambda_k*g_k .
+```
+
+The QCCG program therefore needs large-volume measurements of at least
+`N4`, `Gamma`, `omega`, and a controlled critical trajectory before this
+map can be applied numerically.
+
+The 2024 paper explicitly warns that a raw CDT/lattice critical exponent should
+not automatically be identified with an FRG stability exponent because the
+relation between the lattice correlation-length scale and the FRG
+coarse-graining scale is not yet established.  The same restriction is imposed
+on QCCG.
