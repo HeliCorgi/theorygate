@@ -115,6 +115,11 @@ jobs:
           python qccg/run_causal_column_refinement_scan.py \
             --out artifacts/qccg/causal-column-evidence.json
 
+      - name: Audit time-local evolving-slice transfer
+        run: |
+          python qccg/run_time_local_slice_transfer_toy.py \
+            --out artifacts/qccg/time-local-transfer-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -203,6 +208,7 @@ jobs:
             --evidence artifacts/qccg/causal-move-evidence.json \
             --evidence artifacts/qccg/causal-ensemble-evidence.json \
             --evidence artifacts/qccg/causal-column-evidence.json \
+            --evidence artifacts/qccg/time-local-transfer-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -238,6 +244,7 @@ jobs:
             --evidence artifacts/qccg/causal-move-evidence.json \
             --evidence artifacts/qccg/causal-ensemble-evidence.json \
             --evidence artifacts/qccg/causal-column-evidence.json \
+            --evidence artifacts/qccg/time-local-transfer-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
