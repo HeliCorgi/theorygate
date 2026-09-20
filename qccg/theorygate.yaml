@@ -912,6 +912,14 @@ obligations:
     title: "Finite-block coefficient confidence intervals are compared with the instantaneous equilibrium generator"
     kind: diagnostic
     description: "Tests whether at least one finite block is statistically compatible with the infinitesimal equilibrium-generator mu/lambda."
+  - id: QCCG_STATISTICAL_CDT_COEFFICIENT_CONFIRMATION
+    title: "QCCG CDT effective coefficients are confirmed with uncertainty-aware finite-block statistics"
+    kind: physics
+    description: "Fresh curvature-equilibrated trajectories require bootstrap compatibility with the independently determined instantaneous equilibrium generator at all audited time blocks."
+  - id: QCCG_POINT_ESTIMATE_SPREAD_GATE_REJECTED
+    title: "The raw cross-block point-estimate spread rule is rejected as an uncertainty-blind promotion criterion"
+    kind: negative-control
+    description: "A point-spread rule can reject statistically compatible finite-block estimates and is retained only as a methodological failure control."
   - id: QCCG_CDT_EFFECTIVE_COEFFICIENT_MATCH
     title: "QCCG large-volume effective Gamma, mu, lambda and omega are measured and stable"
     kind: physics
@@ -1196,6 +1204,14 @@ claims:
     statement: "Using Pachner's theorem and the audited reversible 1<->4 and 2<->3 QCCG spatial move families, any two triangulations in the same closed PL 3-manifold slice class are connected by a finite QCCG spatial move sequence; no full 4D causal ergodicity is claimed."
     requires:
       - QCCG_SPATIAL_SLICE_PL_CONNECTIVITY
+
+  - id: QCCG_STATISTICAL_CDT_CONFIRMATION_TOY
+    title: "Uncertainty-aware CDT coefficient confirmation"
+    rank: 49
+    statement: "Fresh curvature-equilibrated QCCG time-block data are compared to the independently determined infinitesimal generator with bootstrap confidence intervals, while the obsolete point-spread rule is retained as a negative control."
+    requires:
+      - QCCG_STATISTICAL_CDT_COEFFICIENT_CONFIRMATION
+      - QCCG_POINT_ESTIMATE_SPREAD_GATE_REJECTED
 
   - id: QCCG_CDT_COEFFICIENT_UNCERTAINTY_TOY
     title: "Bootstrap-resolved CDT coefficient diagnostic"
