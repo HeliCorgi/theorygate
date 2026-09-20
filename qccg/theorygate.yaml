@@ -278,6 +278,7 @@ obligations:
       - SINGLE_COUPLING_RG_TRUNCATION_REJECTED
       - FULL_FINITE_HARMONIC_RG_CLOSURE_TOY
       - TRIVIAL_RG_FLOW_NEGATIVE_CONTROL
+      - QCCG_CELLULATION_NONPERTURBATIVE_RG
   - id: ESSENTIAL_CRITICAL_EXPONENT_MATCH
     title: "QCCG essential UV critical exponents match the RFQG-5/asymptotic-safety target"
     kind: physics
@@ -302,6 +303,26 @@ obligations:
     title: "The actual graph-changing QCCG ensemble yields a controlled momentum-dependent effective kernel"
     kind: physics
     description: "Requires applying the coarse/defect elimination to increasing constrained QCCG cellulation sectors."
+  - id: CELLULATION_FESHBACH_RG_TOY
+    title: "A finite cellulation-move/curvature sector admits exact pair-block coarse graining"
+    kind: formal-numerical
+    description: "A six-state move-graph toy is split into coarse pair blocks plus gapped intra-block defects and reduced exactly by Feshbach elimination."
+  - id: CELLULATION_RESTRICTED_RG_BASIS_REJECTED
+    title: "A narrow move-plus-curvature coarse operator basis is rejected"
+    kind: negative-control
+    description: "The exact coarse kernel cannot be represented by only identity, a simple coarse move Laplacian and one curvature diagonal."
+  - id: CELLULATION_FULL_OPERATOR_BASIS_CLOSURE_TOY
+    title: "The complete finite real-symmetric coarse operator basis closes the cellulation toy"
+    kind: formal-numerical
+    description: "The full finite coarse operator basis reconstructs the exact effective kernel at the audited energies."
+  - id: CELLULATION_ENERGY_DEPENDENT_KERNEL
+    title: "Cellulation coarse graining generates an energy-dependent effective kernel"
+    kind: formal-numerical
+    description: "Exact elimination of fine cellulation defects produces nontrivial energy dependence in the coarse kernel."
+  - id: QCCG_CELLULATION_NONPERTURBATIVE_RG
+    title: "A compatible nonperturbative RG flow is computed across increasing QCCG cellulation ensembles"
+    kind: physics
+    description: "Requires nested QCCG-generated cellulation ensembles, compatible block maps, generated-operator tracking and fixed-point/critical-exponent stability."
   - id: AS_FIXED_POINT_MATCH
     title: "QCCG coarse graining reaches the RFQG-5/asymptotic-safety universality class"
     kind: physics
@@ -509,6 +530,16 @@ claims:
     requires:
       - NONDERIVATIVE_CUBIC_MISMATCH_DETECTED
       - DERIVATIVE_CUBIC_REPAIR
+
+  - id: QCCG_CELLULATION_RG_ARCHITECTURE_TOY
+    title: "Finite cellulation-sector exact coarse-graining architecture"
+    rank: 49
+    statement: "Exact coarse graining of a finite move/curvature cellulation toy rejects a narrow coarse basis, closes in the full finite operator basis and generates an energy-dependent kernel; no continuum cellulation RG flow is claimed."
+    requires:
+      - CELLULATION_FESHBACH_RG_TOY
+      - CELLULATION_RESTRICTED_RG_BASIS_REJECTED
+      - CELLULATION_FULL_OPERATOR_BASIS_CLOSURE_TOY
+      - CELLULATION_ENERGY_DEPENDENT_KERNEL
 
   - id: QCCG_EXACT_RG_ARCHITECTURE_TOY
     title: "Exact finite-Weyl RG architecture toy"
