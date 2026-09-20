@@ -41,6 +41,9 @@ jobs:
           - name: cdt-mixed-connectivity
             script: qccg/run_cdt_mixed_connectivity_toy.py
             output: cdt-mixed-connectivity-evidence.json
+          - name: cdt-connectivity-scaling
+            script: qccg/run_cdt_scalable_connectivity_scan.py
+            output: cdt-connectivity-scaling-evidence.json
           - name: lattice-ward-scaling
             script: qccg/run_lattice_ward_scaling_audit.py
             output: lattice-ward-evidence.json
