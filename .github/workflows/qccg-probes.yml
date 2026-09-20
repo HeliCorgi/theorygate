@@ -86,6 +86,9 @@ jobs:
           - name: qccg-cdt-diffusion-bridge
             script: qccg/run_qccg_cdt_diffusion_bridge.py
             output: qccg-cdt-diffusion-bridge-evidence.json
+          - name: qccg-large-volume-diffusion
+            script: qccg/run_qccg_large_volume_diffusion_scan.py
+            output: qccg-large-volume-diffusion-evidence.json
           - name: qccg-cdt-structural-action
             script: qccg/run_qccg_cdt_structural_action_audit.py
             output: qccg-cdt-structural-action-evidence.json
