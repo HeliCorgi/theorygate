@@ -296,6 +296,7 @@ def sample(kappa, seed):
 
     ds, dv = dimensions(S)
     act, imbalance = action(S, kappa)
+    vertex_count = len({v for simplex in S for v in simplex})
     return {
         "kappa_balance": kappa,
         "attempted": attempted,
@@ -303,6 +304,7 @@ def sample(kappa, seed):
         "acceptance_fraction": accepted / max(1, attempted),
         "move_counts": dict(move_counts),
         "N4": len(S),
+        "vertex_count": vertex_count,
         "action": act,
         "type_imbalance": imbalance,
         "type_counts": type_counts(S),
@@ -340,6 +342,10 @@ def main():
     )
     candidate_count = sum(r["broad_4d_candidate"] for r in rows)
     finite_candidate = candidate_count >= 1
+    initial_S, _initial_spatial = build()
+    initial_vertex_count = len({v for simplex in initial_S for v in simplex})
+    fixed_vertex = all(r["vertex_count"] == initial_vertex_count for r in rows)
+    fixed_vertex_insufficient = (not finite_candidate) and fixed_vertex
 
     result = {
         "schema": 1,
@@ -367,6 +373,16 @@ def main():
                     else "No preregistered finite causal-move setting reaches the broad ds,dV>=3 diagnostic; the current action/move ensemble is insufficient."
                 ),
                 broad_4d_min=BROAD_4D_MIN,
+                candidate_count=candidate_count,
+                rows=rows,
+            ),
+            evidence(
+                "qccg-causal-fixed-vertex-insufficient",
+                "CAUSAL_FIXED_VERTEX_MOVESET_INSUFFICIENT",
+                "PASS" if fixed_vertex_insufficient else ("NOT_APPLICABLE" if finite_candidate else "FAIL"),
+                "The audited 2<->4 causal move ensemble keeps the microscopic vertex set fixed; when the finite 4D diagnostic fails, this is retained as evidence that the move set cannot grow an extended spatial geometry from the tiny initial slice.",
+                initial_vertex_count=initial_vertex_count,
+                fixed_vertex_across_scan=fixed_vertex,
                 candidate_count=candidate_count,
                 rows=rows,
             ),
