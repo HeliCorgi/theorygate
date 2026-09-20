@@ -150,6 +150,10 @@ obligations:
     title: "Overgluing an already-internal tetrahedron is detected"
     kind: negative-control
     description: "A third simplex attached to an internal tetrahedron creates incidence three and is rejected."
+  - id: STRICT_SLAB_GLUE_INCIDENCE_LEMMA
+    title: "Axiom-free formal slab-gluing incidence lemma"
+    kind: formal
+    description: "Given incidence one on each copy of an interface face, gluing gives incidence two; external incidence and adjacent-layer arithmetic are preserved. Physical complexes must establish the hypotheses separately."
   - id: STRICT_23_ROUNDTRIP_COMPOSITION_TOY
     title: "Strict 2->3 and 3->2 causal slabs compose through one shared intermediate slice"
     kind: formal-numerical
@@ -163,6 +167,7 @@ obligations:
     kind: physics
     description: "Requires globally consistent slice labels for arbitrary compositions, beyond the finite round-trip composition toy."
     depends_on:
+      - STRICT_SLAB_GLUE_INCIDENCE_LEMMA
       - STRICT_23_ROUNDTRIP_COMPOSITION_TOY
       - STRICT_SLAB_GLUE_NEGATIVE_CONTROL
   - id: QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
@@ -953,6 +958,13 @@ claims:
       - CLOSED_SLICE_14_CAUSAL_SLAB_TOY
       - CLOSED_SLICE_23_CAUSAL_SLAB_TOY
       - CLOSED_SLICE_SLAB_COMPLETION_CONTROL
+
+  - id: QCCG_FORMAL_GLUE_LEMMA
+    title: "Formal slab-gluing incidence certificate"
+    rank: 33
+    statement: "The arithmetic incidence and adjacent-time bookkeeping used when gluing already-audited strict slabs is formally certified; this does not assert that any physical slab satisfies the hypotheses."
+    requires:
+      - STRICT_SLAB_GLUE_INCIDENCE_LEMMA
 
   - id: QCCG_STRICT_SLAB_COMPOSITION_TOY
     title: "Finite strict causal slab composition"
