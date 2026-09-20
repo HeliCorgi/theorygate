@@ -140,6 +140,11 @@ jobs:
           python qccg/run_cdt_move33_audit.py \
             --out artifacts/qccg/cdt-move33-evidence.json
 
+      - name: Audit spatial Pachner theorem applicability
+        run: |
+          python qccg/run_spatial_pachner_theorem_audit.py \
+            --out artifacts/qccg/spatial-pachner-evidence.json
+
       - name: Audit mixed fixed-boundary CDT connectivity
         run: |
           python qccg/run_cdt_mixed_connectivity_toy.py \
@@ -285,6 +290,7 @@ jobs:
             --evidence artifacts/qccg/refinement-coherence-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
+            --evidence artifacts/qccg/spatial-pachner-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/manifold-diagnostic-evidence.json \
             --evidence artifacts/qccg/pachner-evidence.json \
@@ -337,6 +343,7 @@ jobs:
             --evidence artifacts/qccg/refinement-coherence-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
+            --evidence artifacts/qccg/spatial-pachner-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/manifold-diagnostic-evidence.json \
             --evidence artifacts/qccg/pachner-evidence.json \
