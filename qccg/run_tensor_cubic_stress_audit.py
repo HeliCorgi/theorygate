@@ -20,7 +20,7 @@ import run_tensor_cubic_lattice_audit as base
 
 
 TLAM = (1 + 0j, 0j)
-A_VALUES = (0.4, 0.2, 0.1, 0.05, 0.025)
+A_VALUES = (0.4, 0.2, 0.1, 0.05, 0.025, 0.0125, 0.00625, 0.003125, 0.0015625)
 FINAL_REL_TOL = 2.0e-5
 FINAL_GAUGE_REL_TOL = 2.0e-5
 
