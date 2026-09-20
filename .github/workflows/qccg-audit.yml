@@ -75,6 +75,11 @@ jobs:
           python qccg/run_structure_function_toy.py \
             --out artifacts/qccg/structure-function-evidence.json
 
+      - name: Extract QCCG RFQG bridge observables
+        run: |
+          python qccg/run_rg_bridge_audit.py \
+            --out artifacts/qccg/rg-bridge-evidence.json
+
       - name: Validate audit model
         run: theorygate validate qccg/theorygate.yaml
 
@@ -90,7 +95,8 @@ jobs:
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
-            --require QCCG_GENERIC_NONLINEAR_PARENT_TOY
+            --evidence artifacts/qccg/rg-bridge-evidence.json \
+            --require QCCG_RG_BRIDGE_DATA_TOY
 
       - name: Assert stronger physical claims remain blocked
         run: |
@@ -104,13 +110,16 @@ jobs:
             --evidence artifacts/qccg/cellulation-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
+            --evidence artifacts/qccg/rg-bridge-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
           import json
           from pathlib import Path
 
           report = json.loads(Path("artifacts/qccg/report.json").read_text())
-          assert report["strongest_supported_claim"] == "QCCG_GENERIC_NONLINEAR_PARENT_TOY", report["strongest_supported_claim"]
+          assert report["strongest_supported_claim"] == "QCCG_RG_BRIDGE_DATA_TOY", report["strongest_supported_claim"]
+          assert report["obligations"]["AS_FIXED_POINT_MATCH"]["status"] == "BLOCKED"
+          assert any("QCCG_NONPERTURBATIVE_RG_FLOW=OPEN" in x or "ESSENTIAL_CRITICAL_EXPONENT_MATCH=OPEN" in x for x in report["obligations"]["AS_FIXED_POINT_MATCH"]["blockers"])
           assert report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["status"] == "OPEN"
           assert report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["status"] == "BLOCKED"
           assert any("MANIFOLD_LIKENESS_SCALING=OPEN" in x for x in report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["blockers"])
