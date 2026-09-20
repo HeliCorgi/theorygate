@@ -116,10 +116,26 @@ obligations:
     title: "An incorrect constant structure function is detected as a closure failure"
     kind: negative-control
     description: "Replacing the sector-dependent operator structure function by a constant fails the exact closure relation."
+  - id: FINITE_GLOBAL_CCR_NO_GO
+    title: "Exact global canonical commutators are excluded on the finite microscopic Hilbert space"
+    kind: formal
+    description: "The finite-dimensional trace identity forbids an exact global CCR and motivates emergent code-subspace closure."
+  - id: LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE
+    title: "A localized finite-Weyl code subspace converges to a noncentral continuum commutator"
+    kind: numerical
+    description: "For localized low-energy packets, the finite spectral derivative reproduces [P,X^2]≈-2iX with decreasing residual."
+  - id: STRUCTURE_FUNCTION_PATCH_CONTROL
+    title: "The code-subspace structure-function approximation fails near the periodic chart boundary"
+    kind: negative-control
+    description: "Boundary-localized packets retain a large residual, preventing promotion to an exact global finite-Hilbert identity."
   - id: GR_HDA_STRUCTURE_FUNCTION_MATCH
     title: "The finite-Weyl nonlinear constraints reproduce the dynamical GR HDA structure functions"
     kind: physics
-    description: "Requires inverse-metric/operator-valued structure functions with the correct smearing dependence, not merely a central toy operator."
+    description: "Requires inverse-metric/operator-valued structure functions with the correct smearing dependence, not merely a central toy operator or elementary code-subspace commutator."
+    depends_on:
+      - FINITE_GLOBAL_CCR_NO_GO
+      - LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE
+      - STRUCTURE_FUNCTION_PATCH_CONTROL
   - id: NONLINEAR_CONSTRAINT_CLOSURE
     title: "The nonlinear interacting constraint/BRST algebra closes anomaly-free"
     kind: physics
@@ -343,6 +359,15 @@ claims:
       - STRUCTURE_FUNCTION_CLOSURE_TOY
       - CONSTRAINT_KERNEL_GAP_TOY
       - STRUCTURE_FUNCTION_NEGATIVE_CONTROL
+
+  - id: QCCG_CODE_SUBSPACE_STRUCTURE_FUNCTION_TOY
+    title: "Emergent noncentral structure-function code-subspace pilot"
+    rank: 48
+    statement: "The audited finite-Weyl system cannot realize a global CCR, but a localized low-energy code subspace converges to a noncentral structure-function commutator while a boundary-localized negative control fails."
+    requires:
+      - FINITE_GLOBAL_CCR_NO_GO
+      - LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE
+      - STRUCTURE_FUNCTION_PATCH_CONTROL
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
