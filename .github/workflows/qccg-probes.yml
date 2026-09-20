@@ -80,6 +80,9 @@ jobs:
           - name: cubic-coefficient-selection
             script: qccg/run_cubic_coefficient_selection_audit.py
             output: cubic-coefficient-selection-evidence.json
+          - name: qccg-cdt-transfer-match
+            script: qccg/run_qccg_cdt_transfer_match.py
+            output: qccg-cdt-transfer-match-evidence.json
     name: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
