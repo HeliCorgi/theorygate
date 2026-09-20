@@ -245,6 +245,11 @@ jobs:
           python qccg/run_qccg_mesoscopic_clt_audit.py \
             --out artifacts/qccg/qccg-mesoscopic-clt-evidence.json
 
+      - name: Audit state-dependent QCCG volume kernel
+        run: |
+          python qccg/run_qccg_time_evolved_volume_kernel.py \
+            --out artifacts/qccg/qccg-time-evolved-volume-kernel-evidence.json
+
       - name: Audit structural QCCG CDT action match
         run: |
           python qccg/run_qccg_cdt_structural_action_audit.py \
@@ -353,6 +358,7 @@ jobs:
             --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
             --evidence artifacts/qccg/qccg-large-volume-diffusion-evidence.json \
             --evidence artifacts/qccg/qccg-mesoscopic-clt-evidence.json \
+            --evidence artifacts/qccg/qccg-time-evolved-volume-kernel-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-structural-action-evidence.json \
             --evidence artifacts/qccg/cdt-frg-reuter-anchor-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
@@ -412,6 +418,7 @@ jobs:
             --evidence artifacts/qccg/qccg-cdt-diffusion-bridge-evidence.json \
             --evidence artifacts/qccg/qccg-large-volume-diffusion-evidence.json \
             --evidence artifacts/qccg/qccg-mesoscopic-clt-evidence.json \
+            --evidence artifacts/qccg/qccg-time-evolved-volume-kernel-evidence.json \
             --evidence artifacts/qccg/qccg-cdt-structural-action-evidence.json \
             --evidence artifacts/qccg/cdt-frg-reuter-anchor-evidence.json \
             --evidence artifacts/qccg/exact-rg-evidence.json \
