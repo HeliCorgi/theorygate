@@ -61,6 +61,9 @@ jobs:
           - name: closed-slice-slabs
             script: qccg/run_closed_slice_slab_audit.py
             output: closed-slice-slab-evidence.json
+          - name: generic-slab-scan
+            script: qccg/run_generic_closed_slice_slab_scan.py
+            output: generic-slab-scan-evidence.json
           - name: tensor-cubic-stress
             script: qccg/run_tensor_cubic_stress_audit.py
             output: tensor-cubic-stress-evidence.json
