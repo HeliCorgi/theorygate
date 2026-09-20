@@ -920,6 +920,10 @@ obligations:
     title: "The raw cross-block point-estimate spread rule is rejected as an uncertainty-blind promotion criterion"
     kind: negative-control
     description: "A point-spread rule can reject statistically compatible finite-block estimates and is retained only as a methodological failure control."
+  - id: QCCG_PURE_POWER_FINITE_VOLUME_GATE_REJECTED
+    title: "Finite-volume pure-power p=1 diffusion fitting is rejected as a promotion criterion"
+    kind: negative-control
+    description: "The asymptotic CDT kinetic requirement is tested with Var_rate=D0*N3+D1 at finite volume; forcing an exact pure-power exponent p=1 can falsely reject linear diffusion when the finite-size intercept is nonzero."
   - id: QCCG_CDT_EFFECTIVE_COEFFICIENT_MATCH
     title: "QCCG large-volume effective Gamma, mu, lambda and omega are measured and stable"
     kind: physics
@@ -1212,6 +1216,7 @@ claims:
     requires:
       - QCCG_STATISTICAL_CDT_COEFFICIENT_CONFIRMATION
       - QCCG_POINT_ESTIMATE_SPREAD_GATE_REJECTED
+      - QCCG_PURE_POWER_FINITE_VOLUME_GATE_REJECTED
 
   - id: QCCG_CDT_COEFFICIENT_UNCERTAINTY_TOY
     title: "Bootstrap-resolved CDT coefficient diagnostic"
