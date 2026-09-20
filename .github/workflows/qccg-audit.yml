@@ -120,6 +120,11 @@ jobs:
           python qccg/run_time_local_slice_transfer_toy.py \
             --out artifacts/qccg/time-local-transfer-evidence.json
 
+      - name: Audit local vertex-changing 4D causal move
+        run: |
+          python qccg/run_cdt_move4_audit.py \
+            --out artifacts/qccg/cdt-move4-evidence.json
+
       - name: Audit local 4D Pachner cobordisms
         run: |
           python qccg/run_pachner_cobordism_audit.py \
@@ -219,6 +224,7 @@ jobs:
             --evidence artifacts/qccg/causal-ensemble-evidence.json \
             --evidence artifacts/qccg/causal-column-evidence.json \
             --evidence artifacts/qccg/time-local-transfer-evidence.json \
+            --evidence artifacts/qccg/cdt-move4-evidence.json \
             --evidence artifacts/qccg/pachner-cobordism-evidence.json \
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
@@ -257,6 +263,7 @@ jobs:
             --evidence artifacts/qccg/causal-ensemble-evidence.json \
             --evidence artifacts/qccg/causal-column-evidence.json \
             --evidence artifacts/qccg/time-local-transfer-evidence.json \
+            --evidence artifacts/qccg/cdt-move4-evidence.json \
             --evidence artifacts/qccg/pachner-cobordism-evidence.json \
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
