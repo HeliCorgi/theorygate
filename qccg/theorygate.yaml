@@ -605,6 +605,18 @@ obligations:
     title: "A link-based finite-Weyl cubic yields a field-times-two-derivatives continuum structure"
     kind: formal-numerical
     description: "The repair has zero linear/quadratic variation, nonzero cubic variation and vanishes on spatially uniform modes."
+  - id: CUBIC_ONSHELL_WARD_UNDERDETERMINATION_DETECTED
+    title: "On-shell three-point pure-gauge Ward tests are detected to underdetermine the relative cubic coefficients"
+    kind: negative-control
+    description: "Within the audited two-structure Gamma-Gamma ansatz, each structure separately passes the selected on-shell pure-gauge replacement test, so the coefficient ratio is not selected."
+  - id: CUBIC_OFFSHELL_OR_FOURPOINT_SELECTOR
+    title: "A stronger off-shell Noether or four-point consistency condition selects the physical cubic coefficients"
+    kind: physics
+    description: "Requires a selector stronger than on-shell three-point gauge replacement, such as off-shell Noether consistency or four-point factorization/unitarity."
+  - id: QCCG_CUBIC_LARGER_BASIS_UNIQUENESS
+    title: "The complete independent local two-derivative spin-2 cubic basis is reduced and its physical equivalence class is unique"
+    kind: physics
+    description: "Requires enumeration modulo integrations by parts, equations of motion and field redefinitions."
   - id: GR_CUBIC_WARD_KINEMATIC_CONTROL
     title: "A nonzero Einstein-Hilbert cubic graviton target is calibrated at selected complex on-shell kinematics"
     kind: formal-numerical
@@ -1177,6 +1189,13 @@ claims:
     requires:
       - RG_BRIDGE_OBSERVABLES_EXTRACTED
       - IR_TWO_POINT_MATCH_INSUFFICIENT
+
+  - id: QCCG_CUBIC_WARD_LIMIT_DIAGNOSTIC
+    title: "On-shell cubic Ward underdetermination diagnostic"
+    rank: 41
+    statement: "The audited on-shell three-point pure-gauge test is explicitly shown to be too weak to determine the relative coefficients of the two Gamma-Gamma cubic structures, forcing an off-shell or four-point selector."
+    requires:
+      - CUBIC_ONSHELL_WARD_UNDERDETERMINATION_DETECTED
 
   - id: QCCG_GR_CUBIC_WARD_TARGET
     title: "Calibrated GR three-graviton Ward target"
