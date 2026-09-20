@@ -238,6 +238,18 @@ obligations:
     title: "A link-based finite-Weyl cubic yields a field-times-two-derivatives continuum structure"
     kind: formal-numerical
     description: "The repair has zero linear/quadratic variation, nonzero cubic variation and vanishes on spatially uniform modes."
+  - id: GR_CUBIC_WARD_KINEMATIC_CONTROL
+    title: "A nonzero Einstein-Hilbert cubic graviton target is calibrated at selected complex on-shell kinematics"
+    kind: formal-numerical
+    description: "The selected three-point momenta are null, conserve momentum and give a nonzero physical EH cubic coefficient."
+  - id: GR_CUBIC_GAUGE_REPLACEMENT_CONTROL
+    title: "The calibrated Einstein-Hilbert cubic target vanishes under pure-gauge external polarization replacement"
+    kind: formal-numerical
+    description: "At the audited complex on-shell kinematics, replacing each external graviton polarization by k_(mu xi_(nu)+k_(nu xi_(mu) gives zero cubic coefficient."
+  - id: QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED
+    title: "QCCG has a full tensor-index microscopic cubic graviton vertex"
+    kind: physics
+    description: "Requires lifting the derivative-cubic finite-Weyl proxy to the full tensor sector before comparison to the GR Ward target."
   - id: GR_CUBIC_VERTEX_MATCH
     title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
     kind: physics
@@ -245,6 +257,9 @@ obligations:
     depends_on:
       - NONDERIVATIVE_CUBIC_MISMATCH_DETECTED
       - DERIVATIVE_CUBIC_REPAIR
+      - GR_CUBIC_WARD_KINEMATIC_CONTROL
+      - GR_CUBIC_GAUGE_REPLACEMENT_CONTROL
+      - QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED
   - id: RG_BRIDGE_OBSERVABLES_EXTRACTED
     title: "QCCG bridge observables are extracted for continuum universality comparison"
     kind: rg-analytic
@@ -522,6 +537,14 @@ claims:
     requires:
       - RG_BRIDGE_OBSERVABLES_EXTRACTED
       - IR_TWO_POINT_MATCH_INSUFFICIENT
+
+  - id: QCCG_GR_CUBIC_WARD_TARGET
+    title: "Calibrated GR three-graviton Ward target"
+    rank: 42
+    statement: "The Einstein-Hilbert cubic target has been calibrated at selected complex on-shell three-point kinematics: a physical helicity amplitude is nonzero and pure-gauge polarization replacements vanish."
+    requires:
+      - GR_CUBIC_WARD_KINEMATIC_CONTROL
+      - GR_CUBIC_GAUGE_REPLACEMENT_CONTROL
 
   - id: QCCG_DERIVATIVE_CUBIC_TOY
     title: "Derivative-cubic finite-Weyl repair"
