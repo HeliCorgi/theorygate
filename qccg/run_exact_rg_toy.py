@@ -31,6 +31,7 @@ STEPS = 8
 SINGLE_HARMONIC_MAX_REL_ERR = 5.0e-3
 FULL_RECON_TOL = 5.0e-12
 UNIFORM_TV_TARGET = 2.0e-3
+NUMERICAL_TV_FLOOR = 1.0e-12
 
 
 def normalize_prob(w):
@@ -167,7 +168,14 @@ def run():
         p = normalize_prob(convolution(p, p))
 
     monotone_tv = all(
-        rows[i + 1]["total_variation_to_uniform"] < rows[i]["total_variation_to_uniform"]
+        (
+            rows[i + 1]["total_variation_to_uniform"]
+            < rows[i]["total_variation_to_uniform"]
+        )
+        or (
+            rows[i]["total_variation_to_uniform"] <= NUMERICAL_TV_FLOOR
+            and rows[i + 1]["total_variation_to_uniform"] <= NUMERICAL_TV_FLOOR
+        )
         for i in range(len(rows) - 1)
     )
     trivial_flow = monotone_tv and rows[-1]["total_variation_to_uniform"] <= UNIFORM_TV_TARGET
@@ -212,6 +220,8 @@ def run():
                 "The minimal 1D fixed-geometry toy flows monotonically to the uniform trivial IR fixed point; it therefore supplies no non-Gaussian gravitational fixed-point evidence.",
                 rows=rows,
                 uniform_tv_target=UNIFORM_TV_TARGET,
+                numerical_tv_floor=NUMERICAL_TV_FLOOR,
+                monotonicity_rule="strict decrease above numerical floor; remain within floor afterwards",
             ),
             evidence(
                 "qccg-nonperturbative-gravity-rg-still-open",
