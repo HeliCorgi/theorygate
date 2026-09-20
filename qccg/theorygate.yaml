@@ -798,6 +798,18 @@ obligations:
     title: "A Regge-curvature coupling scan resolves the CDT-inspired curvature-potential derivative better than the unweighted baseline"
     kind: numerical
     description: "A preregistered negative-curvature-coupling region improves the N3^(-2/3) potential-derivative fit without inserting the CDT potential directly."
+  - id: QCCG_CURVATURE_VOLUME_CRITICAL_LINE
+    title: "A zero-drift curvature/volume critical line is constructed from QCCG move counts"
+    kind: numerical
+    description: "For each preregistered negative spatial-curvature coupling, the volume/cosmological coupling is fixed by vanishing large-volume drift without using CDT effective coefficients."
+  - id: QCCG_CURVATURE_CRITICAL_CANDIDATE
+    title: "A curvature-weighted critical-line candidate is selected before time-evolved confirmation"
+    kind: numerical
+    description: "A candidate point is selected by preregistered local potential-shape criteria on the zero-drift line."
+  - id: QCCG_CURVATURE_CRITICAL_TIME_CONFIRMATION
+    title: "The selected curvature-weighted critical point is confirmed by independent time-evolved QCCG dynamics"
+    kind: physics
+    description: "Requires independent-seed weighted evolution with stable mu/lambda and preserved kinetic diffusion."
   - id: QCCG_CURVATURE_WEIGHTED_DYNAMICS
     title: "Time-evolved curvature-weighted QCCG dynamics yields stable CDT effective potential coefficients"
     kind: physics
@@ -806,6 +818,9 @@ obligations:
       - QCCG_REGGE_SPATIAL_CURVATURE_WEIGHT
       - QCCG_CURVATURE_WEIGHT_DETAILED_BALANCE
       - QCCG_CURVATURE_POTENTIAL_RESOLUTION_SCAN
+      - QCCG_CURVATURE_VOLUME_CRITICAL_LINE
+      - QCCG_CURVATURE_CRITICAL_CANDIDATE
+      - QCCG_CURVATURE_CRITICAL_TIME_CONFIRMATION
   - id: QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
     title: "QCCG microscopic volume drift/diffusion is converted to an effective potential derivative"
     kind: numerical
@@ -825,6 +840,14 @@ obligations:
     depends_on:
       - QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
       - QCCG_CURVATURE_WEIGHTED_DYNAMICS
+  - id: QCCG_CURVATURE_CRITICAL_LINE_TOY
+    title: "Curvature-volume zero-drift critical-line construction"
+    rank: 49
+    statement: "The audited Regge-weighted QCCG generator admits a numerically constructed zero-drift volume coupling for each preregistered negative curvature coupling and selects a candidate point before time-evolved confirmation."
+    requires:
+      - QCCG_CURVATURE_VOLUME_CRITICAL_LINE
+      - QCCG_CURVATURE_CRITICAL_CANDIDATE
+
   - id: QCCG_REGGE_CURVATURE_REPAIR_TOY
     title: "Regge-curvature weighted potential repair"
     rank: 49
