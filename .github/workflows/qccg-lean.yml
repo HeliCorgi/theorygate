@@ -32,7 +32,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python -m pip install -e .
+      - run: python -m pip install .
       - name: Install pinned Lean
         uses: leanprover/lean-action@50fcf42d2e460296f1a34b402e990d1b24f8b596
         with:
@@ -43,6 +43,9 @@ jobs:
           lint: 'false'
           use-mathlib-cache: 'false'
           use-github-cache: 'false'
+      - name: Show provenance cleanliness before audit
+        run: git status --porcelain
+
       - name: Collect axiom-free TheoryGate evidence
         run: |
           theorygate evidence lean \
@@ -57,10 +60,16 @@ jobs:
             --theorem QCCG.two_consecutive_layers \
             --theorem QCCG.interface_not_external_after_gluing \
             --output /tmp/qccg-gluing-evidence.json \
-            --no-axioms \
-            --require-pass
+            --no-axioms
           mkdir -p artifacts/qccg-lean
           cp /tmp/qccg-gluing-evidence.json artifacts/qccg-lean/gluing-evidence.json
+          cat artifacts/qccg-lean/gluing-evidence.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          ev = json.loads(Path("artifacts/qccg-lean/gluing-evidence.json").read_text())
+          assert ev["status"] == "PASS", ev
+          PY
       - name: Promote only the formal gluing claim
         run: |
           theorygate check qccg/theorygate.yaml \
