@@ -101,6 +101,9 @@ jobs:
           - name: qccg-fixed-volume-curvature-thermalization
             script: qccg/run_qccg_fixed_volume_curvature_thermalization.py
             output: qccg-fixed-volume-curvature-thermalization-evidence.json
+          - name: qccg-equilibrated-cdt-confirmation
+            script: qccg/run_qccg_equilibrated_cdt_confirmation.py
+            output: qccg-equilibrated-cdt-confirmation-evidence.json
           - name: qccg-cdt-potential-drift
             script: qccg/run_qccg_cdt_potential_drift_audit.py
             output: qccg-cdt-potential-drift-evidence.json
