@@ -924,6 +924,14 @@ obligations:
     title: "Finite-volume pure-power p=1 diffusion fitting is rejected as a promotion criterion"
     kind: negative-control
     description: "The asymptotic CDT kinetic requirement is tested with Var_rate=D0*N3+D1 at finite volume; forcing an exact pure-power exponent p=1 can falsely reject linear diffusion when the finite-size intercept is nonzero."
+  - id: QCCG_CDT_AFFINE_KINETIC_DENOMINATOR
+    title: "The equilibrated QCCG volume generator matches the finite-volume CDT affine kinetic denominator"
+    kind: formal-numerical
+    description: "The local variance rate is fitted to D*(N3-n0), corresponding near n=m to the published CDT denominator Gamma*(n+m-2*n0)."
+  - id: QCCG_EXACT_P1_FINITE_VOLUME_GATE_REJECTED
+    title: "Exact finite-volume p=1 power-law fitting is rejected in favor of the published CDT affine denominator"
+    kind: negative-control
+    description: "A nonzero finite-volume n0 offset can shift a finite-range log-log exponent away from one even when the CDT affine kinetic law is satisfied."
   - id: QCCG_CDT_EFFECTIVE_COEFFICIENT_MATCH
     title: "QCCG large-volume effective Gamma, mu, lambda and omega are measured and stable"
     kind: physics
@@ -1217,6 +1225,14 @@ claims:
       - QCCG_STATISTICAL_CDT_COEFFICIENT_CONFIRMATION
       - QCCG_POINT_ESTIMATE_SPREAD_GATE_REJECTED
       - QCCG_PURE_POWER_FINITE_VOLUME_GATE_REJECTED
+
+  - id: QCCG_CDT_AFFINE_KINETIC_TOY
+    title: "CDT affine kinetic-denominator match"
+    rank: 49
+    statement: "On curvature-equilibrated QCCG slices, the infinitesimal volume-diffusion generator matches the finite-volume CDT kinetic form D*(N3-n0), while an exact finite-volume p=1 power-law requirement is rejected."
+    requires:
+      - QCCG_CDT_AFFINE_KINETIC_DENOMINATOR
+      - QCCG_EXACT_P1_FINITE_VOLUME_GATE_REJECTED
 
   - id: QCCG_CDT_COEFFICIENT_UNCERTAINTY_TOY
     title: "Bootstrap-resolved CDT coefficient diagnostic"
