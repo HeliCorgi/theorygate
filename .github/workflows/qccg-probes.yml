@@ -86,6 +86,9 @@ jobs:
           - name: qccg-cdt-kinetic-coefficient
             script: qccg/run_qccg_cdt_kinetic_coefficient_audit.py
             output: qccg-cdt-kinetic-coefficient-evidence.json
+          - name: qccg-cdt-affine-kinetic
+            script: qccg/run_qccg_cdt_affine_kinetic_audit.py
+            output: qccg-cdt-affine-kinetic-evidence.json
           - name: qccg-regge-curvature-rates
             script: qccg/run_qccg_regge_curvature_rate_audit.py
             output: qccg-regge-curvature-rate-evidence.json
