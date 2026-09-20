@@ -207,12 +207,6 @@ def main():
                 "At the audited on-shell kinematics, replacing each selected external polarization in turn by a pure-gauge tensor makes the EH cubic coefficient vanish.",
                 rows=gauge_rows,
             ),
-            evidence(
-                "qccg-tensor-cubic-vertex-open",
-                "QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED",
-                "OPEN",
-                "QCCG currently has derivative-cubic scalar/collective proxies, but no full tensor-index microscopic cubic vertex has been constructed and matched to the calibrated GR Ward target.",
-            ),
         ],
     }
 
