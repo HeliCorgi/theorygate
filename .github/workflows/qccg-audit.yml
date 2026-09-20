@@ -250,6 +250,11 @@ jobs:
           python qccg/run_tensor_cubic_stress_audit.py \
             --out artifacts/qccg/tensor-cubic-stress-evidence.json
 
+      - name: Diagnose on-shell cubic Ward underdetermination
+        run: |
+          python qccg/run_cubic_coefficient_selection_audit.py \
+            --out artifacts/qccg/cubic-coefficient-selection-evidence.json
+
       - name: Audit generic lattice Ward restoration rate
         run: |
           python qccg/run_lattice_ward_scaling_audit.py \
@@ -314,6 +319,7 @@ jobs:
             --evidence artifacts/qccg/gr-cubic-ward-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-stress-evidence.json \
+            --evidence artifacts/qccg/cubic-coefficient-selection-evidence.json \
             --evidence artifacts/qccg/lattice-ward-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-continuum-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
@@ -365,6 +371,7 @@ jobs:
             --evidence artifacts/qccg/gr-cubic-ward-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-stress-evidence.json \
+            --evidence artifacts/qccg/cubic-coefficient-selection-evidence.json \
             --evidence artifacts/qccg/lattice-ward-evidence.json \
             --evidence artifacts/qccg/tensor-cubic-continuum-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
