@@ -50,10 +50,26 @@ obligations:
     title: "Disconnected move graphs are detected as degenerate-vacuum failures"
     kind: negative-control
     description: "A disconnected cellulation-move graph must produce multiple zero modes."
+  - id: MANIFOLD_DIAGNOSTIC_CALIBRATED
+    title: "Spectral and volume-growth manifold-dimension diagnostics are calibrated"
+    kind: numerical
+    description: "A preregistered classifier identifies a known 4D periodic reference from spectral dimension and volume growth."
+  - id: MANIFOLD_DIMENSION_CONTROLS
+    title: "The calibrated manifold-dimension diagnostic rejects 3D and 5D controls"
+    kind: negative-control
+    description: "Known 3D and 5D periodic references must not be classified as 4D."
+  - id: QCCG_CELLULATION_GEOMETRY_MEASURED
+    title: "Actual QCCG cellulation-liquid ensembles are measured with the calibrated geometry diagnostics"
+    kind: physics
+    description: "Requires increasing-size QCCG-generated cellulation ensembles, not reference lattices."
   - id: MANIFOLD_LIKENESS_SCALING
     title: "The cellulation liquid has a smooth 3+1 Lorentzian manifold-like scaling phase"
     kind: physics
     description: "Requires scaling evidence for dimension, signature, locality and manifold-likeness."
+    depends_on:
+      - MANIFOLD_DIAGNOSTIC_CALIBRATED
+      - MANIFOLD_DIMENSION_CONTROLS
+      - QCCG_CELLULATION_GEOMETRY_MEASURED
   - id: CONTINUUM_MANIFOLD_PHASE
     title: "The critical phase reconstructs a smooth 3+1 Lorentzian continuum"
     kind: physics
@@ -368,6 +384,14 @@ claims:
       - FINITE_GLOBAL_CCR_NO_GO
       - LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE
       - STRUCTURE_FUNCTION_PATCH_CONTROL
+
+  - id: QCCG_MANIFOLD_DIAGNOSTIC_READY
+    title: "Calibrated 4D manifold-likeness detector"
+    rank: 34
+    statement: "The audited diagnostic identifies a known 4D periodic reference and rejects 3D/5D controls; no QCCG-generated manifold phase is claimed."
+    requires:
+      - MANIFOLD_DIAGNOSTIC_CALIBRATED
+      - MANIFOLD_DIMENSION_CONTROLS
 
   - id: QCCG_EMERGENT_MASSLESS_SPIN2
     title: "Microscopically emergent physical massless spin-2 continuum"
