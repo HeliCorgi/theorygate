@@ -65,6 +65,11 @@ jobs:
           python qccg/run_cellulation_liquid_audit.py \
             --out artifacts/qccg/cellulation-evidence.json
 
+      - name: Detect and repair missing cubic interaction
+        run: |
+          python qccg/run_cubic_interaction_audit.py \
+            --out artifacts/qccg/cubic-evidence.json
+
       - name: Validate audit model
         run: theorygate validate qccg/theorygate.yaml
 
@@ -78,7 +83,8 @@ jobs:
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
-            --require QCCG_QUADRATIC_UNITARY_SCALING_TOY
+            --evidence artifacts/qccg/cubic-evidence.json \
+            --require QCCG_GENERIC_NONLINEAR_PARENT_TOY
 
       - name: Assert stronger physical claims remain blocked
         run: |
@@ -90,13 +96,15 @@ jobs:
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
+            --evidence artifacts/qccg/cubic-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
           import json
           from pathlib import Path
 
           report = json.loads(Path("artifacts/qccg/report.json").read_text())
-          assert report["strongest_supported_claim"] == "QCCG_QUADRATIC_UNITARY_SCALING_TOY", report["strongest_supported_claim"]
+          assert report["strongest_supported_claim"] == "QCCG_GENERIC_NONLINEAR_PARENT_TOY", report["strongest_supported_claim"]
+          assert report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["status"] == "OPEN"
           assert report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["status"] == "BLOCKED"
           assert any("MANIFOLD_LIKENESS_SCALING=OPEN" in x for x in report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["blockers"])
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
