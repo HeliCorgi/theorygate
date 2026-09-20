@@ -244,7 +244,7 @@ jobs:
           assert report["obligations"]["QCCG_CELLULATION_GEOMETRY_MEASURED"]["status"] == "BLOCKED"
           assert any("QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE=OPEN" in x for x in report["obligations"]["QCCG_CELLULATION_GEOMETRY_MEASURED"]["blockers"])
           assert report["obligations"]["MANIFOLD_LIKENESS_SCALING"]["status"] == "BLOCKED"
-          assert any("QCCG_CELLULATION_GEOMETRY_MEASURED=OPEN" in x for x in report["obligations"]["MANIFOLD_LIKENESS_SCALING"]["blockers"])
+          assert any("QCCG_CELLULATION_GEOMETRY_MEASURED=BLOCKED" in x for x in report["obligations"]["MANIFOLD_LIKENESS_SCALING"]["blockers"])
           assert report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["status"] == "BLOCKED"
           assert any("MANIFOLD_LIKENESS_SCALING=BLOCKED" in x for x in report["obligations"]["CONTINUUM_MANIFOLD_PHASE"]["blockers"])
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
