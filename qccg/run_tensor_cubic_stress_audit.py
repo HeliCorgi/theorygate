@@ -23,6 +23,7 @@ TLAM = (1 + 0j, 0j)
 A_VALUES = (0.4, 0.2, 0.1, 0.05, 0.025, 0.0125, 0.00625, 0.003125, 0.0015625)
 FINAL_REL_TOL = 2.0e-5
 FINAL_GAUGE_REL_TOL = 2.0e-5
+GAUGE_NUMERICAL_FLOOR = 1.0e-12
 
 LAMBDA_CASES = (
     ((1 + 0j, 0j), (0j, 1 + 0j), (-1 + 0j, -1 + 0j)),
@@ -120,7 +121,13 @@ def main():
             })
 
         physical_improves = rels[-1] < rels[0] and rels[-1] <= FINAL_REL_TOL
-        gauge_improves = grels[-1] < grels[0] and grels[-1] <= FINAL_GAUGE_REL_TOL
+        gauge_improves = (
+            grels[-1] <= FINAL_GAUGE_REL_TOL
+            and (
+                (grels[0] > GAUGE_NUMERICAL_FLOOR and grels[-1] < grels[0])
+                or (grels[0] <= GAUGE_NUMERICAL_FLOOR and grels[-1] <= GAUGE_NUMERICAL_FLOOR)
+            )
+        )
         case_pass = kin_ok and cont_nonzero and physical_improves and gauge_improves
         all_pass = all_pass and case_pass
         all_rows.append({
@@ -145,6 +152,8 @@ def main():
                 a_values=list(A_VALUES),
                 final_physical_relative_tolerance=FINAL_REL_TOL,
                 final_gauge_relative_tolerance=FINAL_GAUGE_REL_TOL,
+                gauge_numerical_floor=GAUGE_NUMERICAL_FLOOR,
+                gauge_monotonicity_rule="decrease above numerical floor; remain within floor if already machine-zero",
                 cases=all_rows,
             ),
         ],
