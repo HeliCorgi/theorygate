@@ -175,10 +175,31 @@ obligations:
     title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
     kind: physics
     description: "Requires nonlinear diffeomorphism/soft-graviton consistency, not merely a nonzero cubic derivative."
+  - id: RG_BRIDGE_OBSERVABLES_EXTRACTED
+    title: "QCCG bridge observables are extracted for continuum universality comparison"
+    kind: rg-analytic
+    description: "The audited parent supplies pole normalization, leading irrelevant lattice exponent and nonlinear cubic data."
+  - id: IR_TWO_POINT_MATCH_INSUFFICIENT
+    title: "Two-point IR matching alone is rejected as a universality criterion"
+    kind: negative-control
+    description: "Distinct nonlinear parents can share the same audited quadratic IR data."
+  - id: QCCG_NONPERTURBATIVE_RG_FLOW
+    title: "A nonperturbative QCCG coarse-graining flow for essential couplings is computed"
+    kind: physics
+    description: "Requires beta functions beyond canonical/IR scaling diagnostics."
+  - id: ESSENTIAL_CRITICAL_EXPONENT_MATCH
+    title: "QCCG essential UV critical exponents match the RFQG-5/asymptotic-safety target"
+    kind: physics
+    description: "Requires a controlled QCCG UV fixed point and essential relevant-direction spectrum."
   - id: AS_FIXED_POINT_MATCH
     title: "QCCG coarse graining reaches the RFQG-5/asymptotic-safety universality class"
     kind: physics
     description: "Requires critical exponents/essential observables compatible with the target Lorentzian fixed point."
+    depends_on:
+      - RG_BRIDGE_OBSERVABLES_EXTRACTED
+      - IR_TWO_POINT_MATCH_INSUFFICIENT
+      - QCCG_NONPERTURBATIVE_RG_FLOW
+      - ESSENTIAL_CRITICAL_EXPONENT_MATCH
   - id: GR_IR_EFFECTIVE_ACTION
     title: "The infrared physical effective action reproduces GR plus controlled corrections"
     kind: physics
@@ -305,6 +326,14 @@ claims:
       - CUBIC_VERTEX_OBSTRUCTION_DETECTED
       - GENERIC_CUBIC_INTERACTION_REPAIR
       - CUBIC_VACUUM_STABILITY_CONTROL
+
+  - id: QCCG_RG_BRIDGE_DATA_TOY
+    title: "QCCG continuum-bridge observable package"
+    rank: 49
+    statement: "The audited parent exposes explicit pole, irrelevant-exponent and cubic observables for a future QCCG/RFQG universality test, and rejects two-point IR matching as sufficient evidence."
+    requires:
+      - RG_BRIDGE_OBSERVABLES_EXTRACTED
+      - IR_TWO_POINT_MATCH_INSUFFICIENT
 
   - id: QCCG_RFQG_UNIVERSALITY
     title: "QCCG realizes the RFQG-5 continuum universality class"
