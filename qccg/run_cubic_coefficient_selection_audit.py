@@ -10,10 +10,11 @@ splitting the cubic coefficient into two independent structures
 and ask whether on-shell pure-gauge replacement conditions select a unique
 ratio alpha:beta.
 
-PASS is deliberately scoped: it establishes symmetry selection inside this
-two-parameter cubic ansatz at several exact complex three-point kinematics.
-It is not a derivation from the microscopic QCCG RG flow and not a proof that
-no larger cubic operator basis exists.
+This audit is now a negative-control test.  If each structure separately
+passes the selected on-shell three-point pure-gauge replacement test, then
+that test cannot determine the relative coefficient.  In that case the audit
+passes by detecting underdetermination and requires a stronger selector such
+as off-shell Noether consistency or four-point factorization.
 """
 from __future__ import annotations
 
@@ -193,53 +194,41 @@ def main():
     null=M.nullspace()
     rank=int(M.rank())
 
-    unique_ratio=(len(null)==1 and null[0].shape==(2,1))
-    ratio=None
-    eh_selected=False
-    if unique_ratio:
-        v=null[0]
-        if v[1]!=0:
-            ratio=sp.simplify(v[0]/v[1])
-            eh_selected=sp.simplify(ratio-1)==0
-
     gauge_eh_zero=all(sp.simplify(a+b)==0 for a,b in ward_rows)
     phys_nonzero=all(sp.simplify(sp.sympify(r["EH_sum"]))!=0 for r in phys_rows)
 
-    # Negative control: alpha=1,beta=0 or alpha=0,beta=1 must violate at least one Ward row.
-    alpha_only_bad=any(a!=0 for a,_b in ward_rows)
-    beta_only_bad=any(b!=0 for _a,b in ward_rows)
-
-    passed=unique_ratio and eh_selected and gauge_eh_zero and phys_nonzero and alpha_only_bad and beta_only_bad
+    alpha_alone_gauge_zero=all(a==0 for a,_b in ward_rows)
+    beta_alone_gauge_zero=all(b==0 for _a,b in ward_rows)
+    underdetermined=(rank==0 and len(null)==2 and alpha_alone_gauge_zero and beta_alone_gauge_zero)
 
     result={
         "schema":1,
         "scope":"two-parameter cubic Gamma-Gamma ansatz Ward selection; not microscopic RG derivation",
         "evidence":[
             evidence(
-                "qccg-cubic-ward-coefficient-selection",
-                "CUBIC_WARD_COEFFICIENT_SELECTION",
-                "PASS" if passed else "FAIL",
-                "Across the audited exact complex on-shell configurations, pure-gauge Ward conditions select a one-dimensional coefficient nullspace whose relative coefficient is alpha:beta=1:1, while the corresponding physical (++-) amplitudes are nonzero.",
+                "qccg-cubic-onshell-underdetermination",
+                "CUBIC_ONSHELL_WARD_UNDERDETERMINATION_DETECTED",
+                "PASS" if underdetermined and gauge_eh_zero and phys_nonzero else "FAIL",
+                "The audited on-shell three-point pure-gauge conditions have rank zero on the two cubic structures: each structure separately passes the gauge-replacement test, so this test cannot select the Einstein-Hilbert relative coefficient.",
                 matrix_rank=rank,
                 ward_matrix=[[str(x) for x in row] for row in M.tolist()],
                 nullspace=[ [str(x) for x in v] for v in null ],
-                alpha_over_beta=None if ratio is None else str(ratio),
+                alpha_alone_gauge_zero=alpha_alone_gauge_zero,
+                beta_alone_gauge_zero=beta_alone_gauge_zero,
                 ward_rows=rows,
                 physical_rows=phys_rows,
             ),
             evidence(
-                "qccg-cubic-coefficient-negative-control",
-                "CUBIC_COEFFICIENT_NEGATIVE_CONTROL",
-                "PASS" if alpha_only_bad and beta_only_bad else "FAIL",
-                "Keeping either cubic structure alone violates at least one audited pure-gauge replacement condition, so the selected relative coefficient is operationally nontrivial.",
-                alpha_only_violates=alpha_only_bad,
-                beta_only_violates=beta_only_bad,
+                "qccg-cubic-stronger-selector-open",
+                "CUBIC_OFFSHELL_OR_FOURPOINT_SELECTOR",
+                "OPEN",
+                "The relative cubic coefficients require a stronger consistency condition than on-shell three-point gauge replacement, such as off-shell Noether consistency with the quadratic action or four-point factorization/unitarity.",
             ),
             evidence(
                 "qccg-cubic-larger-basis-open",
                 "QCCG_CUBIC_LARGER_BASIS_UNIQUENESS",
                 "OPEN",
-                "Ward selection is established only inside the two-structure Gamma-Gamma cubic ansatz. A complete independent local two-derivative spin-2 cubic operator basis has not been enumerated and reduced modulo field redefinitions.",
+                "A complete independent local two-derivative spin-2 cubic operator basis has not been enumerated and reduced modulo field redefinitions.",
             ),
         ],
     }
@@ -248,7 +237,7 @@ def main():
     p.parent.mkdir(parents=True,exist_ok=True)
     p.write_text(json.dumps(result,indent=2,sort_keys=True)+"\n",encoding="utf-8")
     if any(e["status"]=="FAIL" for e in result["evidence"]):
-        raise SystemExit("cubic Ward coefficient-selection audit failed")
+        raise SystemExit("cubic on-shell underdetermination audit failed")
 
 
 if __name__=="__main__":
