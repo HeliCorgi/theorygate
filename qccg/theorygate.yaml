@@ -387,10 +387,16 @@ obligations:
     title: "The finite-Weyl tensor cubic matches the calibrated GR Ward target at selected on-shell kinematics"
     kind: numerical
     description: "The selected lattice three-point amplitude converges to the EH target and pure-gauge replacements vanish."
+  - id: QCCG_CUBIC_MULTI_KINEMATICS_STRESS
+    title: "The finite-Weyl tensor cubic survives a multi-kinematics on-shell Ward stress test"
+    kind: numerical
+    description: "Several independent complex massless three-point configurations must show physical-amplitude convergence and gauge-replacement suppression."
   - id: QCCG_FULL_CUBIC_WARD_MATCH
     title: "The QCCG tensor cubic satisfies the full nonlinear Ward identities and is selected by the microscopic RG flow"
     kind: physics
     description: "Requires all-momenta/all-polarization nonlinear Ward consistency and derivation from QCCG coarse graining rather than insertion of the EH tensor structure."
+    depends_on:
+      - QCCG_CUBIC_MULTI_KINEMATICS_STRESS
   - id: GR_CUBIC_VERTEX_MATCH
     title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
     kind: physics
@@ -762,6 +768,13 @@ claims:
     requires:
       - GR_CUBIC_WARD_KINEMATIC_CONTROL
       - GR_CUBIC_GAUGE_REPLACEMENT_CONTROL
+
+  - id: QCCG_CUBIC_STRESS_TOY
+    title: "Multi-kinematics tensor-cubic Ward stress"
+    rank: 49
+    statement: "The engineered finite-Weyl tensor cubic survives the audited set of independent complex on-shell three-point configurations; this remains a finite stress test rather than a full Ward/RG derivation."
+    requires:
+      - QCCG_CUBIC_MULTI_KINEMATICS_STRESS
 
   - id: QCCG_SELECTED_TENSOR_CUBIC_TOY
     title: "Selected-kinematics finite-Weyl tensor cubic match"
