@@ -110,6 +110,11 @@ jobs:
           python qccg/run_causal_move_ensemble_scan.py \
             --out artifacts/qccg/causal-ensemble-evidence.json
 
+      - name: Try vertex-changing causal column repair
+        run: |
+          python qccg/run_causal_column_refinement_scan.py \
+            --out artifacts/qccg/causal-column-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -192,6 +197,7 @@ jobs:
             --evidence artifacts/qccg/causal-foliation-evidence.json \
             --evidence artifacts/qccg/causal-move-evidence.json \
             --evidence artifacts/qccg/causal-ensemble-evidence.json \
+            --evidence artifacts/qccg/causal-column-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -225,6 +231,7 @@ jobs:
             --evidence artifacts/qccg/causal-foliation-evidence.json \
             --evidence artifacts/qccg/causal-move-evidence.json \
             --evidence artifacts/qccg/causal-ensemble-evidence.json \
+            --evidence artifacts/qccg/causal-column-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
