@@ -60,6 +60,11 @@ jobs:
           python qccg/run_graph_change_scaling_toy.py \
             --out artifacts/qccg/graph-change-scaling-evidence.json
 
+      - name: Audit refinement-path coherence
+        run: |
+          python qccg/run_refinement_coherence_toy.py \
+            --out artifacts/qccg/refinement-coherence-evidence.json
+
       - name: Audit linearized spin-2 constraint target
         run: |
           python qccg/run_linearized_constraint_audit.py \
@@ -157,6 +162,7 @@ jobs:
             --evidence artifacts/qccg/unitarity-evidence.json \
             --evidence artifacts/qccg/interacting-scaling-evidence.json \
             --evidence artifacts/qccg/graph-change-scaling-evidence.json \
+            --evidence artifacts/qccg/refinement-coherence-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
@@ -185,6 +191,7 @@ jobs:
             --evidence artifacts/qccg/unitarity-evidence.json \
             --evidence artifacts/qccg/interacting-scaling-evidence.json \
             --evidence artifacts/qccg/graph-change-scaling-evidence.json \
+            --evidence artifacts/qccg/refinement-coherence-evidence.json \
             --evidence artifacts/qccg/constraint-evidence.json \
             --evidence artifacts/qccg/nonlinear-constraint-evidence.json \
             --evidence artifacts/qccg/cellulation-evidence.json \
@@ -264,9 +271,12 @@ jobs:
           assert report["obligations"]["SCALING_LEAKAGE_NEGATIVE_CONTROL"]["status"] == "PASS"
           assert report["obligations"]["GRAPH_CHANGE_INTERTWINER_TOY"]["status"] == "PASS"
           assert report["obligations"]["GRAPH_CHANGE_LEAKAGE_NEGATIVE_CONTROL"]["status"] == "PASS"
-          assert report["obligations"]["QCCG_GRAPH_CHANGING_SCALING_MAP"]["status"] == "OPEN"
+          assert report["obligations"]["REFINEMENT_PATH_COHERENCE_TOY"]["status"] == "PASS"
+          assert report["obligations"]["REFINEMENT_COHERENCE_NEGATIVE_CONTROL"]["status"] == "PASS"
+          assert report["obligations"]["QCCG_CELLULATION_REFINEMENT_COHERENCE"]["status"] == "OPEN"
+          assert report["obligations"]["QCCG_GRAPH_CHANGING_SCALING_MAP"]["status"] == "BLOCKED"
           assert report["obligations"]["INTERACTING_PHYSICAL_SCALING_UNITARITY"]["status"] == "BLOCKED"
-          assert any("QCCG_GRAPH_CHANGING_SCALING_MAP=OPEN" in x for x in report["obligations"]["INTERACTING_PHYSICAL_SCALING_UNITARITY"]["blockers"])
+          assert any("QCCG_GRAPH_CHANGING_SCALING_MAP=BLOCKED" in x for x in report["obligations"]["INTERACTING_PHYSICAL_SCALING_UNITARITY"]["blockers"])
           assert report["obligations"]["PHYSICAL_UNITARITY_SCALING_LIMIT"]["status"] == "BLOCKED"
           assert report["obligations"]["LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE"]["status"] == "PASS"
           assert report["obligations"]["STRUCTURE_FUNCTION_PATCH_CONTROL"]["status"] == "PASS"
