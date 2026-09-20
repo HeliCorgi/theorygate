@@ -77,6 +77,9 @@ jobs:
           - name: tensor-cubic-stress
             script: qccg/run_tensor_cubic_stress_audit.py
             output: tensor-cubic-stress-evidence.json
+          - name: cubic-coefficient-selection
+            script: qccg/run_cubic_coefficient_selection_audit.py
+            output: cubic-coefficient-selection-evidence.json
     name: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
