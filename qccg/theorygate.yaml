@@ -162,13 +162,33 @@ obligations:
       - PACHNER_COBORDISM_COMPOSITION_TOY
       - PACHNER_COBORDISM_OVERGLUE_NEGATIVE_CONTROL
       - QCCG_STRICT_FOLIATION_COMPOSITION
+  - id: CAUSAL_14_SPACETIME_SLAB_TOY
+    title: "A strict adjacent-slice 4D slab realizes a spatial 1<->4 refinement"
+    kind: formal-numerical
+    description: "A tetrahedron-time staircase prism with an upper-slice stellar refinement gives the expected lower and refined upper spatial boundaries while preserving causal 4D manifold incidence."
+  - id: CAUSAL_14_SLAB_INVERSE_CONTROL
+    title: "The strict 1<->4 causal slab has an exact local inverse"
+    kind: formal-numerical
+    description: "Collapsing the upper refinement vertex reconstructs the original tetrahedron-time prism."
+  - id: CAUSAL_14_SLAB_TIME_SKIP_CONTROL
+    title: "Wrong-time refinement vertices are rejected in the strict 1<->4 slab"
+    kind: negative-control
+    description: "Moving the new upper vertex beyond the adjacent slice creates invalid nonlocal-time simplices."
+  - id: CAUSAL_23_SPACETIME_SLAB_REALIZATION
+    title: "A strict adjacent-slice 4D slab realizes a spatial 2<->3 Pachner transition"
+    kind: physics
+    description: "Requires a causal slab with both old and new spatial vertices assigned to adjacent equal-time slices, beyond the abstract 4-simplex cobordism."
   - id: QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
     title: "Every allowed neighboring spatial slice pair has a bounded-time 4D causal simplicial interpolation"
     kind: physics
-    description: "Requires explicit local Pachner cobordisms plus globally composable causal foliation."
+    description: "Requires explicit strict-foliation local Pachner slabs plus globally composable causal foliation."
     depends_on:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
+      - CAUSAL_14_SPACETIME_SLAB_TOY
+      - CAUSAL_14_SLAB_INVERSE_CONTROL
+      - CAUSAL_14_SLAB_TIME_SKIP_CONTROL
+      - CAUSAL_23_SPACETIME_SLAB_REALIZATION
       - QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
   - id: CDT_MOVE4_VERTEX_REFINEMENT_TOY
     title: "A local 4D causal vertex-changing 2->8 refinement move is realized"
@@ -888,6 +908,15 @@ claims:
     requires:
       - CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
       - CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
+
+  - id: QCCG_CAUSAL_14_SLAB_TOY
+    title: "Strict causal spatial 1<->4 slab"
+    rank: 47
+    statement: "The audited tetrahedron-time prism realizes a spatial 1<->4 refinement as an explicit adjacent-slice 4D causal manifold slab with exact inverse and wrong-time negative control; the spatial 2<->3 slab remains open."
+    requires:
+      - CAUSAL_14_SPACETIME_SLAB_TOY
+      - CAUSAL_14_SLAB_INVERSE_CONTROL
+      - CAUSAL_14_SLAB_TIME_SKIP_CONTROL
 
   - id: QCCG_CAUSAL_FOLIATION_ARCHITECTURE_TOY
     title: "Finite causal-foliation simplicial architecture"
