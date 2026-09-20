@@ -170,6 +170,11 @@ jobs:
           python qccg/run_strict_slab_composition_audit.py \
             --out artifacts/qccg/strict-slab-composition-evidence.json
 
+      - name: Embed strict slabs into closed S3 slice transitions
+        run: |
+          python qccg/run_closed_slice_slab_audit.py \
+            --out artifacts/qccg/closed-slice-slab-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -278,6 +283,7 @@ jobs:
             --evidence artifacts/qccg/causal-14-slab-evidence.json \
             --evidence artifacts/qccg/causal-23-slab-evidence.json \
             --evidence artifacts/qccg/strict-slab-composition-evidence.json \
+            --evidence artifacts/qccg/closed-slice-slab-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -325,6 +331,7 @@ jobs:
             --evidence artifacts/qccg/causal-14-slab-evidence.json \
             --evidence artifacts/qccg/causal-23-slab-evidence.json \
             --evidence artifacts/qccg/strict-slab-composition-evidence.json \
+            --evidence artifacts/qccg/closed-slice-slab-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
