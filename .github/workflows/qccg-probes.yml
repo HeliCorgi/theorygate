@@ -49,6 +49,9 @@ jobs:
           - name: pachner-composition
             script: qccg/run_pachner_cobordism_composition.py
             output: pachner-composition-evidence.json
+          - name: causal-14-slab
+            script: qccg/run_causal_refinement_slab_audit.py
+            output: causal-14-slab-evidence.json
           - name: tensor-cubic-stress
             script: qccg/run_tensor_cubic_stress_audit.py
             output: tensor-cubic-stress-evidence.json
