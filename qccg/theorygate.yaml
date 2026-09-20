@@ -154,6 +154,10 @@ obligations:
     title: "Axiom-free formal slab-gluing incidence lemma"
     kind: formal
     description: "Given incidence one on each copy of an interface face, gluing gives incidence two; external incidence and adjacent-layer arithmetic are preserved. Physical complexes must establish the hypotheses separately."
+  - id: STRICT_FINITE_HISTORY_GLUE_LEMMA
+    title: "Axiom-free finite-history slab interface gluing theorem"
+    kind: formal
+    description: "For any finite list of already-audited interfaces with incidence one from each adjacent slab, every glued interface has incidence two and is not external."
   - id: STRICT_23_ROUNDTRIP_COMPOSITION_TOY
     title: "Strict 2->3 and 3->2 causal slabs compose through one shared intermediate slice"
     kind: formal-numerical
@@ -168,6 +172,7 @@ obligations:
     description: "Requires globally consistent slice labels for arbitrary compositions, beyond the finite round-trip composition toy."
     depends_on:
       - STRICT_SLAB_GLUE_INCIDENCE_LEMMA
+      - STRICT_FINITE_HISTORY_GLUE_LEMMA
       - STRICT_23_ROUNDTRIP_COMPOSITION_TOY
       - STRICT_SLAB_GLUE_NEGATIVE_CONTROL
   - id: QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
@@ -1024,6 +1029,13 @@ claims:
     statement: "The arithmetic incidence and adjacent-time bookkeeping used when gluing already-audited strict slabs is formally certified; this does not assert that any physical slab satisfies the hypotheses."
     requires:
       - STRICT_SLAB_GLUE_INCIDENCE_LEMMA
+
+  - id: QCCG_FORMAL_FINITE_HISTORY_GLUE
+    title: "Formal finite-history slab-gluing certificate"
+    rank: 34
+    statement: "For arbitrary finite histories satisfying the audited unit-incidence interface hypotheses, Lean certifies that every glued interface has incidence two and is not external; physical satisfaction of the hypotheses remains separate."
+    requires:
+      - STRICT_FINITE_HISTORY_GLUE_LEMMA
 
   - id: QCCG_STRICT_SLAB_COMPOSITION_TOY
     title: "Finite strict causal slab composition"
