@@ -45,7 +45,6 @@ jobs:
           use-github-cache: 'false'
       - name: Collect axiom-free TheoryGate evidence
         run: |
-          mkdir -p artifacts/qccg-lean
           theorygate evidence lean \
             --project qccg/lean \
             --id qccg-slab-gluing-lean \
@@ -57,9 +56,11 @@ jobs:
             --theorem QCCG.right_external_incidence_preserved \
             --theorem QCCG.two_consecutive_layers \
             --theorem QCCG.interface_not_external_after_gluing \
-            --output artifacts/qccg-lean/gluing-evidence.json \
+            --output /tmp/qccg-gluing-evidence.json \
             --no-axioms \
             --require-pass
+          mkdir -p artifacts/qccg-lean
+          cp /tmp/qccg-gluing-evidence.json artifacts/qccg-lean/gluing-evidence.json
       - name: Promote only the formal gluing claim
         run: |
           theorygate check qccg/theorygate.yaml \
