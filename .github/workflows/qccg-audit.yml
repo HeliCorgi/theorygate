@@ -100,6 +100,11 @@ jobs:
           python qccg/run_causal_foliation_audit.py \
             --out artifacts/qccg/causal-foliation-evidence.json
 
+      - name: Audit reversible causal local moves
+        run: |
+          python qccg/run_causal_move_dynamics_toy.py \
+            --out artifacts/qccg/causal-move-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -180,6 +185,7 @@ jobs:
             --evidence artifacts/qccg/pachner-evidence.json \
             --evidence artifacts/qccg/weighted-pachner-evidence.json \
             --evidence artifacts/qccg/causal-foliation-evidence.json \
+            --evidence artifacts/qccg/causal-move-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -211,6 +217,7 @@ jobs:
             --evidence artifacts/qccg/pachner-evidence.json \
             --evidence artifacts/qccg/weighted-pachner-evidence.json \
             --evidence artifacts/qccg/causal-foliation-evidence.json \
+            --evidence artifacts/qccg/causal-move-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -272,6 +279,9 @@ jobs:
           assert report["obligations"]["SIMPLE_REGGE_WEIGHT_REPAIR_INSUFFICIENT"]["status"] == "PASS"
           assert report["obligations"]["CAUSAL_FOLIATED_4D_ARCHITECTURE"]["status"] == "PASS"
           assert report["obligations"]["CAUSAL_FOLIATION_NEGATIVE_CONTROL"]["status"] == "PASS"
+          assert report["obligations"]["CAUSAL_LOCAL_MOVESET_TOY"]["status"] == "PASS"
+          assert report["obligations"]["CAUSAL_MOVE_HERMITIAN_TOY"]["status"] == "PASS"
+          assert report["obligations"]["CAUSAL_MOVE_NEGATIVE_CONTROL"]["status"] == "PASS"
           assert report["obligations"]["QCCG_CAUSAL_MOVE_DYNAMICS"]["status"] == "OPEN"
           assert report["obligations"]["QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS"]["status"] == "BLOCKED"
           assert any("QCCG_CAUSAL_MOVE_DYNAMICS=OPEN" in x for x in report["obligations"]["QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS"]["blockers"])
