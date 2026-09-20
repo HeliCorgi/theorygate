@@ -58,10 +58,31 @@ obligations:
     title: "The calibrated manifold-dimension diagnostic rejects 3D and 5D controls"
     kind: negative-control
     description: "Known 3D and 5D periodic references must not be classified as 4D."
-  - id: QCCG_CELLULATION_GEOMETRY_MEASURED
-    title: "Actual QCCG cellulation-liquid ensembles are measured with the calibrated geometry diagnostics"
+  - id: PACHNER_4D_MANIFOLD_TOPOLOGY_CONTROL
+    title: "Explicit Pachner-generated ensembles preserve closed combinatorial 4-manifold incidence"
+    kind: formal-numerical
+    description: "Audited 1->5 and 2->4 Pachner moves preserve two 4-simplex incidences per tetrahedral face."
+  - id: UNWEIGHTED_PACHNER_DIMENSION_FAILURE_DETECTED
+    title: "An unweighted topologically 4D Pachner ensemble is rejected as a 4D metric-scaling phase"
+    kind: negative-control
+    description: "Spectral and volume-growth dimensions remain far below four despite correct combinatorial manifold topology."
+  - id: PACHNER_MOVESET_REPAIR_INSUFFICIENT
+    title: "Adding 2->4 Pachner moves alone is insufficient to recover a 4D metric phase"
+    kind: negative-control
+    description: "A broader reversible-move architecture and nontrivial geometric weighting are required."
+  - id: QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE
+    title: "QCCG specifies and realizes a weighted critical cellulation ensemble with 4D manifold-like scaling"
     kind: physics
-    description: "Requires increasing-size QCCG-generated cellulation ensembles, not reference lattices."
+    description: "Requires geometric/Regge-like weights, reversible Pachner dynamics and a stable four-dimensional critical phase."
+  - id: QCCG_CELLULATION_GEOMETRY_MEASURED
+    title: "Actual QCCG cellulation ensembles are measured with the calibrated geometry diagnostics"
+    kind: physics
+    description: "Requires increasing-size QCCG-generated weighted cellulation ensembles, not reference lattices or unweighted Pachner negative controls."
+    depends_on:
+      - PACHNER_4D_MANIFOLD_TOPOLOGY_CONTROL
+      - UNWEIGHTED_PACHNER_DIMENSION_FAILURE_DETECTED
+      - PACHNER_MOVESET_REPAIR_INSUFFICIENT
+      - QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE
   - id: MANIFOLD_LIKENESS_SCALING
     title: "The cellulation liquid has a smooth 3+1 Lorentzian manifold-like scaling phase"
     kind: physics
@@ -473,6 +494,15 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_PACHNER_MANIFOLD_FAILURE_DIAGNOSTIC
+    title: "Topological-4D versus metric-4D Pachner negative control"
+    rank: 41
+    statement: "Explicit 4D Pachner triangulations preserve combinatorial manifold topology but unweighted refinement/move ensembles fail broad 4D spectral and volume-growth targets, forcing a weighted critical cellulation dynamics."
+    requires:
+      - PACHNER_4D_MANIFOLD_TOPOLOGY_CONTROL
+      - UNWEIGHTED_PACHNER_DIMENSION_FAILURE_DETECTED
+      - PACHNER_MOVESET_REPAIR_INSUFFICIENT
 
   - id: QCCG_CELLULATION_LIQUID_TOY
     title: "Finite cellulation-liquid vacuum pilot"
