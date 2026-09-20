@@ -86,10 +86,26 @@ obligations:
     title: "Nonadjacent-time simplices are detected as causal/foliation violations"
     kind: negative-control
     description: "A deliberately inserted time-skipping simplex fails the causal building-block rule."
+  - id: CAUSAL_LOCAL_MOVESET_TOY
+    title: "A finite causal foliated complex admits reversible local 2<->4 Pachner moves"
+    kind: formal-numerical
+    description: "Accepted local moves remain inside the adjacent-slice manifold class and possess exact inverse moves."
+  - id: CAUSAL_MOVE_HERMITIAN_TOY
+    title: "The finite causal move graph defines a Hermitian positive move Hamiltonian"
+    kind: formal-numerical
+    description: "The audited finite accepted-move graph Laplacian is Hermitian positive semidefinite with a unique uniform zero mode."
+  - id: CAUSAL_MOVE_NEGATIVE_CONTROL
+    title: "Time-skipping local replacements are rejected by the causal move audit"
+    kind: negative-control
+    description: "A deliberately nonadjacent-time local replacement must fail the same causal/manifold validator."
   - id: QCCG_CAUSAL_MOVE_DYNAMICS
     title: "QCCG has a reversible local graph-changing dynamics closed within the causal foliated cellulation class"
     kind: physics
     description: "Requires an ergodic foliation-preserving move set and compatible Hermitian/weighted dynamics."
+    depends_on:
+      - CAUSAL_LOCAL_MOVESET_TOY
+      - CAUSAL_MOVE_HERMITIAN_TOY
+      - CAUSAL_MOVE_NEGATIVE_CONTROL
   - id: QCCG_CAUSAL_CRITICAL_CELLULATION_DYNAMICS
     title: "QCCG realizes a causal/foliated weighted cellulation dynamics with a stable 4D critical phase"
     kind: physics
@@ -551,6 +567,15 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_CAUSAL_MOVE_ARCHITECTURE_TOY
+    title: "Finite reversible causal move architecture"
+    rank: 43
+    statement: "The audited finite foliated 4D complex admits local reversible 2<->4 Pachner moves and a Hermitian positive move-graph Hamiltonian, while time-skipping moves are rejected; scalable ergodicity is not claimed."
+    requires:
+      - CAUSAL_LOCAL_MOVESET_TOY
+      - CAUSAL_MOVE_HERMITIAN_TOY
+      - CAUSAL_MOVE_NEGATIVE_CONTROL
 
   - id: QCCG_CAUSAL_FOLIATION_ARCHITECTURE_TOY
     title: "Finite causal-foliation simplicial architecture"
