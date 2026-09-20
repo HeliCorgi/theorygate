@@ -247,9 +247,17 @@ obligations:
     kind: formal-numerical
     description: "At the audited complex on-shell kinematics, replacing each external graviton polarization by k_(mu xi_(nu)+k_(nu xi_(mu) gives zero cubic coefficient."
   - id: QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED
-    title: "QCCG has a full tensor-index microscopic cubic graviton vertex"
+    title: "QCCG has an explicit finite-Weyl tensor-index cubic graviton vertex construction"
+    kind: formal-numerical
+    description: "A finite-Weyl sine-coordinate, local lattice discretization of the EH Gamma-Gamma cubic tensor structure is explicitly constructed."
+  - id: QCCG_CUBIC_SELECTED_WARD_MATCH
+    title: "The finite-Weyl tensor cubic matches the calibrated GR Ward target at selected on-shell kinematics"
+    kind: numerical
+    description: "The selected lattice three-point amplitude converges to the EH target and pure-gauge replacements vanish."
+  - id: QCCG_FULL_CUBIC_WARD_MATCH
+    title: "The QCCG tensor cubic satisfies the full nonlinear Ward identities and is selected by the microscopic RG flow"
     kind: physics
-    description: "Requires lifting the derivative-cubic finite-Weyl proxy to the full tensor sector before comparison to the GR Ward target."
+    description: "Requires all-momenta/all-polarization nonlinear Ward consistency and derivation from QCCG coarse graining rather than insertion of the EH tensor structure."
   - id: GR_CUBIC_VERTEX_MATCH
     title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
     kind: physics
@@ -260,6 +268,8 @@ obligations:
       - GR_CUBIC_WARD_KINEMATIC_CONTROL
       - GR_CUBIC_GAUGE_REPLACEMENT_CONTROL
       - QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED
+      - QCCG_CUBIC_SELECTED_WARD_MATCH
+      - QCCG_FULL_CUBIC_WARD_MATCH
   - id: RG_BRIDGE_OBSERVABLES_EXTRACTED
     title: "QCCG bridge observables are extracted for continuum universality comparison"
     kind: rg-analytic
@@ -545,6 +555,14 @@ claims:
     requires:
       - GR_CUBIC_WARD_KINEMATIC_CONTROL
       - GR_CUBIC_GAUGE_REPLACEMENT_CONTROL
+
+  - id: QCCG_SELECTED_TENSOR_CUBIC_TOY
+    title: "Selected-kinematics finite-Weyl tensor cubic match"
+    rank: 49
+    statement: "An explicit finite-Weyl tensor cubic construction reproduces the calibrated EH three-point target on the audited complex on-shell kinematics while lattice pure-gauge replacements vanish; full nonlinear Ward/RG derivation is not claimed."
+    requires:
+      - QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED
+      - QCCG_CUBIC_SELECTED_WARD_MATCH
 
   - id: QCCG_DERIVATIVE_CUBIC_TOY
     title: "Derivative-cubic finite-Weyl repair"
