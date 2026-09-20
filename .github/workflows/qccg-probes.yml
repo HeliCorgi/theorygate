@@ -89,6 +89,9 @@ jobs:
           - name: qccg-large-volume-diffusion
             script: qccg/run_qccg_large_volume_diffusion_scan.py
             output: qccg-large-volume-diffusion-evidence.json
+          - name: qccg-mesoscopic-clt
+            script: qccg/run_qccg_mesoscopic_clt_audit.py
+            output: qccg-mesoscopic-clt-evidence.json
           - name: qccg-cdt-structural-action
             script: qccg/run_qccg_cdt_structural_action_audit.py
             output: qccg-cdt-structural-action-evidence.json
