@@ -95,21 +95,23 @@ theorem finite_history_interfaces_two
       · exact interface_incidence_two x hleft hright
       · exact ih htail
 
+def allInterfacesNotExternal : List FaceIncidence -> Prop
+  | [] => True
+  | x :: xs => gluedIncidence x ≠ 1 ∧ allInterfacesNotExternal xs
+
 theorem finite_history_no_external_interfaces
     (xs : List FaceIncidence)
     (h : allInterfacesUnit xs) :
-    ∀ x ∈ xs, gluedIncidence x ≠ 1 := by
-  intro x hx
+    allInterfacesNotExternal xs := by
   induction xs with
   | nil =>
-      cases hx
-  | cons y ys ih =>
-      change y.left = 1 ∧ y.right = 1 ∧ allInterfacesUnit ys at h
+      trivial
+  | cons x xs ih =>
+      change x.left = 1 ∧ x.right = 1 ∧ allInterfacesUnit xs at h
       rcases h with ⟨hleft, hright, htail⟩
-      cases hx with
-      | head =>
-          exact interface_not_external_after_gluing y hleft hright
-      | tail _ hx' =>
-          exact ih htail hx'
+      change gluedIncidence x ≠ 1 ∧ allInterfacesNotExternal xs
+      constructor
+      · exact interface_not_external_after_gluing x hleft hright
+      · exact ih htail
 
 end QCCG
