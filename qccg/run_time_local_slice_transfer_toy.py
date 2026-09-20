@@ -64,8 +64,11 @@ def manifold(S):
 
 def candidates14(S):
     used = {v for tet in S for v in tet}
-    newv = max(used) + 1
-    return [(tet, newv) for tet in sorted(S)]
+    # Labels are gauge.  Reuse holes left by prior 4->1 moves as well as one
+    # genuinely fresh label; otherwise 4->1 can delete a non-maximal label
+    # whose exact 1->4 inverse is unreachable in the labelled state graph.
+    available = [v for v in range(max(used) + 2) if v not in used]
+    return [(tet, v) for tet in sorted(S) for v in available]
 
 
 def apply14(S, c):
@@ -229,6 +232,7 @@ def build_state_graph():
     edges = set()
     edge_types = {}
     inverse_ok = True
+    inverse_failures = []
 
     for k, S in states.items():
         i = idx[k]
@@ -242,10 +246,18 @@ def build_state_graph():
             edges.add(e)
             edge_types.setdefault(str(e), set()).add(typ)
             # Reverse adjacency is the operational inverse check.
-            if k not in neighbors(states[nk]):
+            reverse_neighbors = neighbors(states[nk])
+            if k not in reverse_neighbors:
                 inverse_ok = False
+                inverse_failures.append({
+                    "from_state": i,
+                    "to_state": j,
+                    "forward_type": typ,
+                    "from_vertices": sorted({v for tet in S for v in tet}),
+                    "to_vertices": sorted({v for tet in states[nk] for v in tet}),
+                })
 
-    return states, keys, idx, edges, edge_types, inverse_ok
+    return states, keys, idx, edges, edge_types, inverse_ok, inverse_failures
 
 
 def shortest_distances(n, edges, source):
@@ -277,7 +289,7 @@ def evidence(eid, obligation, status, note, **metadata):
 
 
 def main():
-    states, keys, idx, edges, edge_types, inverse_ok = build_state_graph()
+    states, keys, idx, edges, edge_types, inverse_ok, inverse_failures = build_state_graph()
     n = len(keys)
     L = sp.zeros(n)
     for a, b in edges:
@@ -337,6 +349,8 @@ def main():
                 n_edges=len(edges),
                 edge_types={k: sorted(v) for k, v in edge_types.items()},
                 inverse_ok=inverse_ok,
+                inverse_failures=inverse_failures,
+                label_policy="1->4 reuses vacant labels before/alongside a fresh label; labels are gauge",
                 hermitian=hermitian,
                 uniform_zero=uniform_zero,
                 nullity=nullity,
