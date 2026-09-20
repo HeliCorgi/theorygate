@@ -80,6 +80,11 @@ jobs:
           python qccg/run_structure_function_toy.py \
             --out artifacts/qccg/structure-function-evidence.json
 
+      - name: Audit emergent noncentral structure functions on code subspace
+        run: |
+          python qccg/run_emergent_structure_function_audit.py \
+            --out artifacts/qccg/emergent-structure-evidence.json
+
       - name: Extract QCCG RFQG bridge observables
         run: |
           python qccg/run_rg_bridge_audit.py \
@@ -106,6 +111,7 @@ jobs:
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
+            --evidence artifacts/qccg/emergent-structure-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --require QCCG_RG_BRIDGE_DATA_TOY
@@ -123,6 +129,7 @@ jobs:
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
+            --evidence artifacts/qccg/emergent-structure-evidence.json \
             --evidence artifacts/qccg/rg-bridge-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --json > artifacts/qccg/report.json
@@ -142,6 +149,8 @@ jobs:
           assert report["obligations"]["LORENTZ_UNIVERSALITY"]["status"] == "BLOCKED"
           assert any("MARGINAL_LV_STABILITY=OPEN" in x for x in report["obligations"]["LORENTZ_UNIVERSALITY"]["blockers"])
           assert report["obligations"]["PHYSICAL_UNITARITY_SCALING_LIMIT"]["status"] == "BLOCKED"
+          assert report["obligations"]["LOW_ENERGY_STRUCTURE_FUNCTION_CONVERGENCE"]["status"] == "PASS"
+          assert report["obligations"]["STRUCTURE_FUNCTION_PATCH_CONTROL"]["status"] == "PASS"
           assert report["obligations"]["GR_HDA_STRUCTURE_FUNCTION_MATCH"]["status"] == "OPEN"
           assert report["obligations"]["NONLINEAR_CONSTRAINT_CLOSURE"]["status"] == "BLOCKED"
           assert any("GR_HDA_STRUCTURE_FUNCTION_MATCH=OPEN" in x for x in report["obligations"]["NONLINEAR_CONSTRAINT_CLOSURE"]["blockers"])
