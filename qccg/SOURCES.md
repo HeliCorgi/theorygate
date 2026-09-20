@@ -96,3 +96,31 @@ not automatically be identified with an FRG stability exponent because the
 relation between the lattice correlation-length scale and the FRG
 coarse-graining scale is not yet established.  The same restriction is imposed
 on QCCG.
+
+
+## Regge curvature for spatial-slice weighting
+
+4. T. Regge,
+   **General relativity without coordinates**,
+   Nuovo Cimento 19 (1961) 558-571.
+   - DOI: 10.1007/BF02733251
+   - Use here: curvature on a simplicial manifold is concentrated on
+     codimension-two hinges.  In a 3D tetrahedral slice the hinges are edges,
+     motivating the local spatial curvature weight
+     ```text
+     R_Regge ~ sum_e l_e delta_e.
+     ```
+   - For the equilateral QCCG slice toy with unit edge length and tetrahedral
+     dihedral angle `acos(1/3)`, this becomes
+     ```text
+     R_Regge ~ 2*pi*N1 - 6*acos(1/3)*N3
+     ```
+     up to the overall Regge normalization.
+
+The curvature-weighted QCCG rate
+```text
+w(S -> S') = exp[-(S(S')-S(S))/2]
+```
+is a QCCG modeling choice used because it gives exact pairwise detailed
+balance with weight `exp(-S)`.  Regge's paper supplies the geometric action
+anchor, not this stochastic rate prescription.
