@@ -120,6 +120,11 @@ jobs:
           python qccg/run_cellulation_rg_toy.py \
             --out artifacts/qccg/cellulation-rg-evidence.json
 
+      - name: Calibrate GR cubic Ward target
+        run: |
+          python qccg/run_gr_cubic_ward_target.py \
+            --out artifacts/qccg/gr-cubic-ward-evidence.json
+
       - name: Audit soft-graviton universal coupling target
         run: |
           python qccg/run_soft_graviton_audit.py \
@@ -149,6 +154,7 @@ jobs:
             --evidence artifacts/qccg/exact-rg-evidence.json \
             --evidence artifacts/qccg/feshbach-evidence.json \
             --evidence artifacts/qccg/cellulation-rg-evidence.json \
+            --evidence artifacts/qccg/gr-cubic-ward-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --require QCCG_RG_BRIDGE_DATA_TOY
 
@@ -173,6 +179,7 @@ jobs:
             --evidence artifacts/qccg/exact-rg-evidence.json \
             --evidence artifacts/qccg/feshbach-evidence.json \
             --evidence artifacts/qccg/cellulation-rg-evidence.json \
+            --evidence artifacts/qccg/gr-cubic-ward-evidence.json \
             --evidence artifacts/qccg/soft-graviton-evidence.json \
             --json > artifacts/qccg/report.json
           python - <<'PY'
@@ -199,7 +206,11 @@ jobs:
           assert report["obligations"]["QCCG_GRAPH_CHANGING_EFFECTIVE_KERNEL"]["status"] == "OPEN"
           assert report["obligations"]["AS_FIXED_POINT_MATCH"]["status"] == "BLOCKED"
           assert any("QCCG_NONPERTURBATIVE_RG_FLOW=OPEN" in x or "ESSENTIAL_CRITICAL_EXPONENT_MATCH=OPEN" in x for x in report["obligations"]["AS_FIXED_POINT_MATCH"]["blockers"])
-          assert report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["status"] == "OPEN"
+          assert report["obligations"]["GR_CUBIC_WARD_KINEMATIC_CONTROL"]["status"] == "PASS"
+          assert report["obligations"]["GR_CUBIC_GAUGE_REPLACEMENT_CONTROL"]["status"] == "PASS"
+          assert report["obligations"]["QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED"]["status"] == "OPEN"
+          assert report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["status"] == "BLOCKED"
+          assert any("QCCG_TENSOR_CUBIC_VERTEX_CONSTRUCTED=OPEN" in x for x in report["obligations"]["GR_CUBIC_VERTEX_MATCH"]["blockers"])
           assert report["obligations"]["DERIVATIVE_CUBIC_REPAIR"]["status"] == "PASS"
           assert report["obligations"]["MANIFOLD_DIAGNOSTIC_CALIBRATED"]["status"] == "PASS"
           assert report["obligations"]["MANIFOLD_DIMENSION_CONTROLS"]["status"] == "PASS"
