@@ -745,6 +745,14 @@ obligations:
     title: "The frozen local QCCG Pachner generator Gaussianizes in the mesoscopic scaling window"
     kind: numerical
     description: "Higher standardized volume cumulants vanish on increasing triangulations at fixed local generator data."
+  - id: QCCG_TIME_EVOLVED_VOLUME_DIFFUSION
+    title: "State-dependent QCCG Pachner evolution has an extensive finite-time volume-diffusion window"
+    kind: numerical
+    description: "Gillespie evolution with unit rate per physical local Pachner move yields Var(Delta N3) approximately proportional to N3 over preregistered short-time blocks."
+  - id: QCCG_TIME_EVOLVED_GAUSSIAN_WINDOW
+    title: "State-dependent QCCG volume transitions have a robust near-Gaussian large-volume window"
+    kind: numerical
+    description: "At increasing N3, variance scaling, skewness and robust quantile-shape diagnostics are compatible with a local Gaussian transition window."
   - id: QCCG_CDT_DIFFUSIVE_KINETIC_LIMIT
     title: "Increasing QCCG ensembles reach a Gaussian diffusive volume regime with CDT kinetic scaling"
     kind: physics
@@ -756,6 +764,8 @@ obligations:
       - QCCG_LARGE_VOLUME_DIFFUSION_EXPONENT
       - QCCG_MESOSCOPIC_VOLUME_CLT_SCALING
       - QCCG_FROZEN_GENERATOR_GAUSSIANIZATION
+      - QCCG_TIME_EVOLVED_VOLUME_DIFFUSION
+      - QCCG_TIME_EVOLVED_GAUSSIAN_WINDOW
   - id: QCCG_S3_CURVATURE_POTENTIAL_SCALING
     title: "Round-S3 intrinsic curvature gives an N3^(1/3) coarse potential"
     kind: formal
