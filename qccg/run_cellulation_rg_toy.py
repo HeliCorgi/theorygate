@@ -163,9 +163,15 @@ def main():
     rhs = sp.factor((E * sp.eye(3) - D).det() * (E * sp.eye(3) - heff(E)).det())
     feshbach_exact = sp.simplify(lhs - rhs) == 0
 
-    defect_eigs = sorted([float(sp.N(x)) for x in D.eigenvals().keys()])
+    defect_eigs = []
+    defect_eig_imag_max = 0.0
+    for x in D.eigenvals().keys():
+        z = complex(sp.N(x, 30))
+        defect_eig_imag_max = max(defect_eig_imag_max, abs(z.imag))
+        defect_eigs.append(z.real)
+    defect_eigs = sorted(defect_eigs)
     defect_gap = min(defect_eigs)
-    gap_positive = defect_gap > 0
+    gap_positive = defect_gap > 0 and defect_eig_imag_max < 1.0e-12
 
     result = {
         "schema": 1,
@@ -182,6 +188,7 @@ def main():
                 fine_edges=[list(x) for x in EDGES],
                 curvature=list(CURV_FINE),
                 defect_block_eigenvalues=defect_eigs,
+                defect_eigenvalue_max_abs_imag=defect_eig_imag_max,
                 defect_gap=defect_gap,
                 feshbach_identity=feshbach_exact,
             ),
