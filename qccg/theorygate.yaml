@@ -786,10 +786,25 @@ obligations:
     title: "The QCCG microscopic time unit is mapped to the CDT effective proper-time unit or an equivalent dimensionless kinetic coordinate"
     kind: physics
     description: "Required before the numerical QCCG kinetic coefficient can be identified directly with CDT Gamma."
+  - id: QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
+    title: "QCCG microscopic volume drift/diffusion is converted to an effective potential derivative"
+    kind: numerical
+    description: "Uses the local Fokker-Planck drift/diffusion relation to test whether the current QCCG dynamics resolves the CDT-inspired curvature-plus-volume potential structure."
+  - id: QCCG_CDT_CURVATURE_POTENTIAL_NOT_RESOLVED
+    title: "The unweighted QCCG move dynamics is diagnosed as not resolving a stable N3^(1/3) curvature potential"
+    kind: negative-control
+    description: "A stable linear-volume drift without a well-resolved N3^(-2/3) derivative term is retained as evidence of missing geometric weighting."
+  - id: QCCG_CURVATURE_WEIGHTED_DYNAMICS
+    title: "A microscopic curvature-sensitive QCCG dynamics produces a stable curvature contribution"
+    kind: physics
+    description: "Requires a geometric/curvature term derived from the QCCG microscopic sector, not insertion of the CDT effective potential by hand."
   - id: QCCG_CDT_POTENTIAL_PROFILE_MATCH
     title: "QCCG dynamically yields stable curvature/volume coefficients and a de Sitter-type volume profile"
     kind: physics
     description: "Requires large-volume fits of mu, lambda and the profile parameter omega (or an equivalent potential/profile observable) without inserting the CDT potential by hand."
+    depends_on:
+      - QCCG_CDT_POTENTIAL_DRIFT_DIAGNOSTIC
+      - QCCG_CURVATURE_WEIGHTED_DYNAMICS
   - id: QCCG_CDT_EFFECTIVE_COEFFICIENT_MATCH
     title: "QCCG large-volume effective Gamma, mu, lambda and omega are measured and stable"
     kind: physics
