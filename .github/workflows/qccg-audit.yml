@@ -105,6 +105,11 @@ jobs:
           python qccg/run_causal_move_dynamics_toy.py \
             --out artifacts/qccg/causal-move-evidence.json
 
+      - name: Scan finite causal move ensemble geometry
+        run: |
+          python qccg/run_causal_move_ensemble_scan.py \
+            --out artifacts/qccg/causal-ensemble-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -186,6 +191,7 @@ jobs:
             --evidence artifacts/qccg/weighted-pachner-evidence.json \
             --evidence artifacts/qccg/causal-foliation-evidence.json \
             --evidence artifacts/qccg/causal-move-evidence.json \
+            --evidence artifacts/qccg/causal-ensemble-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -218,6 +224,7 @@ jobs:
             --evidence artifacts/qccg/weighted-pachner-evidence.json \
             --evidence artifacts/qccg/causal-foliation-evidence.json \
             --evidence artifacts/qccg/causal-move-evidence.json \
+            --evidence artifacts/qccg/causal-ensemble-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
