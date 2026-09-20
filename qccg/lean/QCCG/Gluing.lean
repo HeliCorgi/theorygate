@@ -71,4 +71,45 @@ theorem interface_not_external_after_gluing
   rw [htwo]
   decide
 
+
+def allInterfacesUnit : List FaceIncidence -> Prop
+  | [] => True
+  | x :: xs => x.left = 1 ∧ x.right = 1 ∧ allInterfacesUnit xs
+
+def allInterfacesTwo : List FaceIncidence -> Prop
+  | [] => True
+  | x :: xs => gluedIncidence x = 2 ∧ allInterfacesTwo xs
+
+theorem finite_history_interfaces_two
+    (xs : List FaceIncidence)
+    (h : allInterfacesUnit xs) :
+    allInterfacesTwo xs := by
+  induction xs with
+  | nil =>
+      trivial
+  | cons x xs ih =>
+      change x.left = 1 ∧ x.right = 1 ∧ allInterfacesUnit xs at h
+      rcases h with ⟨hleft, hright, htail⟩
+      change gluedIncidence x = 2 ∧ allInterfacesTwo xs
+      constructor
+      · exact interface_incidence_two x hleft hright
+      · exact ih htail
+
+theorem finite_history_no_external_interfaces
+    (xs : List FaceIncidence)
+    (h : allInterfacesUnit xs) :
+    ∀ x ∈ xs, gluedIncidence x ≠ 1 := by
+  intro x hx
+  induction xs with
+  | nil =>
+      cases hx
+  | cons y ys ih =>
+      change y.left = 1 ∧ y.right = 1 ∧ allInterfacesUnit ys at h
+      rcases h with ⟨hleft, hright, htail⟩
+      cases hx with
+      | head =>
+          exact interface_not_external_after_gluing y hleft hright
+      | tail _ hx' =>
+          exact ih htail hx'
+
 end QCCG
