@@ -165,6 +165,11 @@ jobs:
           python qccg/run_causal_23_slab_audit.py \
             --out artifacts/qccg/causal-23-slab-evidence.json
 
+      - name: Audit strict causal slab composition
+        run: |
+          python qccg/run_strict_slab_composition_audit.py \
+            --out artifacts/qccg/strict-slab-composition-evidence.json
+
       - name: Detect and repair missing cubic interaction
         run: |
           python qccg/run_cubic_interaction_audit.py \
@@ -272,6 +277,7 @@ jobs:
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/causal-14-slab-evidence.json \
             --evidence artifacts/qccg/causal-23-slab-evidence.json \
+            --evidence artifacts/qccg/strict-slab-composition-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
@@ -318,6 +324,7 @@ jobs:
             --evidence artifacts/qccg/pachner-composition-evidence.json \
             --evidence artifacts/qccg/causal-14-slab-evidence.json \
             --evidence artifacts/qccg/causal-23-slab-evidence.json \
+            --evidence artifacts/qccg/strict-slab-composition-evidence.json \
             --evidence artifacts/qccg/cubic-evidence.json \
             --evidence artifacts/qccg/derivative-cubic-evidence.json \
             --evidence artifacts/qccg/structure-function-evidence.json \
