@@ -197,6 +197,18 @@ obligations:
     title: "Missing 4-simplices are detected in the strict 2<->3 slab"
     kind: negative-control
     description: "Deleting any one required 4-simplex breaks the prescribed boundary or manifold incidence."
+  - id: CLOSED_SLICE_14_CAUSAL_SLAB_TOY
+    title: "A local 1->4 strict slab embeds into a complete closed S3 slice transition"
+    kind: formal-numerical
+    description: "A full S3 x interval product slab with one upper-boundary stellar refinement remains causal/manifold and has no mixed-time external boundary."
+  - id: CLOSED_SLICE_23_CAUSAL_SLAB_TOY
+    title: "A local 2->3 strict slab embeds into a complete closed S3 slice transition"
+    kind: formal-numerical
+    description: "Replacing the product subcomplex of a valid 2->3 pair by the nine-simplex strict slab yields a causal/manifold closed-slice transition with only full lower/upper S3 boundaries."
+  - id: CLOSED_SLICE_SLAB_COMPLETION_CONTROL
+    title: "Missing local slab simplices are detected after closed-slice completion"
+    kind: negative-control
+    description: "Deleting a required replacement simplex creates boundary or incidence defects in the completed closed-slice slab."
   - id: QCCG_LOCAL_SPACETIME_SLAB_REALIZATION
     title: "Every allowed neighboring spatial slice pair has a bounded-time 4D causal simplicial interpolation"
     kind: physics
@@ -210,6 +222,9 @@ obligations:
       - CAUSAL_23_SPACETIME_SLAB_REALIZATION
       - CAUSAL_23_SLAB_INVERSE_CONTROL
       - CAUSAL_23_SLAB_COMPLETENESS_CONTROL
+      - CLOSED_SLICE_14_CAUSAL_SLAB_TOY
+      - CLOSED_SLICE_23_CAUSAL_SLAB_TOY
+      - CLOSED_SLICE_SLAB_COMPLETION_CONTROL
       - QCCG_GLOBAL_CAUSAL_COBORDISM_COMPATIBILITY
   - id: CDT_MOVE4_VERTEX_REFINEMENT_TOY
     title: "A local 4D causal vertex-changing 2->8 refinement move is realized"
@@ -929,6 +944,15 @@ claims:
     requires:
       - CDT_MIXED_MOVE_FIXED_BOUNDARY_CONNECTIVITY_TOY
       - CDT_MOVE_FAMILY_CONNECTIVITY_CONTROL
+
+  - id: QCCG_CLOSED_SLICE_SLAB_TOY
+    title: "Closed S3 embedding of both spatial Pachner slab generators"
+    rank: 49
+    statement: "The audited strict 1->4 and 2->3 local causal slabs each embed into a complete closed S3 slice-to-slice 4D manifold with no lateral external boundary; arbitrary triangulation histories are not claimed."
+    requires:
+      - CLOSED_SLICE_14_CAUSAL_SLAB_TOY
+      - CLOSED_SLICE_23_CAUSAL_SLAB_TOY
+      - CLOSED_SLICE_SLAB_COMPLETION_CONTROL
 
   - id: QCCG_STRICT_SLAB_COMPOSITION_TOY
     title: "Finite strict causal slab composition"
