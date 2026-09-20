@@ -110,6 +110,26 @@ obligations:
     title: "The fixed-vertex causal 2<->4 move ensemble is diagnosed as insufficient when it fails the finite 4D geometry target"
     kind: negative-control
     description: "The local 2<->4 move set preserves the microscopic vertex set, so a failed extended-geometry diagnostic motivates vertex-changing causal moves."
+  - id: CAUSAL_COLUMN_MOVESET_TOY
+    title: "Vertex-changing causal-column spatial Pachner moves preserve the finite causal 4-manifold architecture"
+    kind: formal-numerical
+    description: "Spatial 1<->4 and 2<->3 moves change vertices/connectivity while staircase time extension preserves causal manifold incidence."
+  - id: CAUSAL_COLUMN_ENSEMBLE_SCAN_EXECUTED
+    title: "A finite vertex-changing causal-column ensemble scan is executed"
+    kind: numerical
+    description: "The repaired ensemble is sampled with proposal-count detailed balance and spatial/4D manifold checks."
+  - id: CAUSAL_COLUMN_FINITE_4D_CANDIDATE
+    title: "The finite causal-column repair reaches a broad four-dimensional geometry diagnostic"
+    kind: physics
+    description: "A finite diagnostic only; PASS does not establish scaling and FAIL is a valid negative result."
+  - id: CAUSAL_COLUMN_REPAIR_INSUFFICIENT
+    title: "Repeating one vertex-changing spatial triangulation through time is diagnosed as insufficient when the 4D target fails"
+    kind: negative-control
+    description: "The repair removes the fixed-vertex defect but may still fail because every time slice shares one spatial geometry."
+  - id: QCCG_TIME_LOCAL_CAUSAL_DYNAMICS
+    title: "QCCG has bounded-time-neighborhood local causal graph dynamics with independently evolving spatial slices"
+    kind: physics
+    description: "Requires slice-dependent geometries and foliation-preserving local spacetime moves rather than global time-column updates."
   - id: CAUSAL_4D_SCALING_STABILITY
     title: "The causal-move ensemble has a stable four-dimensional scaling phase at increasing volume and time extent"
     kind: physics
@@ -131,6 +151,7 @@ obligations:
       - CAUSAL_FOLIATED_4D_ARCHITECTURE
       - CAUSAL_FOLIATION_NEGATIVE_CONTROL
       - QCCG_CAUSAL_MOVE_DYNAMICS
+      - QCCG_TIME_LOCAL_CAUSAL_DYNAMICS
       - CAUSAL_4D_SCALING_STABILITY
   - id: QCCG_WEIGHTED_CRITICAL_CELLULATION_ENSEMBLE
     title: "QCCG specifies and realizes a weighted critical cellulation ensemble with 4D manifold-like scaling"
@@ -585,6 +606,15 @@ claims:
     requires:
       - HDA_NONABELIAN_TARGET
       - COMMUTING_PROJECTOR_HDA_REJECTED
+
+  - id: QCCG_CAUSAL_COLUMN_REPAIR_DIAGNOSTIC
+    title: "Vertex-changing causal-column repair diagnostic"
+    rank: 44
+    statement: "The audited column repair adds reversible vertex-changing spatial Pachner dynamics while preserving the causal 4D architecture; if it still misses the broad 4D target, the failure is retained as evidence that time-independent columns are insufficient."
+    requires:
+      - CAUSAL_COLUMN_MOVESET_TOY
+      - CAUSAL_COLUMN_ENSEMBLE_SCAN_EXECUTED
+      - CAUSAL_COLUMN_REPAIR_INSUFFICIENT
 
   - id: QCCG_CAUSAL_FIXED_VERTEX_DIAGNOSTIC
     title: "Fixed-vertex causal-move limitation diagnostic"
