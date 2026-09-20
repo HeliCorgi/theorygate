@@ -83,6 +83,9 @@ jobs:
           - name: qccg-cdt-transfer-match
             script: qccg/run_qccg_cdt_transfer_match.py
             output: qccg-cdt-transfer-match-evidence.json
+          - name: qccg-cdt-kinetic-coefficient
+            script: qccg/run_qccg_cdt_kinetic_coefficient_audit.py
+            output: qccg-cdt-kinetic-coefficient-evidence.json
           - name: qccg-cdt-diffusion-bridge
             script: qccg/run_qccg_cdt_diffusion_bridge.py
             output: qccg-cdt-diffusion-bridge-evidence.json
