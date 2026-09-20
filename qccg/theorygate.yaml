@@ -508,12 +508,26 @@ obligations:
     title: "The finite-Weyl tensor cubic survives a multi-kinematics on-shell Ward stress test"
     kind: numerical
     description: "Several independent complex massless three-point configurations must show physical-amplitude convergence and gauge-replacement suppression."
+  - id: LATTICE_WARD_RESIDUAL_OA2
+    title: "The symmetric local lattice derivative has an O(a^2) generic Ward/momentum-additivity defect"
+    kind: formal-numerical
+    description: "Under continuum momentum conservation, the symmetric derivative symbol violates additivity only at quadratic order in lattice spacing."
+  - id: FORWARD_DIFFERENCE_WARD_OA_NEGATIVE_CONTROL
+    title: "A forward-difference derivative is rejected by its larger O(a) Ward defect"
+    kind: negative-control
+    description: "The first-order lattice derivative has only linear-in-a restoration, calibrating the improvement of the symmetric discretization."
+  - id: FINITE_LATTICE_EXACT_DIFFEO_WARD
+    title: "Exact microscopic finite-spacing diffeomorphism Ward identities hold"
+    kind: physics
+    description: "The current local lattice derivative does not satisfy this; continuum restoration rather than exact finite-a symmetry is required."
   - id: QCCG_FULL_CUBIC_WARD_MATCH
     title: "The QCCG tensor cubic satisfies the full nonlinear Ward identities and is selected by the microscopic RG flow"
     kind: physics
     description: "Requires all-momenta/all-polarization nonlinear Ward consistency and derivation from QCCG coarse graining rather than insertion of the EH tensor structure."
     depends_on:
       - QCCG_CUBIC_MULTI_KINEMATICS_STRESS
+      - LATTICE_WARD_RESIDUAL_OA2
+      - FORWARD_DIFFERENCE_WARD_OA_NEGATIVE_CONTROL
   - id: GR_CUBIC_VERTEX_MATCH
     title: "The microscopic cubic interaction matches the physical GR three-graviton Ward identities"
     kind: physics
@@ -960,6 +974,14 @@ claims:
     statement: "The engineered finite-Weyl tensor cubic survives the audited set of independent complex on-shell three-point configurations; this remains a finite stress test rather than a full Ward/RG derivation."
     requires:
       - QCCG_CUBIC_MULTI_KINEMATICS_STRESS
+
+  - id: QCCG_LATTICE_WARD_SCALING_TOY
+    title: "Controlled continuum restoration of lattice cubic Ward kinematics"
+    rank: 49
+    statement: "The symmetric lattice derivative has a generic O(a^2) momentum-additivity/Ward defect, while a forward difference is only O(a); exact finite-spacing diffeomorphism invariance is not claimed."
+    requires:
+      - LATTICE_WARD_RESIDUAL_OA2
+      - FORWARD_DIFFERENCE_WARD_OA_NEGATIVE_CONTROL
 
   - id: QCCG_SELECTED_TENSOR_CUBIC_TOY
     title: "Selected-kinematics finite-Weyl tensor cubic match"
