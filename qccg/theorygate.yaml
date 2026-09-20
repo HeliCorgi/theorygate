@@ -214,10 +214,20 @@ obligations:
     title: "Wrong-time self-dual moves are rejected"
     kind: negative-control
     description: "A vertex outside adjacent time slices invalidates the causal 3->3 move."
+  - id: QCCG_CDT_MOVESET_ERGODICITY
+    title: "The realized local 4D causal move set is ergodic within the intended fixed-boundary causal triangulation sectors"
+    kind: physics
+    description: "Requires finite-state connectivity tests followed by scalable evidence; individual local move realizations are insufficient."
   - id: QCCG_CDT_LOCAL_MOVESET_COMPLETENESS
     title: "QCCG realizes a complete reversible local 4D causal move set with fixed-boundary connectivity"
     kind: physics
-    description: "Requires the remaining causal local moves and connectivity/ergodicity tests across finite fixed-boundary state graphs."
+    description: "Requires the audited 2<->4, 2<->8, 4<->6 and 3<->3 causal move architectures plus connectivity/ergodicity."
+    depends_on:
+      - CAUSAL_LOCAL_MOVESET_TOY
+      - CDT_MOVE4_VERTEX_REFINEMENT_TOY
+      - CDT_MOVE46_CONNECTIVITY_TOY
+      - CDT_MOVE33_SELFDUAL_TOY
+      - QCCG_CDT_MOVESET_ERGODICITY
   - id: QCCG_TIME_LOCAL_CAUSAL_DYNAMICS
     title: "QCCG has bounded-time-neighborhood local causal graph dynamics with independently evolving spatial slices"
     kind: physics
@@ -640,6 +650,11 @@ obligations:
     description: "Requires an in-in/CTP effective description for collapse or cosmology and causal physical observables."
 
 evidence:
+  - id: qccg-cdt-ergodicity-open
+    obligation: QCCG_CDT_MOVESET_ERGODICITY
+    status: OPEN
+    engine: model-spec
+    note: "Major local causal move types are now realized, but no scalable fixed-boundary connectivity/ergodicity theorem or exhaustive state-graph audit has been established."
   - id: reciprocity-choice
     obligation: GEOMETRIC_RECIPROCITY
     status: MODEL_CHOICE
@@ -735,6 +750,16 @@ claims:
     requires:
       - PACHNER_4SIMPLEX_COBORDISM_TOY
       - PACHNER_COBORDISM_INVERSE_CONTROL
+
+  - id: QCCG_CDT_MAJOR_MOVES_TOY
+    title: "Major local 4D causal move architectures"
+    rank: 47
+    statement: "The audited finite QCCG/CDT-style model realizes reversible local 2<->4, vertex-changing 2<->8, connectivity-changing 4<->6 and self-dual 3<->3 causal moves; global ergodicity is not claimed."
+    requires:
+      - CAUSAL_LOCAL_MOVESET_TOY
+      - CDT_MOVE4_VERTEX_REFINEMENT_TOY
+      - CDT_MOVE46_CONNECTIVITY_TOY
+      - CDT_MOVE33_SELFDUAL_TOY
 
   - id: QCCG_CDT_SELFDUAL_MOVE_TOY
     title: "Local self-dual 4D causal connectivity move"
