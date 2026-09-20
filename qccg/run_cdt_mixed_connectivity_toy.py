@@ -321,7 +321,7 @@ def main():
                 reduced_nullity=reduced_nullity,
             ),
             evidence(
-                "qccg-cdt-scalable-connectivity-open",
+                "qccg-cdt-scalable-connectivity-open-mixed-sector",
                 "QCCG_CDT_SCALABLE_CONNECTIVITY",
                 "OPEN",
                 "Finite mixed fixed-boundary connectivity is established only for the audited glued sector. Connectivity/ergodicity has not been demonstrated across increasing generic causal triangulation sectors.",
