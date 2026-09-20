@@ -253,10 +253,31 @@ obligations:
     title: "Two-point IR matching alone is rejected as a universality criterion"
     kind: negative-control
     description: "Distinct nonlinear parents can share the same audited quadratic IR data."
+  - id: EXACT_FINITE_RG_BLOCKING_TOY
+    title: "An exact finite-state real-space RG blocking map is implemented"
+    kind: formal-numerical
+    description: "A fixed-geometry K-state Weyl/clock bond model is blocked exactly by convolution."
+  - id: SINGLE_COUPLING_RG_TRUNCATION_REJECTED
+    title: "A one-harmonic RG truncation is rejected as non-closed"
+    kind: negative-control
+    description: "Exact blocking generates higher harmonics beyond the initial cosine coupling."
+  - id: FULL_FINITE_HARMONIC_RG_CLOSURE_TOY
+    title: "The complete finite harmonic operator basis closes the exact blocking toy"
+    kind: formal-numerical
+    description: "All finite Z_K harmonics reconstruct the exact blocked effective action up to normalization."
+  - id: TRIVIAL_RG_FLOW_NEGATIVE_CONTROL
+    title: "The minimal fixed-geometry RG toy is detected to flow to the trivial IR fixed point"
+    kind: negative-control
+    description: "The exact 1D toy supplies no non-Gaussian gravitational fixed-point evidence."
   - id: QCCG_NONPERTURBATIVE_RG_FLOW
     title: "A nonperturbative QCCG coarse-graining flow for essential couplings is computed"
     kind: physics
-    description: "Requires beta functions beyond canonical/IR scaling diagnostics."
+    description: "Requires beta functions on the actual graph-changing constrained QCCG ensemble; single-coupling truncations are not accepted."
+    depends_on:
+      - EXACT_FINITE_RG_BLOCKING_TOY
+      - SINGLE_COUPLING_RG_TRUNCATION_REJECTED
+      - FULL_FINITE_HARMONIC_RG_CLOSURE_TOY
+      - TRIVIAL_RG_FLOW_NEGATIVE_CONTROL
   - id: ESSENTIAL_CRITICAL_EXPONENT_MATCH
     title: "QCCG essential UV critical exponents match the RFQG-5/asymptotic-safety target"
     kind: physics
@@ -467,6 +488,16 @@ claims:
     requires:
       - NONDERIVATIVE_CUBIC_MISMATCH_DETECTED
       - DERIVATIVE_CUBIC_REPAIR
+
+  - id: QCCG_EXACT_RG_ARCHITECTURE_TOY
+    title: "Exact finite-Weyl RG architecture toy"
+    rank: 49
+    statement: "Exact blocking rejects a one-coupling truncation, demonstrates closure in the full finite harmonic basis, and correctly identifies the minimal fixed-geometry toy as flowing to a trivial IR fixed point rather than an asymptotic-safety fixed point."
+    requires:
+      - EXACT_FINITE_RG_BLOCKING_TOY
+      - SINGLE_COUPLING_RG_TRUNCATION_REJECTED
+      - FULL_FINITE_HARMONIC_RG_CLOSURE_TOY
+      - TRIVIAL_RG_FLOW_NEGATIVE_CONTROL
 
   - id: QCCG_RFQG_UNIVERSALITY
     title: "QCCG realizes the RFQG-5 continuum universality class"
