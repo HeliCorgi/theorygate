@@ -13,11 +13,14 @@ component-wise modular invariants from gcds of the move deltas.
 A fixed-boundary 4-manifold necessarily satisfies the homogeneous incidence
 identity
     2 Δf3 = 5 Δf4,
-so Δf4 is even and Δf3 is divisible by five.  These apparent modular
-invariants are boundary-determined, not evidence of move-set nonergodicity.
+and the 4D Dehn--Sommerville move relation
+    2 Δf1 - 3 Δf2 + 4 Δf3 - 5 Δf4 = 0.
+Hence Δf4 is even, Δf3 is divisible by five, and Δf2 is also even.
+These apparent modular invariants are manifold-relation consequences, not
+evidence of move-set nonergodicity.
 
-Any additional component-wise modulus >1 is treated as an unexpected
-candidate obstruction and fails this audit for investigation.
+Any additional component-wise modulus not implied by the audited manifold
+relations is treated as an unexpected candidate obstruction.
 """
 from __future__ import annotations
 
@@ -95,6 +98,10 @@ def main():
     euler_ok=all(int((euler.T*sp.Matrix(d))[0])==0 for d in deltas.values())
 
     incidence_ok=all(2*d[3]-5*d[4]==0 for d in deltas.values())
+    dehn_sommerville_ok=all(
+        2*d[1]-3*d[2]+4*d[3]-5*d[4]==0
+        for d in deltas.values()
+    )
 
     boundary_rows={}
     boundary_preserved=True
@@ -115,8 +122,12 @@ def main():
         f"f{i}":g for i,g in enumerate(component_gcds) if g>1
     }
     expected_boundary_modular={
+        # Δf4 even and Δf3 multiple of 5 from 2Δf3=5Δf4.
         "f3":5,
         "f4":2,
+        # Mod 2, Dehn--Sommerville gives Δf2 ≡ Δf4 (mod 2),
+        # hence Δf2 is even because Δf4 is even.
+        "f2":2,
     }
     unexpected={
         k:v for k,v in modular.items()
@@ -126,11 +137,20 @@ def main():
     # Explicitly verify the parity/mod-5 changes are consequences of incidence.
     boundary_moduli_explained=(
         incidence_ok
+        and dehn_sommerville_ok
+        and component_gcds[2]==2
         and component_gcds[3]==5
         and component_gcds[4]==2
     )
 
-    passed=euler_ok and incidence_ok and boundary_preserved and boundary_moduli_explained and not unexpected
+    passed=(
+        euler_ok
+        and incidence_ok
+        and dehn_sommerville_ok
+        and boundary_preserved
+        and boundary_moduli_explained
+        and not unexpected
+    )
 
     result={
         "schema":1,
@@ -140,13 +160,14 @@ def main():
                 "qccg-cdt-move-invariant-audit",
                 "CDT_MOVE_INVARIANT_AUDIT",
                 "PASS" if passed else "FAIL",
-                "The audited move deltas preserve Euler and fixed-boundary codimension-one incidence. The visible f3 mod 5 and f4 mod 2 invariants are exactly boundary-determined; no additional component-wise modulus is found.",
+                "The audited move deltas preserve Euler, fixed-boundary codimension-one incidence, and the 4D Dehn--Sommerville move relation. The visible f2 mod 2, f3 mod 5 and f4 mod 2 invariants are implied by those manifold relations; no additional component-wise modulus is found.",
                 deltas=deltas,
                 matrix=[[int(x) for x in row] for row in M.tolist()],
                 matrix_rank=int(M.rank()),
                 rational_left_nullspace=null,
                 euler_invariant=euler_ok,
                 fixed_boundary_incidence=incidence_ok,
+                dehn_sommerville_relation=dehn_sommerville_ok,
                 boundary_rows=boundary_rows,
                 component_gcds=component_gcds,
                 modular_invariants=modular,
@@ -157,7 +178,7 @@ def main():
                 "qccg-cdt-boundary-parity-control",
                 "CDT_BOUNDARY_MODULAR_INVARIANTS_EXPLAINED",
                 "PASS" if boundary_moduli_explained else "FAIL",
-                "The apparent N4 parity and N3 mod-5 invariants follow from 2 Δf3 = 5 Δf4 at fixed tetrahedral boundary rather than an extra move-set conservation law.",
+                "The apparent N4 parity and N3 mod-5 invariants follow from 2 Δf3 = 5 Δf4, while N2 parity follows from that incidence relation together with the 4D Dehn--Sommerville move relation; none is an extra move-set conservation law.",
                 component_gcds=component_gcds,
             ),
             evidence(
