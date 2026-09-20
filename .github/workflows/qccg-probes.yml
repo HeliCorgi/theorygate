@@ -92,6 +92,9 @@ jobs:
           - name: qccg-mesoscopic-clt
             script: qccg/run_qccg_mesoscopic_clt_audit.py
             output: qccg-mesoscopic-clt-evidence.json
+          - name: qccg-time-evolved-volume-kernel
+            script: qccg/run_qccg_time_evolved_volume_kernel.py
+            output: qccg-time-evolved-volume-kernel-evidence.json
           - name: qccg-cdt-structural-action
             script: qccg/run_qccg_cdt_structural_action_audit.py
             output: qccg-cdt-structural-action-evidence.json
